@@ -7,7 +7,7 @@ import AdminEvent from '../../components/AdminComponent/AdminEvent/AdminEvent';
 const AdminPage = () => {
     const items = [
         getItem('Admin', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-        getItem('Item 2', 'g2', null, [getItem('Người dùng', 'user', <UserOutlined />), getItem('Sản phẩm', 'event', <AppstoreOutlined />)], 'group'),
+        getItem('Item 2', 'g2', null, [getItem('Người dùng', 'user', <UserOutlined />), getItem('Sự Kiện', 'event', <AppstoreOutlined />)], 'group'),
     ];
     const renderPage = (key) => {
         switch (key) {
