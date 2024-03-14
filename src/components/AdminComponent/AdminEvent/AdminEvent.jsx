@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Modal, DatePicker, Form } from 'antd';
-import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
-// import TableComponent from '../TableComponent/TableComponent';
+import { Button, Modal, DatePicker, Form, Space, Table, Tag, Dropdown, message, Tooltip } from 'antd';
+import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons'
 import InputComponent from '../../InputComponent/InputComponent';
-import { Space, Table, Tag } from 'antd';
 import { WrapperHeader } from './style';
+import { WrapperAction } from '../AdminUser/style';
+import TableComponent from '../../TableComponent/TableComponent';
+
+const { RangePicker } = DatePicker;
 const renderAction = (record) => {
   return (
 
@@ -42,7 +44,7 @@ const columns = [
     render: renderAction
   },
 ];
-const data = [
+const dataSource = [
   {
     key: '1',
     name: 'John Brown',
@@ -62,6 +64,44 @@ const data = [
     address: 'Sydney No. 1 Lake Park',
   },
 ];
+
+const handleButtonClick = (e) => {
+  message.info('Click on left button.');
+  console.log('click left button', e);
+};
+const handleMenuClick = (e) => {
+  message.info('Click on menu item.');
+  console.log('click', e);
+};
+const items = [
+  {
+    label: 'IT',
+    key: '1',
+    icon: <UserOutlined />,
+  },
+  {
+    label: 'Design',
+    key: '2',
+    icon: <UserOutlined />,
+  },
+  {
+    label: 'Marketing',
+    key: '3',
+    icon: <UserOutlined />,
+    danger: true,
+  },
+  {
+    label: 'Business',
+    key: '4',
+    icon: <UserOutlined />,
+    danger: true,
+    disabled: true,
+  },
+];
+const menuProps = {
+  items,
+  onClick: handleMenuClick,
+};
 const onFinish = () => {
   console.log('finish')
 }
@@ -72,18 +112,35 @@ const AdminEvent = () => {
   const handleOk = () => {
 
   };
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   return (
-    <div>
-      <WrapperHeader> Quản lý sự kiện</WrapperHeader>
-      <Button style={{ height: '45px', width: '50px', fontSize: '20px', background: 'white', marginTop: '10px' }} onClick={() => setIsModalOpen(true)}><PlusOutlined /> </Button>
-      <Table columns={columns} dataSource={data} />
+
+    <div style={{ padding: '30px' }}>
+      <WrapperHeader><p>Quản lý Sự Kiện</p></WrapperHeader>
+      <WrapperAction>
+        <div style={{
+          paddingLeft: '20px'
+        }}>
+          <Button style={{ width: '100px' }} type="primary" onClick={showModal}>Add</Button>
+        </div>
+        <div style={{
+          paddingLeft: '20px'
+        }}>
+          <Button style={{ width: '100px' }} danger>Delete</Button>
+        </div>
+      </WrapperAction>
+      <div>
+        <TableComponent dataSource={dataSource} columns={columns} />
+      </div>
       <div>
         <div>
-          <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal title="Thêm Sự Kiện" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <Form
               name="basic"
               labelCol={{
@@ -115,12 +172,12 @@ const AdminEvent = () => {
               </Form.Item>
 
               <Form.Item
-                label="caigi do"
-                name="gido"
+                label="chac la nhap ten nguoi dang"
+                name="tennguoidang"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input caigido',
+                    message: 'Please input ten ngươi dang',
                   },
                 ]}
               >
@@ -133,11 +190,35 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your password!',
+                    message: 'Please input your Falcuty',
                   },
                 ]}
               >
-                <InputComponent />
+                <Space wrap>
+                  <Dropdown menu={menuProps}>
+                    <Button>
+                      <Space>
+                        Select
+                        <DownOutlined />
+                      </Space>
+                    </Button>
+                  </Dropdown>
+                </Space>
+              </Form.Item>
+
+              <Form.Item
+                label="Times"
+                name="time"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input Time!',
+                  },
+                ]}
+              >
+                <Space direction="vertical" size={12}>
+                <RangePicker showTime />
+                </Space>
               </Form.Item>
 
               <Form.Item

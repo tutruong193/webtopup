@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, DownOutline
 import TableComponent from '../../TableComponent/TableComponent'
 import { WrapperHeader, WrapperAction, WrapperInput } from './style'
 import InputComponent from '../../InputComponent/InputComponent'
-const { RangePicker } = DatePicker;
+
 const dataSource = [
     {
         key: '1',
@@ -90,7 +90,7 @@ const AdminUser = () => {
     };
     return (
         <div style={{ padding: '30px' }}>
-            <WrapperHeader><p>quản lý Người Dùng</p></WrapperHeader>
+            <WrapperHeader><p>Quản Lý Người Dùng</p></WrapperHeader>
             <WrapperAction>
                 <div style={{
                     paddingLeft: '20px'
