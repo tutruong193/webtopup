@@ -1,29 +1,110 @@
-import React from 'react'
-import { WrapperHeader } from './style'
-import { Button, Modal, Form } from 'antd'
-import TableComponent from '../../TableComponent/TableComponent';
-import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
-import { useState } from 'react'
-import InputComponent from '../../InputComponent/InputComponent';
+import React, { useState } from 'react'
+import { Button, Modal, DatePicker, Dropdown, Space, message, Form } from 'antd'
+import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons'
+import TableComponent from '../../TableComponent/TableComponent'
+import { WrapperHeader, WrapperAction, WrapperInput } from './style'
+import InputComponent from '../../InputComponent/InputComponent'
+const { RangePicker } = DatePicker;
+const dataSource = [
+    {
+        key: '1',
+        name: 'Mike',
+        age: 32,
+        address: '10 Downing Street',
+    },
+    {
+        key: '2',
+        name: 'John',
+        age: 42,
+        address: '10 Downing Street',
+    },
+];
+const renderAction = (record) => {
+    return (
+        <div style={{ padding: '10px', display: 'flex', flexDirection: 'row' }}>
+            <div>
+                <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} />
+            </div>
+            <div>
+                <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} />
+            </div>
 
+        </div>
+    )
+}
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+        key: 'age',
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+    },
+    {
+        title: 'Action',
+        dataIndex: 'Action',
+        render: renderAction
+    }
+];
+const items = [
+    {
+        label: 'IT',
+        key: 'IT',
+        icon: <UserOutlined />,
+    },
+    {
+        label: 'Design',
+        key: 'Design',
+        icon: <UserOutlined />,
+    },
+];
 const AdminUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleOk = () => {
 
+    const showModal = () => {
+        setIsModalOpen(true);
     };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
-    const onFinish = () => {
-        console.log('finish')
-    }
+    const handleMenuClick = ({ key }) => {
+        console.log('click', key);
+    };
+    const menuProps = {
+        items,
+        onClick: handleMenuClick,
+    };
     return (
-        <div>
-            <WrapperHeader> Quản lý người dùng</WrapperHeader>
-            <Button style={{ height: '45px', width: '50px', fontSize: '20px', background: 'white', marginTop: '10px' }} onClick={() => setIsModalOpen(true)}><PlusOutlined /> </Button>
-            <div style={{ marginTop: '20px' }}>
-                <TableComponent />
+        <div style={{ padding: '30px' }}>
+            <WrapperHeader><p>quản lý Người Dùng</p></WrapperHeader>
+            <WrapperAction>
+                <div style={{
+                    paddingLeft: '20px'
+                }}>
+                    <Button style={{ width: '100px' }} type="primary" onClick={showModal}>Add</Button>
+                </div>
+                <div style={{
+                    paddingLeft: '20px'
+                }}>
+                    <Button style={{ width: '100px' }} danger>Delete</Button>
+                </div>
+            </WrapperAction>
+            <div>
+                <TableComponent dataSource={dataSource} columns={columns} />
             </div>
             <Modal title="Tạo tài khoản người dùng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
@@ -40,7 +121,6 @@ const AdminUser = () => {
                     initialValues={{
                         remember: true,
                     }}
-                    onFinish={onFinish}
                     autoComplete="off"
                 >
                     <Form.Item
@@ -66,7 +146,7 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <InputComponent/>
+                        <InputComponent />
                     </Form.Item>
 
                     <Form.Item
@@ -79,7 +159,7 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <InputComponent/>
+                        <InputComponent />
                     </Form.Item>
 
                     <Form.Item
@@ -94,6 +174,7 @@ const AdminUser = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+
         </div>
     )
 }
