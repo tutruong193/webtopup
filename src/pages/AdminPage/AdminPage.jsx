@@ -2,8 +2,8 @@ import { Menu } from 'antd'
 import React, { useState } from 'react'
 import { getItem } from '../../utilis';
 import { UserOutlined, AppstoreOutlined, LogoutOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
-// import AdminUser from '../../component/AdminUser/AdminUser'
-// import AdminEvent from '../../component/AdminEvent/AdminEvent';
+import AdminUser from '../../components/AdminComponent/AdminUser/AdminUser';
+import AdminEvent from '../../components/AdminComponent/AdminEvent/AdminEvent';
 const AdminPage = () => {
     const items = [
         getItem('Admin', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
@@ -13,13 +13,12 @@ const AdminPage = () => {
         switch (key) {
             case 'user':
                 return (
-                    // <AdminUser/>
-                    <div></div>
+                    <AdminUser/>
                 )
             case 'event':
                 return (
-                    // <AdminEvent/>
-                    <div></div>
+                    <AdminEvent/>
+                    
                 )
             case 'logout':
                 return (
