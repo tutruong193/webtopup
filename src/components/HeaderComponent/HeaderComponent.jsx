@@ -4,6 +4,7 @@ import { Col, Row } from 'antd';
 import { WrapperText, WrapperIcon } from './style';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
+import { useNavigate } from 'react-router-dom';
 const HeaderComponent = () => {
 
     const items = [
@@ -24,7 +25,10 @@ const HeaderComponent = () => {
             ),
         }
     ]
-
+    const navigate = useNavigate();
+    const handleSignIn = () => {
+        navigate('/signin');
+    };
     return (
         <div>
             <Row style={{
@@ -62,7 +66,7 @@ const HeaderComponent = () => {
                             }}
                         >
                             <a onClick={(e) => e.preventDefault()}>
-                                <Space>
+                                <Space style={{ color: 'black' }}>
                                     Faculty
                                 </Space>
                             </a>
@@ -81,7 +85,7 @@ const HeaderComponent = () => {
                         <SearchOutlined />
                     </WrapperIcon>
                     <WrapperIcon >
-                        <UserOutlined />
+                        <UserOutlined onClick={handleSignIn} />
                     </WrapperIcon></Col>
             </Row>
         </div>

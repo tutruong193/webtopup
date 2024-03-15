@@ -170,42 +170,20 @@ const AdminEvent = () => {
               >
                 <InputComponent />
               </Form.Item>
-
               <Form.Item
-                label="chac la nhap ten nguoi dang"
-                name="tennguoidang"
+                label="Time start"
+                name="time"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input ten ngươi dang',
+                    message: 'Please input Time!',
                   },
                 ]}
               >
-                <InputComponent />
-              </Form.Item>
-
-              <Form.Item
-                label="Falcuty"
-                name="falcuty"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Falcuty',
-                  },
-                ]}
-              >
-                <Space wrap>
-                  <Dropdown menu={menuProps}>
-                    <Button>
-                      <Space>
-                        Select
-                        <DownOutlined />
-                      </Space>
-                    </Button>
-                  </Dropdown>
+                <Space direction="vertical" size={12}>
+                  <DatePicker showTime placeholder='Open Date' />
                 </Space>
               </Form.Item>
-
               <Form.Item
                 label="Times"
                 name="time"
@@ -217,19 +195,8 @@ const AdminEvent = () => {
                 ]}
               >
                 <Space direction="vertical" size={12}>
-                <RangePicker showTime />
+                  <RangePicker showTime placeholder={['First close date', 'Final close date']} />
                 </Space>
-              </Form.Item>
-
-              <Form.Item
-                wrapperCol={{
-                  offset: 8,
-                  span: 16,
-                }}
-              >
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
               </Form.Item>
             </Form>
           </Modal>

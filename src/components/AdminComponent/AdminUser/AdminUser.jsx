@@ -124,6 +124,56 @@ const AdminUser = () => {
                     autoComplete="off"
                 >
                     <Form.Item
+                        label="Name"
+                        name="name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your email!',
+                            },
+                        ]}
+                    >
+                        <InputComponent />
+                    </Form.Item>
+                    <Form.Item
+                        label="Role"
+                        name="role"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your email!',
+                            },
+                        ]}
+                    >
+                        <Dropdown menu={menuProps}>
+                            <Button>
+                                <Space>
+                                    
+                                    <DownOutlined />
+                                </Space>
+                            </Button>
+                        </Dropdown>
+                    </Form.Item>
+                    <Form.Item
+                        label="Faculty"
+                        name="faculty"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your email!',
+                            },
+                        ]}
+                    >
+                        <Dropdown menu={menuProps}>
+                            <Button>
+                                <Space>
+                                    
+                                    <DownOutlined />
+                                </Space>
+                            </Button>
+                        </Dropdown>
+                    </Form.Item>
+                    <Form.Item
                         label="Email"
                         name="email"
                         rules={[

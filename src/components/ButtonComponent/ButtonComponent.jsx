@@ -4,9 +4,13 @@ import React from 'react'
 const ButtonComponent = ({ size, styleButton, styleTextButton, textButton, disabled, ...rests }) => {
     return (
         <Button
+
             style={{
                 ...styleButton,
-                background: disabled ? '#ccc' : styleButton.background
+                background: disabled ? '#ccc' : styleButton.background,
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex'
             }}
             size={size}
             {...rests}

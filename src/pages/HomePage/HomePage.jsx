@@ -1,51 +1,62 @@
 import React from 'react'
-import SmallComponent from '../../components/SmallCardComponent/SmallComponent'
-import BigCardComponents from '../../components/BigCardComponents/BigCardComponents'
-import { WrapperSmallCart } from './style'
-import acb from '../../assets/images/pic01.jpg';
+import SmallCartComponent from '../../components/SmallCardComponent/SmallCardComponent'
+import BigCardComponent from '../../components/BigCardComponent/BigCardComponent'
+import {
+  Wrapper,
+  WrapperSlider,
+  WrapperMiniPost,
+  WrapperContent,
+  WrapperImage
+} from './style'
+import logo from '../../assets/images/logo.jpg'
 const HomePage = () => {
   return (
-    <div style={{ padding: '60px', display: 'flex' }}>
-      <div style={{ marginRight: '60px' }}>
-        <div style={{ borderBottom: '1px solid', marginBottom: '30px' }}>
-          <div style={{ marginBottom: '32px' }}> <img style={{
-            borderRadius: '50%',
-            width: '50px',
-            height: '50px'
-          }} src={acb} alt="" /></div>
-          <div style={{ marginBottom: '32px' }}>FUTURE IMPERFECT</div>
-          <div style={{ marginBottom: '32px' }}>ANOTHER FINE RESPONSIVE SITE TEMPLATE BY HTML5 UP</div>
+    <Wrapper>
+      <WrapperSlider>
+        <div>
+          <img src={logo} ></img>
+          <h1
+            style={{
+              fontFamily: "'Raleway', 'Helvetica', sans-serif",
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              fontWeight: '900',
+              padding: '20px 0',
+              marginTop: '14px'
+            }}>FUTURE IMPERFECT</h1>
+          <div
+            style={{
+              fontFamily: "'Raleway', 'Helvetica', sans-serif",
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              paddingBottom: '50px',
+              borderBottom: 'solid 1px rgba(160, 160, 160, 0.3)',
+              marginBottom: '50px'
+            }}>ANOTHER FINE RESPONSIVE SITE TEMPLATE BY HTML5 UP</div>
         </div>
-        <WrapperSmallCart>
-          <SmallComponent />
-        </WrapperSmallCart>
-        <WrapperSmallCart>
-          <SmallComponent />
-        </WrapperSmallCart>
-        <WrapperSmallCart>
-          <SmallComponent />
-        </WrapperSmallCart>
-        <WrapperSmallCart>
-          <SmallComponent />
-        </WrapperSmallCart>
-      </div>
-      <div>
-        <div style={{ marginBottom: '32px' }}>
-          <BigCardComponents />
+        <WrapperMiniPost>
+          <SmallCartComponent />
+        </WrapperMiniPost>
+        <WrapperMiniPost>
+          <SmallCartComponent />
+        </WrapperMiniPost>
+        <WrapperMiniPost>
+          <SmallCartComponent />
+        </WrapperMiniPost>
+      </WrapperSlider>
+      <WrapperContent>
+        <div style={{ paddingBottom: '40px' }}>
+          <BigCardComponent />
         </div>
-        <div style={{ marginBottom: '32px' }}>
-          <BigCardComponents />
+        <div style={{ paddingBottom: '40px' }}>
+          <BigCardComponent />
         </div>
-        <div style={{ marginBottom: '32px' }}>
-          <BigCardComponents />
+        <div style={{ paddingBottom: '40px' }}>
+          <BigCardComponent />
         </div>
-        <div style={{ marginBottom: '32px' }}>
-          <BigCardComponents />
-        </div>
-      </div>
+      </WrapperContent>
+    </Wrapper>
 
-
-    </div>
   )
 }
 

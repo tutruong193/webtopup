@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import InputForm from '../../components/InputForm/InputForm'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style'
-// import imageLogo from '../../assets/images/logo-login.png'
+import imageLogo from '../../assets/images/logo-login.png'
 import { Image } from 'antd'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -78,9 +78,9 @@ const SignInPage = () => {
                     <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p>
                     <p>Quay về <WrapperTextLight onClick={handleNavigateHomePage}>Trang chủ</WrapperTextLight></p>
                 </WrapperContainerLeft>
-                {/* <WrapperContainerRight>
+                <WrapperContainerRight>
                     <Image src={imageLogo} preview={false} alt="iamge-logo" height="203px" width="203px" />
-                </WrapperContainerRight> */}
+                </WrapperContainerRight>
             </div>
         </div >
     )
