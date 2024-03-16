@@ -4,6 +4,9 @@ import { getItem } from '../../utilis';
 import { UserOutlined, AppstoreOutlined, LogoutOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
 import AdminUser from '../../components/AdminComponent/AdminUser/AdminUser';
 import AdminEvent from '../../components/AdminComponent/AdminEvent/AdminEvent';
+import * as UserService from '../../services/UserService'
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom'
 const AdminPage = () => {
     const items = [
         getItem('Admin', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
@@ -13,25 +16,31 @@ const AdminPage = () => {
         switch (key) {
             case 'user':
                 return (
-                    <AdminUser/>
+                    <AdminUser />
                 )
             case 'event':
                 return (
-                    <AdminEvent/>
-                    
+                    <AdminEvent />
+
                 )
             case 'logout':
                 return (
-                    <div>logout</div>
+                    <div onClick={handleLogout}>logout</div>
                 )
             default:
                 return <></>
         }
     }
     const [keySelected, setKeySelected] = useState('')
-
+    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
+    const navigate = useNavigate()
     const handleOnCLick = ({ key }) => {
         setKeySelected(key)
+    }
+    const handleLogout = async () => {
+        await UserService.logoutUser()
+        removeCookie('access_token')
+        navigate('/')
     }
     return (
         <>
@@ -50,7 +59,7 @@ const AdminPage = () => {
                     {renderPage(keySelected)}
                 </div>
             </div>
-           
+
         </>
     )
 }

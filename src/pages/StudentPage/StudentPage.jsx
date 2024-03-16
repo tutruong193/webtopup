@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { getItem } from '../../utilis';
 import { UserOutlined, FormOutlined, LogoutOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
 import { Menu } from 'antd'
-
+import * as UserService from '../../services/UserService'
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom'
 const StudentPage = () => {
     const items = [
         getItem('Student', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
@@ -16,12 +18,12 @@ const StudentPage = () => {
                 )
             case 'event':
                 return (
-                   <div/>
-                    
+                    <div />
+
                 )
             case 'logout':
                 return (
-                    <div>logout</div>
+                    <div onClick={handleLogout}>logout</div>
                 )
             default:
                 return <></>
@@ -31,6 +33,13 @@ const StudentPage = () => {
 
     const handleOnCLick = ({ key }) => {
         setKeySelected(key)
+    }
+    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
+    const navigate = useNavigate()
+    const handleLogout = async () => {
+        await UserService.logoutUser()
+        console.log('cookies', cookies)
+        navigate('/')
     }
     return (
         <>
@@ -49,7 +58,7 @@ const StudentPage = () => {
                     {renderPage(keySelected)}
                 </div>
             </div>
-           
+
         </>
     )
 }

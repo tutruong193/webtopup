@@ -52,7 +52,7 @@ const BigCardComponent = () => {
                                 height: '40px',
                                 borderRadius: '100%',
                             }}
-                            src={avatar} alt></img>
+                            src={avatar}></img>
                     </div>
                 </div>
 
