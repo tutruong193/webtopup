@@ -1,10 +1,6 @@
 import React from 'react'
-
 import { Card } from 'antd';
-import {
-    WrapperCardStyle,
-    WrapperBigTextHeaderCartStyle,
-    WrapperHeaderCart,
+import { WrapperCardStyle,WrapperBigTextHeaderCartStyle,WrapperHeaderCart,
     WrapperSmallTextHeaderCartStyle,
     WrapperLinkAuthor,
     WrapperDatePulisher,

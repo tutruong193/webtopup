@@ -30,6 +30,7 @@ export const WrapperBigTextHeaderCartStyle = styled.h2`
 export const WrapperSmallTextHeaderCartStyle = styled.h5`
     font-family: "Raleway", Helvetica, sans-serif;
     font-size: 12px;
+    
 `;
 
 export const WrapperLinkAuthor = styled.a`

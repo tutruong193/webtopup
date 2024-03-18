@@ -3,6 +3,7 @@ import HomePage from "../pages/HomePage/HomePage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import StudentPage from "../pages/StudentPage/StudentPage";
+import PageDetail from "../pages/PageDetail/PageDetail";
 export const routes = [
     {
         path: '/',
@@ -27,6 +28,13 @@ export const routes = [
         page: StudentPage,
         isShowHeader: false,
         requiresAuth: true
+    },
+    {
+        path: '/pages/PageDetail',
+        page: PageDetail,
+        isShowHeader: true
+
+
     },
     {
         path: '*',
