@@ -4,7 +4,8 @@ import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, DownOutline
 import TableComponent from '../../TableComponent/TableComponent'
 import { WrapperHeader, WrapperAction, WrapperInput } from './style'
 import InputComponent from '../../InputComponent/InputComponent'
-
+import * as FacultyService from '../../../services/FacultyService'
+import { useQuery } from '@tanstack/react-query'
 const dataSource = [
     {
         key: '1',
@@ -54,26 +55,44 @@ const columns = [
         render: renderAction
     }
 ];
-const items = [
+const itemsRole = [
     {
-        label: 'IT',
-        key: 'IT',
-        icon: <UserOutlined />,
+        label: 'Student',
+        key: 'Student',
     },
     {
-        label: 'Design',
-        key: 'Design',
-        icon: <UserOutlined />,
+        label: 'Marketing Manager',
+        key: 'MarketingManager',
+    },
+    {
+        label: 'Marketing Coordinator',
+        key: 'MarketingCoordinator',
     },
 ];
 const AdminUser = () => {
+    //khai báo
+    const inittial = () => ({
+        name: '',
+        email: '',
+        password: '',
+        role: '',
+        faculty: '',
+    })
+    const [stateUser, setStateUser] = useState(inittial())
+    const handleOnchangeUser = (e) => {
+        setStateUser({
+            ...stateUser,
+            [e.target.name]: e.target.value
+        })
+    }
+    //modal add user
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const showModal = () => {
         setIsModalOpen(true);
     };
 
     const handleOk = () => {
+        console.log('stateUser:', stateUser)
         setIsModalOpen(false);
     };
 
@@ -81,13 +100,41 @@ const AdminUser = () => {
         setIsModalOpen(false);
     };
 
-    const handleMenuClick = ({ key }) => {
-        console.log('click', key);
+    const handleRoleClick = ({ key }) => {
+        setStateUser({
+            ...stateUser,
+            role: key
+        })
     };
-    const menuProps = {
-        items,
-        onClick: handleMenuClick,
+    const menuPropsRole = {
+        items: itemsRole,
+        onClick: handleRoleClick,
     };
+    /// lấy dữ riệu faculty
+    const fetchFacultyAll = async () => {
+        const res = await FacultyService.getAllFaculty()
+        return res
+    }
+    const { data: faculties } = useQuery({
+        queryKey: ['faculties'],
+        queryFn: fetchFacultyAll,
+        config: { retry: 3, retryDelay: 1000 }
+    });
+    const itemsFaculty = faculties?.data?.map(faculty => ({
+        label: faculty.name,
+        key: faculty._id,
+    }));
+    const handleFacultyClick = ({ key }) => {
+        setStateUser({
+            ...stateUser,
+            faculty: key
+        })
+    };
+    const menuPropsFaculty = {
+        items: itemsFaculty,
+        onClick: handleFacultyClick,
+    };
+    ///
     return (
         <div style={{ padding: '30px' }}>
             <WrapperHeader><p>Quản Lý Người Dùng</p></WrapperHeader>
@@ -133,7 +180,7 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <InputComponent />
+                        <InputComponent value={stateUser['name']} onChange={handleOnchangeUser} name="name" />
                     </Form.Item>
                     <Form.Item
                         label="Role"
@@ -145,16 +192,20 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <Dropdown menu={menuProps}>
+                        <Dropdown menu={menuPropsRole}>
                             <Button>
                                 <Space>
-                                    
-                                    <DownOutlined />
+                                    {stateUser['role'] ? (
+                                        <span>{stateUser['role']} <DownOutlined /></span>
+                                    ) : (
+                                        <span>Select<DownOutlined /></span>
+                                    )}
                                 </Space>
+
                             </Button>
                         </Dropdown>
                     </Form.Item>
-                    <Form.Item
+                    {(stateUser['role'] === 'Student' || stateUser['role'] === 'MarketingCoordinator') ? (<Form.Item
                         label="Faculty"
                         name="faculty"
                         rules={[
@@ -164,15 +215,19 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <Dropdown menu={menuProps}>
+                        <Dropdown menu={menuPropsFaculty}>
                             <Button>
                                 <Space>
-                                    
-                                    <DownOutlined />
+                                    {stateUser['faculty'] ? (
+                                        <span>{stateUser['faculty']} <DownOutlined /></span>
+                                    ) : (
+                                        <span>Select<DownOutlined /></span>
+                                    )}
                                 </Space>
                             </Button>
                         </Dropdown>
-                    </Form.Item>
+                    </Form.Item>) : (<></>)}
+
                     <Form.Item
                         label="Email"
                         name="email"
@@ -183,7 +238,7 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <InputComponent />
+                        <InputComponent value={stateUser['email']} onChange={handleOnchangeUser} name="email" />
                     </Form.Item>
 
                     <Form.Item
@@ -196,31 +251,14 @@ const AdminUser = () => {
                             },
                         ]}
                     >
-                        <InputComponent />
+                        <InputComponent value={stateUser['password']} onChange={handleOnchangeUser} name="password" />
                     </Form.Item>
-
-                    <Form.Item
-                        label="Re-Password"
-                        name="rewritepassword"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                    >
-                        <InputComponent />
-                    </Form.Item>
-
                     <Form.Item
                         wrapperCol={{
                             offset: 8,
                             span: 16,
                         }}
                     >
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
                     </Form.Item>
                 </Form>
             </Modal>
