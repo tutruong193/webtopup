@@ -11,6 +11,7 @@ import avatar from '../../assets/images/avatar.jpg'
 import pic01 from '../../assets/images/pic01.jpg'
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { HeartOutlined, CommentOutlined } from '@ant-design/icons';
+import FacultyArticlePage from '../../pages/FacultyArticlePage/FacultyArticlePage';
 const BigCardComponent = () => {
     return (
         <WrapperCardStyle >
@@ -67,7 +68,7 @@ const BigCardComponent = () => {
                 <WrapperActionCard>
                     <div style={{ width: '50%' }}>
                         <ButtonComponent
-                            href='/article'
+                            href='/faculty/detail'
                             textButton='Continue Reading'
                             styleButton={{
                                 color: 'black',
