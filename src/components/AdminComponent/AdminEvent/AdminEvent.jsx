@@ -107,10 +107,15 @@ const onFinish = () => {
 }
 
 const AdminEvent = () => {
-
+  const [stateEvent, setStateEvent] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    faculty: ''
+})
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = () => {
-
   };
   const showModal = () => {
     setIsModalOpen(true);

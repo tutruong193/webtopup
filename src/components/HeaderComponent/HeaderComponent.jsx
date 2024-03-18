@@ -5,8 +5,9 @@ import { WrapperText, WrapperIcon } from './style';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 const HeaderComponent = () => {
-
+    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
     const items = [
         {
             key: '1',
@@ -28,6 +29,7 @@ const HeaderComponent = () => {
     const navigate = useNavigate();
     const handleSignIn = () => {
         navigate('/signin');
+        removeCookie('access_token');
     };
     return (
         <div>

@@ -20,3 +20,7 @@ export const logoutUser = async () => {
     const res = await axios.post(`http://localhost:3001/api/user/logout`)
     return res.data
 }
+export const getAllUser = async () => {
+    const res = await axios.get(`http://localhost:3001/api/user/getall`)
+    return res.data
+}

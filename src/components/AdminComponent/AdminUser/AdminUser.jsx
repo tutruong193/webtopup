@@ -8,70 +8,59 @@ import * as FacultyService from '../../../services/FacultyService'
 import { useQuery } from '@tanstack/react-query'
 import { useMutationHooks } from '../../../hooks/useMutationHook'
 import * as UserService from '../../../services/UserService'
-const dataSource = [
-    {
-        key: '1',
-        name: 'Mike',
-        age: 32,
-        address: '10 Downing Street',
-    },
-    {
-        key: '2',
-        name: 'John',
-        age: 42,
-        address: '10 Downing Street',
-    },
-];
-const renderAction = (record) => {
-    return (
-        <div style={{ padding: '10px', display: 'flex', flexDirection: 'row' }}>
+import ModalComponent from '../../ModalComponent/ModalComponent'
+
+const AdminUser = () => {
+    //setup
+    const renderAction = () => {
+        return (
             <div>
-                <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} />
-            </div>
-            <div>
+                <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={ () => setIsModalOpenDelete(true)} />
                 <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} />
             </div>
-
-        </div>
-    )
-}
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'Action',
-        dataIndex: 'Action',
-        render: renderAction
+        )
     }
-];
-const itemsRole = [
-    {
-        label: 'Student',
-        key: 'Student',
-    },
-    {
-        label: 'Marketing Manager',
-        key: 'MarketingManager',
-    },
-    {
-        label: 'Marketing Coordinator',
-        key: 'MarketingCoordinator',
-    },
-];
-const AdminUser = () => {
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+        },
+        {
+            title: 'Faculty',
+            dataIndex: 'faculty',
+            key: 'faculty',
+        },
+        {
+            title: 'Action',
+            dataIndex: 'Action',
+            render: renderAction
+        }
+    ];
+    const itemsRole = [
+        {
+            label: 'Student',
+            key: 'Student',
+        },
+        {
+            label: 'Marketing Manager',
+            key: 'MarketingManager',
+        },
+        {
+            label: 'Marketing Coordinator',
+            key: 'MarketingCoordinator',
+        },
+    ];
     const [stateUser, setStateUser] = useState({
         name: '',
         email: '',
@@ -138,7 +127,36 @@ const AdminUser = () => {
     const handleOk = () => {
         mutation.mutate({ ...stateUser })
     };
+    //getalluser
+    const fetchUserAll = async () => {
+        const res = await UserService.getAllUser()
+        return res
+    }
 
+    const { data: users } = useQuery({
+        queryKey: ['users'],
+        queryFn: fetchUserAll,
+        config: { retry: 3, retryDelay: 1000 }
+    });
+
+
+    const itemsUser = users?.data?.filter(user => user.role !== 'Admin') // Loại bỏ người dùng có vai trò là 'Admin'
+        .map((user) => ({
+            key: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            faculty: user.faculty
+        }));
+    ///delete user
+    const [rowSelected, setRowSelected] = useState('')
+    const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+    const handleCancelDelete = () => {
+        setIsModalOpenDelete(false)
+    }
+    const handleDeleteUser = () => {
+
+    }
     return (
         <div style={{ padding: '30px' }}>
             <WrapperHeader><p>Quản Lý Người Dùng</p></WrapperHeader>
@@ -155,7 +173,13 @@ const AdminUser = () => {
                 </div>
             </WrapperAction>
             <div>
-                <TableComponent dataSource={dataSource} columns={columns} />
+                <TableComponent dataSource={itemsUser} columns={columns} onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => {
+                            setRowSelected(record.key)
+                        }
+                    };
+                }}/>
             </div>
             <Modal title="Tạo tài khoản người dùng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
@@ -266,7 +290,9 @@ const AdminUser = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-
+            <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
+                <div>Bạn có chắc xóa tài khoản này không? </div>
+            </ModalComponent>
         </div>
     )
 }
