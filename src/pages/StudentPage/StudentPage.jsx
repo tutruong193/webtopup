@@ -5,10 +5,12 @@ import { Menu } from 'antd'
 import * as UserService from '../../services/UserService'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
+import StudentPostBlog from '../../components/StudentComponent/StudentPostBlog/StudentPostBlog';
+import StudentListBlog from '../../components/StudentComponent/StudentPostBlog/StudentPostBlog';
 const StudentPage = () => {
     const items = [
         getItem('Student', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-        getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Đăng Bài', 'postBlog', <FormOutlined />)], 'group'),
+        getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Đăng bài', 'postBlog', <FormOutlined />)], 'group'),
     ];
     const renderPage = (key) => {
         switch (key) {
@@ -16,11 +18,12 @@ const StudentPage = () => {
                 return (
                     <div></div>
                 )
-            case 'event':
+            case 'postBlog':
                 return (
-                    <div />
+                    <StudentPostBlog />
 
                 )
+
             case 'logout':
                 return (
                     <div onClick={handleLogout}>logout</div>
