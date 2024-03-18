@@ -6,6 +6,8 @@ import { WrapperHeader, WrapperAction, WrapperInput } from './style'
 import InputComponent from '../../InputComponent/InputComponent'
 import * as FacultyService from '../../../services/FacultyService'
 import { useQuery } from '@tanstack/react-query'
+import { useMutationHooks } from '../../../hooks/useMutationHook'
+import * as UserService from '../../../services/UserService'
 const dataSource = [
     {
         key: '1',
@@ -70,15 +72,14 @@ const itemsRole = [
     },
 ];
 const AdminUser = () => {
-    //khai báo
-    const inittial = () => ({
+    const [stateUser, setStateUser] = useState({
         name: '',
         email: '',
         password: '',
         role: '',
-        faculty: '',
+        faculty: ''
     })
-    const [stateUser, setStateUser] = useState(inittial())
+    //mỗi khi thay đổi input nhập vào, sẽ lưu luôn vào biến bằng useState
     const handleOnchangeUser = (e) => {
         setStateUser({
             ...stateUser,
@@ -91,15 +92,10 @@ const AdminUser = () => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
-        console.log('stateUser:', stateUser)
-        setIsModalOpen(false);
-    };
-
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
+    //set role khi click
     const handleRoleClick = ({ key }) => {
         setStateUser({
             ...stateUser,
@@ -124,6 +120,7 @@ const AdminUser = () => {
         label: faculty.name,
         key: faculty._id,
     }));
+    //set faculty khi click
     const handleFacultyClick = ({ key }) => {
         setStateUser({
             ...stateUser,
@@ -135,6 +132,13 @@ const AdminUser = () => {
         onClick: handleFacultyClick,
     };
     ///
+    const mutation = useMutationHooks(
+        data => UserService.createUser(data)
+    )
+    const handleOk = () => {
+        mutation.mutate({ ...stateUser })
+    };
+
     return (
         <div style={{ padding: '30px' }}>
             <WrapperHeader><p>Quản Lý Người Dùng</p></WrapperHeader>
