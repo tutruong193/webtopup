@@ -41,7 +41,7 @@ const StudentPage = () => {
     const navigate = useNavigate()
     const handleLogout = async () => {
         await UserService.logoutUser()
-        console.log('cookies', cookies)
+        removeCookie('access_token')
         navigate('/')
     }
     return (

@@ -2,8 +2,7 @@ import { Card } from "antd";
 import styled from "styled-components";
 
 export const WrapperCardStyle = styled.div`
-    width: 900px;
-    height: 800px;
+    width: 100%;
     position: relative;
     border: solid 1px rgba(160, 160, 160, 0.3);
     justify-items: center;
@@ -30,7 +29,6 @@ export const WrapperBigTextHeaderCartStyle = styled.h2`
 export const WrapperSmallTextHeaderCartStyle = styled.h5`
     font-family: "Raleway", Helvetica, sans-serif;
     font-size: 12px;
-    
 `;
 
 export const WrapperLinkAuthor = styled.a`
@@ -53,7 +51,7 @@ export const WrapperDatePulisher = styled.div`
 export const WrapperCard = styled(Card)`
 width: 100%;
 border: none;
-
+padding-top: 50px
 `
 export const WrapperActionCard = styled.div`
     display: flex;
