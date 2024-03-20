@@ -1,121 +1,117 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, DatePicker, Form, Space, Table, Tag, Dropdown, message, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons'
 import InputComponent from '../../InputComponent/InputComponent';
 import { WrapperHeader } from './style';
 import { WrapperAction } from '../AdminUser/style';
 import TableComponent from '../../TableComponent/TableComponent';
-
-const { RangePicker } = DatePicker;
-const renderAction = (record) => {
-  return (
-
-    <div style={{ padding: '10px', display: 'flex', flexDirection: 'row' }}>
-      <div>
-        <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} />
-      </div>
-      <div>
-        <EditOutlined style={{ color: 'green', fontSize: '30px', cursor: 'pointer' }} />
-      </div>
-    </div>
-
-  )
-}
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: renderAction
-  },
-];
-const dataSource = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-];
-
-const handleButtonClick = (e) => {
-  message.info('Click on left button.');
-  console.log('click left button', e);
-};
-const handleMenuClick = (e) => {
-  message.info('Click on menu item.');
-  console.log('click', e);
-};
-const items = [
-  {
-    label: 'IT',
-    key: '1',
-    icon: <UserOutlined />,
-  },
-  {
-    label: 'Design',
-    key: '2',
-    icon: <UserOutlined />,
-  },
-  {
-    label: 'Marketing',
-    key: '3',
-    icon: <UserOutlined />,
-    danger: true,
-  },
-  {
-    label: 'Business',
-    key: '4',
-    icon: <UserOutlined />,
-    danger: true,
-    disabled: true,
-  },
-];
-const menuProps = {
-  items,
-  onClick: handleMenuClick,
-};
-const onFinish = () => {
-  console.log('finish')
-}
+import DateTimePicker from 'react-datetime-picker';
+import 'react-datetime-picker/dist/DateTimePicker.css';
+import 'react-calendar/dist/Calendar.css';
+import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
+import { useMutationHooks } from '../../../hooks/useMutationHook'
+import * as EventService from '../../../services/EventService'
+import { useQuery } from '@tanstack/react-query';
+import * as Message from '../../../components/Message/Message'
+import ModalComponent from '../../ModalComponent/ModalComponent';
+import { useCookies } from 'react-cookie';
 
 const AdminEvent = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
+  const renderAction = (record) => {
+    return (
+      <div>
+        <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => setIsModalOpenDelete(true)} />
+        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }}/>
+      </div>
+    )
+  }
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Open Date',
+      dataIndex: 'openDate',
+      key: 'openDate',
+    },
+    {
+      title: 'First Close Date',
+      dataIndex: 'firstCloseDate',
+      key: 'firstCloseDate',
+    },
+    {
+      title: 'Final Close Date',
+      dataIndex: 'finalCloseDate',
+      key: 'finalCloseDate',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: renderAction
+    },
+  ];
+  ///getall event
+  const fetchEventAll = async () => {
+    const res = await EventService.getAllEvent()
+    return res
+  }
+
+  const eventQuerry = useQuery({
+    queryKey: ['events'],
+    queryFn: fetchEventAll,
+    config: { retry: 3, retryDelay: 1000 }
+  });
+  const { data: events } = eventQuerry
+
+  const dataTable = events?.data?.map((event) => {
+    const vietnamTimezone = 'Asia/Ho_Chi_Minh';
+    const openDate = utcToZonedTime(event.openDate, vietnamTimezone);
+    const firstCloseDate = utcToZonedTime(event.firstCloseDate, vietnamTimezone);
+    const finalCloseDate = utcToZonedTime(event.finalCloseDate, vietnamTimezone);
+    const formattedOpenDate = format(openDate, 'HH:mm:ss yyyy/MM/dd', { timeZone: vietnamTimezone });
+    const formattedFirstCloseDate = format(firstCloseDate, 'HH:mm:ss yyyy/MM/dd', { timeZone: vietnamTimezone });
+    const formattedFinalCloseDate = format(finalCloseDate, 'HH:mm:ss yyyy/MM/dd', { timeZone: vietnamTimezone });
+    return {
+      key: event._id,
+      name: event.name,
+      openDate: formattedOpenDate,
+      firstCloseDate: formattedFirstCloseDate,
+      finalCloseDate: formattedFinalCloseDate
+    };
+  });
+  ///setup add event
+  const currentYear = new Date().getFullYear();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [stateEvent, setStateEvent] = useState({
     name: '',
-    email: '',
-    password: '',
-    role: '',
-    faculty: ''
-})
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOk = () => {
+    openDate: '',
+    firstCloseDate: '',
+    finalCloseDate: ''
+  })
+  const handleOnchangeEventName = (e) => {
+    setStateEvent({
+      ...stateEvent,
+      [e.target.name]: e.target.value
+    })
+  }
+  const handleOnChange = (name, value) => {
+    let formattedValue = value;
+    if (value instanceof Date) {
+      const vietnamTimezone = 'Asia/Ho_Chi_Minh';
+      const zonedTime = utcToZonedTime(value, vietnamTimezone); // Chuyển múi giờ sang múi giờ của Việt Nam
+      formattedValue = format(zonedTime, 'yyyy/MM/dd HH:mm:ss', { timeZone: vietnamTimezone }); // Định dạng lại ngày tháng và múi giờ
+    }
+
+
+    setStateEvent({
+      ...stateEvent,
+      [name]: formattedValue,
+    });
   };
   const showModal = () => {
     setIsModalOpen(true);
@@ -123,9 +119,139 @@ const AdminEvent = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const mutationAdded = useMutationHooks(
+    data => EventService.createEvent(data)
+  )
+  const [form] = Form.useForm()
+  const handleOk = () => {
+    mutationAdded.mutate({ ...stateEvent }, {
+      onSettled: () => {
+        eventQuerry.refetch()
+      }
+    })
+    if (dataAdded?.status == 'OK') {
+      setStateEvent({
+        name: '',
+        openDate: '',
+        firstCloseDate: '',
+        finalCloseDate: ''
+      })
+      setIsModalOpen(false)
+    }
+    form.resetFields()
+  };
+  const { data: dataAdded, isLoading: isLoadingAdded, isSuccess: isSuccessAdded, isError: isErrorAdded } = mutationAdded
+  useEffect(() => {
+    if (isSuccessAdded && dataAdded?.status === 'OK') {
+      Message.success()
+      setIsModalOpen(false)
+    } else if (isErrorAdded && dataAdded?.status === 'ERR') {
+      Message.error()
+    }
+  }, [isSuccessAdded])
+  //delete event
+  const [rowSelected, setRowSelected] = useState('')
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const handleCancelDelete = () => {
+    setIsModalOpenDelete(false)
+  }
+  const mutationDeleted = useMutationHooks(
+    (data) => {
+      const { id, token } = data
+      const res = EventService.deleteEvent(id, token)
+      return res
+    },
+  )
+  const handleDeleteEvent = () => {
+    mutationDeleted.mutate({ id: rowSelected, token: cookies['access_token'].split(' ')[1] }, {
+      onSettled: () => {
+        eventQuerry.refetch()
+      }
+    })
+    setIsModalOpenDelete(false)
+  }
+  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
+  useEffect(() => {
+    if (isSuccessDelected && dataDeleted?.status === 'OK') {
+      Message.success()
+      handleCancelDelete()
+    } else if (isErrorDeleted) {
+      Message.error()
+    }
+  }, [isSuccessDelected])
+// ////update user
+// const [formUpdate] = Form.useForm()
+// const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+// const [stateDetailEvent, setStateDetailEvent] = useState({
+//   name: '',
+//   openDate: '',
+//   firstCloseDate: '',
+//   finalCloseDate: ''
+// })
+// useEffect(() => {
+//     formUpdate.setFieldsValue(stateDetailEvent)
+// }, [formUpdate, stateDetailEvent])
+// const handleDetailEvent = (record) => {
+//     const selectedId = record?._id;
+//     setRowSelected(rowSelected => selectedId);
+//     if (rowSelected) {
+//         setIsOpenDrawer(true)
+//         // setIsLoadingUpdate(true)
+//     }
+// }
 
+// const handleOnChangeDetails = (e) => {
+//     setStateDetailEvent({
+//         ...stateDetailEvent,
+//         [e.target.name]: e.target.value
+//     })
+// }
+// useEffect(() => {
+//     if (rowSelected) {
+//         fetchGetEventDetail(rowSelected)
+//         // setIsOpenDrawer(true)
+//     }
+// }, [rowSelected])
+// const fetchGetEventDetail = async (selectedID) => {
+//     const res = await EventService.getDetailsEvent(selectedID, cookies['access_token'].split(' ')[1])
+//     if (res?.data) {
+//         setStateDetailEvent({
+//             name: res?.data?.name,
+//             email: res?.data?.email,
+//             password: res?.data?.password,
+//             role: res?.data?.role,
+//             faculty: res?.data?.faculty
+//         })
+//     }
+// }
+// const mutationUpdate = useMutationHooks(
+//     (data) => {
+//         const { stateDetailUser } = data
+//         const token = cookies['access_token'].split(' ')[1]
+//         const res = UserService.updateUser(rowSelected, token, stateDetailUser)
+//         return res
+//     }
+// )
+
+// const updateUser = () => {
+//     mutationUpdate.mutate({ rowSelected, token: cookies['access_token'].split(' ')[1], stateDetailUser }, {
+//         onSettled: () => {
+//             userQuerry.refetch()
+//         }
+//     })
+//     setIsOpenDrawer(false)
+// }
+// const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
+// useEffect(() => {
+//     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
+//         Message.success()
+//         handleCancelDelete()
+//     } else if (isErrorUpdated) {
+//         Message.error()
+//     }
+// }, [isSuccessUpdated])
+// //
   return (
-
     <div style={{ padding: '30px' }}>
       <WrapperHeader><p>Quản lý Sự Kiện</p></WrapperHeader>
       <WrapperAction>
@@ -141,11 +267,18 @@ const AdminEvent = () => {
         </div>
       </WrapperAction>
       <div>
-        <TableComponent dataSource={dataSource} columns={columns} />
+        <TableComponent dataSource={dataTable} columns={columns} onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => {
+                            setRowSelected(record?.key)
+                        }
+                    };
+                }}/>
       </div>
       <div>
         <div>
           <Modal title="Thêm Sự Kiện" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            {dataAdded?.status == 'ERR' && <p style={{ color: 'red' }}>{dataAdded?.message}</p>}
             <Form
               name="basic"
               labelCol={{
@@ -160,51 +293,81 @@ const AdminEvent = () => {
               initialValues={{
                 remember: true,
               }}
-              onFinish={onFinish}
               autoComplete="off"
+              form={form}
             >
               <Form.Item
-                label="Title"
-                name="title"
+                label="Name of event"
+                name="name"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input title!',
+                    message: 'Please input name',
                   },
                 ]}
               >
-                <InputComponent />
+                <InputComponent value={stateEvent['name']} onChange={handleOnchangeEventName} name="name" />
               </Form.Item>
               <Form.Item
-                label="Time start"
-                name="time"
+                label="Open date"
+                name="openDate"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input Time!',
+                    message: 'Please input name',
                   },
                 ]}
               >
-                <Space direction="vertical" size={12}>
-                  <DatePicker showTime placeholder='Open Date' />
-                </Space>
+                {/* <DateTimePicker value={stateEvent['openDate']} onChange={(value) => handleOnChange('openDate', value)} disableClock={true} hourFormat="24" /> */}
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateEvent['openDate']} onChange={(value) => handleOnChange('openDate', value)}
+                />
               </Form.Item>
               <Form.Item
-                label="Times"
-                name="time"
+                label="First close date"
+                name="firstCloseDate"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input Time!',
+                    message: 'Please input name',
                   },
                 ]}
               >
-                <Space direction="vertical" size={12}>
-                  <RangePicker showTime placeholder={['First close date', 'Final close date']} />
-                </Space>
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateEvent['firstCloseDate']} onChange={(value) => handleOnChange('firstCloseDate', value)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Final close date"
+                name="finalCloseDate"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input name',
+                  },
+                ]}
+              >
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateEvent['finalCloseDate']} onChange={(value) => handleOnChange('finalCloseDate', value)}
+                />
               </Form.Item>
             </Form>
           </Modal>
+          <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
+            <div>Bạn có chắc xóa tài khoản này không? </div>
+          </ModalComponent>
         </div>
       </div>
     </div>

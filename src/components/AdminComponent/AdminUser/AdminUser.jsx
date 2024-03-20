@@ -71,6 +71,7 @@ const AdminUser = () => {
         role: '',
         faculty: ''
     })
+    
     //mỗi khi thay đổi input nhập vào, sẽ lưu luôn vào biến bằng useState
     const handleOnchangeUser = (e) => {
         setStateUser({
@@ -99,20 +100,30 @@ const AdminUser = () => {
         onClick: handleRoleClick,
     };
     /// lấy dữ riệu faculty
-    const fetchFacultyAll = async () => {
-        const res = await FacultyService.getAllFaculty()
-        return res
-    }
-    const { data: faculties } = useQuery({
-        queryKey: ['faculties'],
-        queryFn: fetchFacultyAll,
-        config: { retry: 3, retryDelay: 1000 }
-    });
-    const itemsFaculty = faculties?.data?.map(faculty => ({
-        label: faculty.name,
-        key: faculty._id,
-    }));
-    //set faculty khi click
+    const [itemsFaculty, setItemsFaculty] = useState([]);
+
+    useEffect(() => {
+        const fetchFacultyData = async () => {
+            try {
+                const res = await FacultyService.getAllFaculty();
+                // Chuyển đổi dữ liệu từ API thành định dạng mong muốn và cập nhật state
+                const formattedData = res.data.map(faculty => ({
+                    key: faculty._id, // Gán id vào key
+                    label: faculty.name, // Gán name vào name
+                }));
+                setItemsFaculty(formattedData);
+            } catch (error) {
+                console.error('Error fetching faculty data:', error);
+            }
+        };
+
+        fetchFacultyData();
+    }, []);
+    const facultyLabel = (facultyId) => {
+        const faculty = itemsFaculty.find(faculty => faculty.key === facultyId);
+        return faculty ? faculty.label : '';
+    };
+    // set faculty khi click
     const handleFacultyClick = ({ key }) => {
         setStateUser({
             ...stateUser,
@@ -128,7 +139,6 @@ const AdminUser = () => {
         const res = await UserService.getAllUser()
         return res
     }
-
     const userQuerry = useQuery({
         queryKey: ['users'],
         queryFn: fetchUserAll,
@@ -136,15 +146,15 @@ const AdminUser = () => {
     });
     const { data: users } = userQuerry
 
-    const dataTable = users?.data?.filter(user => user.role !== 'Admin') // Loại bỏ người dùng có vai trò là 'Admin'
-        .map((user) => ({
-            key: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            faculty: user.faculty
-        }));
-    ///
+    const dataTable = users?.data?.filter(user => user.role !== 'Admin')
+    .map((user) => ({
+        key: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        faculty: facultyLabel(user.faculty)
+    }));
+    ///add user
     const mutationAdded = useMutationHooks(
         data => UserService.createUser(data)
     )
@@ -388,7 +398,7 @@ const AdminUser = () => {
                             <Button>
                                 <Space>
                                     {stateUser['faculty'] ? (
-                                        <span>{stateUser['faculty']} <DownOutlined /></span>
+                                        <span>{facultyLabel(stateUser['faculty'])} <DownOutlined /></span>
                                     ) : (
                                         <span>Select<DownOutlined /></span>
                                     )}
@@ -493,7 +503,7 @@ const AdminUser = () => {
                             <Button>
                                 <Space>
                                     {stateDetailUser['faculty'] ? (
-                                        <span>{stateDetailUser['faculty']} <DownOutlined /></span>
+                                        <span>{facultyLabel(stateDetailUser['faculty'])} <DownOutlined /></span>
                                     ) : (
                                         <span>Select<DownOutlined /></span>
                                     )}

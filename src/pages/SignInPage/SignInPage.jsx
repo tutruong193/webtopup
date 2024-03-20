@@ -35,13 +35,11 @@ const SignInPage = () => {
             email,
             password
         })
-        console.log('data', data)
     }
     useEffect(() => {
         if (isSuccess && data?.status == 'OK') {
             setCookieAccessToken('access_token', `Bearer ${data?.access_token}`, { path: '/', encode: String })
             const user = jwtTranslate(cookiesAccessToken);
-            console.log('user', user)
             switch (user?.role) {
                 case 'Admin':
                     navigate('/system/admin');
