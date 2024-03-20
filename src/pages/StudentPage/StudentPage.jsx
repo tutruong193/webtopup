@@ -6,7 +6,7 @@ import * as UserService from '../../services/UserService'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
 import StudentPostBlog from '../../components/StudentComponent/StudentPostBlog/StudentPostBlog';
-import StudentListBlog from '../../components/StudentComponent/StudentPostBlog/StudentPostBlog';
+import StudentAccount from '../../components/StudentComponent/StudentAccount/StudentAccount';
 const StudentPage = () => {
     const items = [
         getItem('Student', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
@@ -16,7 +16,7 @@ const StudentPage = () => {
         switch (key) {
             case 'user':
                 return (
-                    <div></div>
+                    <StudentAccount />
                 )
             case 'postBlog':
                 return (

@@ -19,7 +19,6 @@ const SignInPage = () => {
         data => UserService.loginUser(data),
     )
     const { data, isSuccess } = mutation
-    console.log('mutation', mutation)
     const navigate = useNavigate()
 
     const handleNavigateHomePage = () => {
@@ -36,6 +35,7 @@ const SignInPage = () => {
             email,
             password
         })
+        console.log('data', data)
     }
     useEffect(() => {
         if (isSuccess && data?.status == 'OK') {
