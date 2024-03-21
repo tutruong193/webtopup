@@ -10,7 +10,7 @@ import CoordinatorEvent from '../../components/CoordinatorComponent/CoordinatorE
 
 const CoordinatorPage = () => {
   const items = [
-    getItem('Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
+    getItem('Marketing Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
     getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
