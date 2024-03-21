@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import * as Message from '../../../components/Message/Message'
 import ModalComponent from '../../ModalComponent/ModalComponent';
 import { useCookies } from 'react-cookie';
+import DrawerComponent from '../../DrawerComponent/DrawerComponent'
 
 const AdminEvent = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
@@ -23,7 +24,7 @@ const AdminEvent = () => {
     return (
       <div>
         <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => setIsModalOpenDelete(true)} />
-        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }}/>
+        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} onClick={() => handleDetailEvent(record)} />
       </div>
     )
   }
@@ -179,78 +180,86 @@ const AdminEvent = () => {
       Message.error()
     }
   }, [isSuccessDelected])
-// ////update user
-// const [formUpdate] = Form.useForm()
-// const [isOpenDrawer, setIsOpenDrawer] = useState(false)
-// const [stateDetailEvent, setStateDetailEvent] = useState({
-//   name: '',
-//   openDate: '',
-//   firstCloseDate: '',
-//   finalCloseDate: ''
-// })
-// useEffect(() => {
-//     formUpdate.setFieldsValue(stateDetailEvent)
-// }, [formUpdate, stateDetailEvent])
-// const handleDetailEvent = (record) => {
-//     const selectedId = record?._id;
-//     setRowSelected(rowSelected => selectedId);
-//     if (rowSelected) {
-//         setIsOpenDrawer(true)
-//         // setIsLoadingUpdate(true)
-//     }
-// }
+  // ////update user
+  const [formUpdate] = Form.useForm()
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
+  const [stateDetailEvent, setStateDetailEvent] = useState({
+    name: '',
+    openDate: '',
+    firstCloseDate: '',
+    finalCloseDate: ''
+  })
+  useEffect(() => {
+    formUpdate.setFieldsValue(stateDetailEvent)
+  }, [formUpdate, stateDetailEvent])
+  const handleDetailEvent = (record) => {
+    const selectedId = record?.key;
+    setRowSelected(selectedId);
+    if (rowSelected) {
+      setIsOpenDrawer(true)
+      // setIsLoadingUpdate(true)
+    }
+    fetchGetEventDetail(selectedId);
+  }
+  const handleOnchangeEventDetailName = (e) => {
+    setStateDetailEvent({
+      ...stateDetailEvent,
+      [e.target.name]: e.target.value
+    })
+  }
+  const handleOnChangeDetail = (name, value) => {
+    let formattedValue = value;
+    if (value instanceof Date) {
+      const vietnamTimezone = 'Asia/Ho_Chi_Minh';
+      const zonedTime = utcToZonedTime(value, vietnamTimezone); // Chuyển múi giờ sang múi giờ của Việt Nam
+      formattedValue = format(zonedTime, 'yyyy/MM/dd HH:mm:ss', { timeZone: vietnamTimezone }); // Định dạng lại ngày tháng và múi giờ
+    }
 
-// const handleOnChangeDetails = (e) => {
-//     setStateDetailEvent({
-//         ...stateDetailEvent,
-//         [e.target.name]: e.target.value
-//     })
-// }
-// useEffect(() => {
-//     if (rowSelected) {
-//         fetchGetEventDetail(rowSelected)
-//         // setIsOpenDrawer(true)
-//     }
-// }, [rowSelected])
-// const fetchGetEventDetail = async (selectedID) => {
-//     const res = await EventService.getDetailsEvent(selectedID, cookies['access_token'].split(' ')[1])
-//     if (res?.data) {
-//         setStateDetailEvent({
-//             name: res?.data?.name,
-//             email: res?.data?.email,
-//             password: res?.data?.password,
-//             role: res?.data?.role,
-//             faculty: res?.data?.faculty
-//         })
-//     }
-// }
-// const mutationUpdate = useMutationHooks(
-//     (data) => {
-//         const { stateDetailUser } = data
-//         const token = cookies['access_token'].split(' ')[1]
-//         const res = UserService.updateUser(rowSelected, token, stateDetailUser)
-//         return res
-//     }
-// )
 
-// const updateUser = () => {
-//     mutationUpdate.mutate({ rowSelected, token: cookies['access_token'].split(' ')[1], stateDetailUser }, {
-//         onSettled: () => {
-//             userQuerry.refetch()
-//         }
-//     })
-//     setIsOpenDrawer(false)
-// }
-// const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
-// useEffect(() => {
-//     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-//         Message.success()
-//         handleCancelDelete()
-//     } else if (isErrorUpdated) {
-//         Message.error()
-//     }
-// }, [isSuccessUpdated])
-// //
+    setStateDetailEvent({
+      ...stateDetailEvent,
+      [name]: formattedValue,
+    });
+  };
+  const fetchGetEventDetail = async (selectedID) => {
+    const res = await EventService.getDetailsEvent(selectedID, cookies['access_token'].split(' ')[1])
+    if (res?.data) {
+      setStateDetailEvent({
+        name: res?.data?.name,
+        openDate: res?.data?.openDate,
+        firstCloseDate: res?.data?.firstCloseDate,
+        finalCloseDate: res?.data?.finalCloseDate
+      })
+    }
+    console.log("resdata", stateDetailEvent)
+  }
+  const mutationUpdate = useMutationHooks(
+    (data) => {
+      const { stateDetailEvent } = data
+      const token = cookies['access_token'].split(' ')[1]
+      const res = EventService.updateEvent(rowSelected, token, stateDetailEvent)
+      return res
+    }
+  )
+
+  const updateEvent = () => {
+    mutationUpdate.mutate({ rowSelected, token: cookies['access_token'].split(' ')[1], stateDetailEvent }, {
+      onSettled: () => {
+        eventQuerry.refetch()
+      }
+    })
+    setIsOpenDrawer(false)
+  }
+  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
+  useEffect(() => {
+    if (isSuccessUpdated && dataUpdated?.status === 'OK') {
+      Message.success()
+      handleCancelDelete()
+    } else if (isErrorUpdated) {
+      Message.error()
+    }
+  }, [isSuccessUpdated])
+  // //
   return (
     <div style={{ padding: '30px' }}>
       <WrapperHeader><p>Quản lý Sự Kiện</p></WrapperHeader>
@@ -268,12 +277,12 @@ const AdminEvent = () => {
       </WrapperAction>
       <div>
         <TableComponent dataSource={dataTable} columns={columns} onRow={(record, rowIndex) => {
-                    return {
-                        onClick: event => {
-                            setRowSelected(record?.key)
-                        }
-                    };
-                }}/>
+          return {
+            onClick: event => {
+              setRowSelected(record?.key)
+            }
+          };
+        }} />
       </div>
       <div>
         <div>
@@ -293,6 +302,7 @@ const AdminEvent = () => {
               initialValues={{
                 remember: true,
               }}
+
               autoComplete="off"
               form={form}
             >
@@ -318,7 +328,6 @@ const AdminEvent = () => {
                   },
                 ]}
               >
-                {/* <DateTimePicker value={stateEvent['openDate']} onChange={(value) => handleOnChange('openDate', value)} disableClock={true} hourFormat="24" /> */}
                 <DateTimePicker
                   clearIcon={null}
                   format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
@@ -368,6 +377,98 @@ const AdminEvent = () => {
           <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
             <div>Bạn có chắc xóa tài khoản này không? </div>
           </ModalComponent>
+          <DrawerComponent title='Chi tiết event' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
+            <Form
+              name="basic"
+              labelCol={{
+                span: 8,
+              }}
+              wrapperCol={{
+                span: 16,
+              }}
+              style={{
+                maxWidth: 600,
+              }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={updateEvent}
+              autoComplete="off"
+              form={formUpdate}
+            >
+              <Form.Item
+                label="Name of event"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input name',
+                  },
+                ]}
+              >
+                <InputComponent value={stateDetailEvent['name']} onChange={handleOnchangeEventDetailName} name="name" />
+              </Form.Item>
+              <Form.Item
+                label="Open date"
+                name="openDate"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input name',
+                  },
+                ]}
+              >
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateDetailEvent['openDate']} onChange={(value) => handleOnChangeDetail('openDate', value)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="First close date"
+                name="firstCloseDate"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input name',
+                  },
+                ]}
+              >
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateDetailEvent['firstCloseDate']} onChange={(value) => handleOnChangeDetail('firstCloseDate', value)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Final close date"
+                name="finalCloseDate"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input name',
+                  },
+                ]}
+              >
+                <DateTimePicker
+                  clearIcon={null}
+                  format="yyyy-MM-dd HH:mm" // HH is used for 24-hour format
+                  disableClock
+                  locale="en-US"
+                  value={stateDetailEvent['finalCloseDate']} onChange={(value) => handleOnChangeDetail('finalCloseDate', value)}
+                />
+              </Form.Item>
+              <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
+                <Button type="primary" htmlType="submit">
+                  Update
+                </Button>
+              </Form.Item>
+            </Form>
+          </DrawerComponent>
         </div>
       </div>
     </div>
