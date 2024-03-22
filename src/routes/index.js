@@ -6,6 +6,7 @@ import StudentPage from "../pages/StudentPage/StudentPage";
 import PageDetail from "../pages/PageDetail/PageDetail";
 import FacultyArticlePage from "../pages/FacultyArticlePage/FacultyArticlePage";
 import CoordinatorPage from "../pages/CoordinatorPage/CoordinatorPage";
+import ManagerPage from "../pages/ManagerPage/ManagerPage";
 export const routes = [
     {
         path: '/',
@@ -44,6 +45,12 @@ export const routes = [
     {
         path: '/system/coordinator',
         page: CoordinatorPage,
+        isShowHeader: false,
+        requiresAuth: false
+    },
+    {
+        path: '/system/manager',
+        page: ManagerPage,
         isShowHeader: false,
         requiresAuth: false
     },
