@@ -17,7 +17,7 @@ const PageDetail = () => {
     <div style={{ padding: '48px', backgroundColor: '#e6e3e3' }}>
       <div style={{
         marginBottom: '20px',
-      }}>Home / Faculty / IT / name baif baos </div>
+      }}>Home / Faculty / IT / Name News </div>
       <WrapperCardStyle >
         <div style={{
           width: '100%',

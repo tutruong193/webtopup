@@ -12,7 +12,7 @@ const HeaderComponent = () => {
         {
             key: '1',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                <a target="_blank" rel="noopener noreferrer" href="/faculty/detail">
                     IT
                 </a>
             ),
