@@ -7,17 +7,23 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
 import ManagerAccount from '../../components/ManagerComponent/ManagerAccount/ManagerAccount';
 import ManagerEvent from '../../components/ManagerComponent/ManagerEvent/ManagerEvent';
+import ManagerFalcuty from '../../components/ManagerComponent/ManagerFalcuty/ManagerFalcuty';
 
 const ManagerPage = () => {
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
+    getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />),  getItem('Create Falcuty', 'falcuty', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
       case 'user':
         return (
           <ManagerAccount />
+          
+        )
+        case 'falcuty':
+        return (
+          <ManagerFalcuty />
           
         )
       case 'listBlog':
