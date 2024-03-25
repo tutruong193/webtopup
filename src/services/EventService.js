@@ -21,15 +21,12 @@ export const getAllEventValid = async () => {
     const res = await axios.get(`http://localhost:3001/api/event/getvalidevent`)
     return res.data
 }
-export const getDetailsEvent = async (id, access_token) => {
-    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/event/detail/${id}`, {
-        headers: {
-            'token': `Bearer ${access_token}`,
-        }
-    },)
+export const getDetailsEvent = async (id) => {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/event/detail/${id}`)
+    console.log(res.data)
     return res.data
 }
-export const updateEvent= async (id, access_token, data) => {
+export const updateEvent = async (id, access_token, data) => {
     const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/event/update/${id}`, data, {
         headers: {
             'token': `Bearer ${access_token}`,
