@@ -18,8 +18,16 @@ export const getSubmitedContribution = async (studentId, access_token) => {
   return (res.data)
 }
 export const deleteContribution = async (id, access_token) => {
-  console.log(`deleting ${id}`)
   const res = await axios.delete(`${process.env.REACT_APP_API_URL}/contribution/delete/${id}`)
+  return (res.data)
+}
+export const getContributionsByEventAndFaculty = async (eventId, facultyId) => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/list/eid=${eventId}&fid=${facultyId}`)
+  return (res.data)
+}
+export const updateContribution = async (id, data) => {
+  console.log(id, data)
+  const res = await axios.put(`${process.env.REACT_APP_API_URL}/contribution/update/${id}`, data)
   return (res.data)
 }
 

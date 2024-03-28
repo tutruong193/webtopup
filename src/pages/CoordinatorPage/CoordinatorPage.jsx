@@ -7,8 +7,10 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
 import CoordinatorAccount from '../../components/CoordinatorComponent/CoordinatorAccount/CoordinatorAccount';
 import CoordinatorEvent from '../../components/CoordinatorComponent/CoordinatorEvent/CoordinatorEvent';
+import CoordinatorContribution from '../../components/CoordinatorComponent/CoordinatorContribution/CoordinatorContribution';
 
 const CoordinatorPage = () => {
+  const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
   const items = [
     getItem('Marketing Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
     getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
@@ -18,14 +20,17 @@ const CoordinatorPage = () => {
       case 'user':
         return (
           <CoordinatorAccount />
-          
+
         )
       case 'listBlog':
         return (
           <CoordinatorEvent />
-          
-        )
 
+        )
+      case 'contribution': // Hiển thị CoordinatorContribution nếu keySelected là 'contribution'
+        return (
+          <CoordinatorContribution />
+        )
       case 'logout':
         return (
           <div onClick={handleLogout}>logout</div>
@@ -39,12 +44,13 @@ const CoordinatorPage = () => {
   const handleOnCLick = ({ key }) => {
     setKeySelected(key)
   }
-  const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
   const navigate = useNavigate()
   const handleLogout = async () => {
-    await UserService.logoutUser()
-    removeCookie('access_token')
-    navigate('/')
+    removeCookie('access_token');
+    // Gọi API đăng xuất từ UserService
+    await UserService.logoutUser();
+    // Chuyển hướng người dùng đến trang chủ
+    navigate('/');
   }
   return (
     <>

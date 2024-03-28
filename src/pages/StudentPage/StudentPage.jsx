@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import StudentPostBlog from '../../components/StudentComponent/StudentPostBlog/StudentPostBlog';
 import StudentAccount from '../../components/StudentComponent/StudentAccount/StudentAccount';
 const StudentPage = () => {
+    const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
     const items = [
         getItem('Student', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
         getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Đăng bài', 'postBlog', <FormOutlined />)], 'group'),
@@ -37,13 +38,15 @@ const StudentPage = () => {
     const handleOnCLick = ({ key }) => {
         setKeySelected(key)
     }
-    const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
     const navigate = useNavigate()
     const handleLogout = async () => {
-        await UserService.logoutUser()
-        removeCookie('access_token')
-        navigate('/')
-    }
+        // Xóa access token khỏi cookie
+        removeCookie('access_token');
+        // Gọi API đăng xuất từ UserService
+        await UserService.logoutUser();
+        // Chuyển hướng người dùng đến trang chủ
+        navigate('/');
+    };
     return (
         <>
             <div style={{ display: 'flex' }}>

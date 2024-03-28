@@ -47,6 +47,12 @@ const SignInPage = () => {
                 case 'Student':
                     navigate('/system/student');
                     break;
+                case 'MarketingCoordinator':
+                    navigate('/system/coordinator');
+                    break;
+                case 'MarketingManager':
+                    navigate('/system/manager');
+                    break;
                 default:
                     navigate('/signin');
             }

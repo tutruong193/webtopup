@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Input, Space, Dropdown, message, Upload, Divider, Descriptions } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, AudioOutlined, UploadOutlined, PlusOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, AudioOutlined, UploadOutlined } from '@ant-design/icons'
 import { WrapperHeader, WrapperCard } from '../StudentPostBlog/style';
 import TableComponent from '../../TableComponent/TableComponent';
 import * as EventService from '../../../services/EventService'
@@ -18,6 +18,17 @@ import ModalComponent from '../../ModalComponent/ModalComponent';
 const StudentPostBlog = () => {
   ////setup
   const [cookiesAccessToken, setCookieAccessToken] = useCookies('')
+  const [updateForm, setUpdateForm] = useState({
+    studentId: "",
+    title: "",
+    wordFile: "",
+    imageFiles: "",
+    submission_date: "",
+    lastupdated_date: "",
+    eventId: "",
+    facultyId: "",
+    status: ""
+  })
   //lấy danh sách bài đã nộp
   const fetchSubmitedContribution = async (studentId) => {
     const res = await ContributionService.getSubmitedContribution(studentId);
@@ -189,6 +200,7 @@ const StudentPostBlog = () => {
       const result = await ContributionService.getDetailContribution(eventId, cookiesAccessToken);
       if (result && result.data) {
         setDetailContribution(result.data);
+        setUpdateForm(result.data)
       } else {
         setDetailContribution([]); // Nếu không có dữ liệu, setDetailContribution thành mảng rỗng
       }
@@ -196,6 +208,7 @@ const StudentPostBlog = () => {
       console.error('Error fetching contribution data:', error);
     }
   };
+  console.log('updateform', updateForm)
   console.log('detail', detailContribution);
   ///delete contribution
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
@@ -241,13 +254,13 @@ const StudentPostBlog = () => {
     setIsModalUpdateOpen(true);
   };
   const [titleUpdate, setTitleUpdate] = useState(detailContribution?.title);
-  console.log('title update', titleUpdate)
-  const handleOnchangeUpdate = (e) => {
-    setTitle(e.target.value)
-  }
-  const handleOkUpdate = () => {
-    console.log('title', titleUpdate)
-  }
+  const handleOkUpdate = async () => {
+    // Thực hiện logic cập nhật ở đây
+    console.log('Updated title:', titleUpdate);
+    // Đóng modal sau khi cập nhật thành công
+    setIsModalUpdateOpen(false);
+  };
+
   ///
   const { Search } = Input;
   const suffix = (
@@ -450,7 +463,7 @@ const StudentPostBlog = () => {
                 },
               ]}
             >
-              <div onChange={handleOnchange}>{detailContribution ? eventLabel(detailContribution?.eventId) : ''}</div>
+              <div onChange={handleOnchange}>{updateForm ? eventLabel(updateForm?.eventId) : ''}</div>
             </Form.Item>
             <Form.Item
               label="Title"
@@ -462,8 +475,7 @@ const StudentPostBlog = () => {
                 },
               ]}
             >
-              <InputComponent name="title"  onChange={handleOnchangeUpdate} />
-              <div style={{display :'none'}}>{detailContribution?.title}</div>
+              <div>{updateForm['title']}</div>
             </Form.Item>
             <Form.Item
               label="Upload File Word"
@@ -480,6 +492,19 @@ const StudentPostBlog = () => {
               </Upload>
             </Form.Item>
             <Form.Item
+              label="File Word"
+              name="fileWord"
+            >
+              {updateForm.wordFile ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {/* Thay FileWordIcon bằng biểu tượng file word của bạn */}
+                  <span>{updateForm.wordFile}</span>
+                </div>
+              ) : (
+                <span>No file uploaded</span>
+              )}
+            </Form.Item>
+            <Form.Item
               label="Upload File Image"
               name="uploadFileImg"
             >
@@ -491,8 +516,8 @@ const StudentPostBlog = () => {
                   beforeUpload={beforeUpload}
                   showRemoveIcon={true}
                   showPreviewIcon={false} // Ẩn nút xem trước
-                  defaultFileList={detailContribution?.imageFiles ?
-                    detailContribution.imageFiles.map((file, index) => ({
+                  defaultFileList={updateForm?.imageFiles ?
+                    updateForm.imageFiles.map((file, index) => ({
                       uid: index,
                       name: file,
                       status: 'done',

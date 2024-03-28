@@ -10,6 +10,7 @@ import ManagerEvent from '../../components/ManagerComponent/ManagerEvent/Manager
 import ManagerFalcuty from '../../components/ManagerComponent/ManagerFalcuty/ManagerFalcuty';
 
 const ManagerPage = () => {
+  
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
     getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />),  getItem('Create Falcuty', 'falcuty', <FormOutlined />)], 'group'),
