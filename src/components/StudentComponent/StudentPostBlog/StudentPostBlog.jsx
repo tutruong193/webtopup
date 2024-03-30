@@ -174,6 +174,7 @@ const StudentPostBlog = () => {
     formData.append('facultyId', user?.faculty);
     formData.append('status', 'Pending');
     formData.append('wordFile', selectedFiles);
+    console.log('selectedfiles', selectedFiles)
     const imageUrls = fileListImage.map(file => file);
     imageUrls.forEach((url, index) => {
       formData.append(`image_${index}`, url);
@@ -531,7 +532,6 @@ const StudentPostBlog = () => {
                 </Upload>
               </>
             </Form.Item>
-
           </Form>
         </Modal>
       </div>
