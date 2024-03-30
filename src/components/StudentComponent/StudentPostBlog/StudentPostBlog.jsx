@@ -99,7 +99,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: 'file',
     multiple: true,
-    action: 'http://localhost:3001/upload-files',
+    action: 'https://webtopup-be.onrender.com/upload-files',
     beforeUpload: (file) => {
       const isDoc = file.type === 'application/msword' || file.type === 'application/pdf' ||// .doc 
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx
@@ -202,13 +202,14 @@ const StudentPostBlog = () => {
       facultyId: user?.faculty,
       status: "Pending"
     };
-    setIsOpenDrawer(false);
-    setIsModalOpen(false);
+
     mutationAdded.mutate(data, {
       onSettled: () => {
         submitedQuerry.refetch()
       }
     });
+    setIsOpenDrawer(false);
+    setIsModalOpen(false);
   };
   const { data: dataAdded, isLoading: isLoadingAdded, isSuccess: isSuccessAdded, isError: isErrorAdded } = mutationAdded
   useEffect(() => {
