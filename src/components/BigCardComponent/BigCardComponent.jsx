@@ -1,6 +1,6 @@
-import React from 'react'
-import { Card } from 'antd';
-import { WrapperCardStyle,WrapperBigTextHeaderCartStyle,WrapperHeaderCart,
+import React, { useEffect, useState } from 'react'
+import {
+    WrapperCardStyle, WrapperBigTextHeaderCartStyle, WrapperHeaderCart,
     WrapperSmallTextHeaderCartStyle,
     WrapperLinkAuthor,
     WrapperDatePulisher,
@@ -11,8 +11,47 @@ import avatar from '../../assets/images/avatar.jpg'
 import pic01 from '../../assets/images/pic01.jpg'
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { HeartOutlined, CommentOutlined } from '@ant-design/icons';
-import FacultyArticlePage from '../../pages/FacultyArticlePage/FacultyArticlePage';
-const BigCardComponent = () => {
+import * as UserService from '../../services/UserService'
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, id, ...props }) => {
+    const navigate = useNavigate()
+    ////lấy tên học sinh
+    const [itemsStudent, setItemsStudent] = useState([]);
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            try {
+                const res = await UserService.getAllUser();
+                const filteredStudents = res.data.filter(user => user.role === 'Student');
+                const formattedData = filteredStudents.map(student => ({
+                    key: student._id,
+                    label: student.name,
+                }));
+                setItemsStudent(formattedData);
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+            }
+        };
+
+        fetchStudentData();
+    }, []);
+    const studentLabel = (studentId) => {
+        const student = itemsStudent.find(student => student.key === studentId);
+        return student ? student.label : '';
+    };
+    ///format ngày tháng
+    const formatDate = (dateString) => {
+        // Chuyển đổi chuỗi ngày thành đối tượng Date
+        const date = new Date(dateString);
+        // Định dạng ngày
+        const formattedDate = format(date, 'MMMM dd, yyyy');
+        return formattedDate;
+    };
+    //ấn đọc
+    const handleRead = (id) => {
+
+        navigate(`/detail/${id}`)
+    }
     return (
         <WrapperCardStyle >
             <div style={{
@@ -23,7 +62,7 @@ const BigCardComponent = () => {
             }}>
                 <WrapperHeaderCart>
                     <WrapperBigTextHeaderCartStyle>
-                        MAGNA SED ADIPISCING
+                        {title}
                     </WrapperBigTextHeaderCartStyle>
                     <WrapperSmallTextHeaderCartStyle>
                         LOREM IPSUM DOLOR AMET NULLAM CONSEQUAT ETIAM FEUGIAT
@@ -39,17 +78,17 @@ const BigCardComponent = () => {
                     backgroundColor: 'white'
                 }}>
                     <WrapperDatePulisher>
-                        NOVEMBER 1, 2015
+                        {formatDate(date)}
                     </WrapperDatePulisher>
                     <div >
-                        <WrapperLinkAuthor href="#">Tac gia</WrapperLinkAuthor>
+                        <WrapperLinkAuthor href="#">{studentLabel(author)}</WrapperLinkAuthor>
                         <img
                             style={{
                                 width: '40px',
                                 height: '40px',
                                 borderRadius: '100%',
                             }}
-                            src={avatar}></img>
+                            src={Avatar}></img>
                     </div>
                 </div>
 
@@ -57,10 +96,9 @@ const BigCardComponent = () => {
             <WrapperCard>
                 <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '50px' }}>
                     <img style={{
-                        width: '90%',
-                        height: '60%',
+                        maxHeight: '60%',
                     }}
-                        alt="example" src={pic01} />
+                        alt="example" src={img} />
                 </div>
                 <div style={{ padding: '0px 40px', paddingBottom: '50px', justifyContent: 'space-between' }}>
                     <div>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</div>
@@ -68,7 +106,7 @@ const BigCardComponent = () => {
                 <WrapperActionCard>
                     <div style={{ width: '50%' }}>
                         <ButtonComponent
-                            href='/faculty/detail'
+                            onClick={() => handleRead(id)}
                             textButton='Continue Reading'
                             styleButton={{
                                 color: 'black',

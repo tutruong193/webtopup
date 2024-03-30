@@ -16,7 +16,7 @@ export const routes = [
         requiresAuth: false
     },
     {
-        path: '/faculty/detail',
+        path: '/detail/:id',
         page: PageDetail,
         isShowHeader: true
     },

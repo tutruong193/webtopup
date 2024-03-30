@@ -14,6 +14,7 @@ import ButtonComponent from '../../ButtonComponent/ButtonComponent'
 import { useMutationHooks } from '../../../hooks/useMutationHook'
 import * as Message from '../../../components/Message/Message'
 import { jwtTranslate } from '../../../utilis'
+import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer'
 const CoordinatorContribution = ({ eventId, facultyId }) => {
     ///setup trạng thái
     const items = [
@@ -38,7 +39,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         const formattedDate = `${formatTime(date.getHours())}:${formatTime(date.getMinutes())} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
         return formattedDate;
     };
-    const [cookiesAccessToken, setCookieAccessToken] = useCookies('')
+    const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
     const marketingaccount = jwtTranslate(cookiesAccessToken);
     //setup faculty label
     const [itemsFaculty, setItemsFaculty] = useState([]);
@@ -113,8 +114,8 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         score: "",
         comment: "",
     });
-    const handleOpenDrawer = async (contributionid) => {
-        const res = await ContributionService.getDetailContribution(eventId, cookiesAccessToken)
+    const handleOpenDrawer = async () => {
+        const res = await ContributionService.getDetailContributionByEvent(eventId, cookiesAccessToken)
         setContributionDetail(res.data)
         setIsOpenDrawer(true);
     }
@@ -157,6 +158,31 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             Message.error()
         }
     }, [isSuccessUpdated])
+    ////xem file
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [wordContent, setWordContent] = useState('');
+    // const [isLoading, setIsLoading] = useState(false);
+    // const docs = [
+    //     {
+    //         uri: require("E:/study/TOPUP/Web thay tho/project/webtopup-be/src/files/1711362872190Ánh.docx")
+    //     }, // Remote file
+    // ];
+    // const handleViewWord = async (wordFilePath) => {
+    //     try {
+    //         setIsLoading(true);
+    //         const response = await axios.get(`http://localhost:3001/getfiles/${wordFilePath}`);
+    //         // Lưu nội dung của file word vào state
+    //         console.log(response.data)
+    //         setWordContent(response.data.link);
+    //         // Mở modal
+    //         setIsModalOpen(true);
+    //     } catch (error) {
+    //         console.error('Error fetching word content:', error);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // }
+    // console.log('link', wordContent)
     return (
         <div>
             <div>
@@ -189,7 +215,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                     />
                                 )
                             }
-                            onClick={() => handleOpenDrawer(item._id)}
+                            onClick={() => handleOpenDrawer()}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={item.avatar} />}
@@ -233,7 +259,13 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                         <Descriptions.Item label="Status">{contributionDetail?.status}</Descriptions.Item>
                         <Descriptions.Item label="Student">{studentLabel(contributionDetail?.studentId)}</Descriptions.Item>
                         <Descriptions.Item label="Last Updated">{formatDateTime(contributionDetail?.lastupdated_date)}</Descriptions.Item>
-                        <Descriptions.Item label="File Word">{contributionDetail?.wordFile}<Button style={{ marginLeft: '20px' }}>View</Button></Descriptions.Item>
+                        <Descriptions.Item label="File Word">{contributionDetail?.wordFile}
+                            <Button
+                                style={{ marginLeft: '20px' }}
+                            // onClick={() => handleViewWord(contributionDetail?.wordFile)}
+                            >
+                                View</Button>
+                        </Descriptions.Item>
                         <Descriptions.Item label="File Image">
                             {contributionDetail?.imageFiles?.length > 0 ? (
                                 <>
@@ -285,8 +317,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                 maxLength={100}
                                 name='comment'
                                 onChange={handleOnChangeComment}
-                                placeholder="disable resize"
-                                placeholder={contributionDetail?.comment && contributionDetail.comment.includes('^') ? contributionDetail.comment.split('^')[0] : ''}
+                                placeholder={contributionDetail?.comment && contributionDetail.comment.includes('^') ? contributionDetail.comment.split('^')[0] : 'disable resize'}
                                 style={{ height: 120, resize: 'none' }}
                             />
                         </Descriptions.Item>
@@ -294,6 +325,9 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                 </div>
                 <Button type="dashed" onClick={handleMarking}>Submit</Button>
             </DrawerComponent>
+            {/* <ModalComponent title="Xóa người dùng" open={isModalOpen} onCancel={() => setIsModalOpen(false)}>
+                <DocViewer documents={docs} pluginRenderers={DocViewerRenderers} />
+            </ModalComponent> */}
         </div>
     )
 }

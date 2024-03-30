@@ -39,8 +39,8 @@ const AdminPage = () => {
     }
     const handleLogout = async () => {
         await UserService.logoutUser()
-        removeCookie('access_token')
         navigate('/')
+        window.location.reload();
     }
     return (
         <>

@@ -99,7 +99,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: 'file',
     multiple: true,
-    action: 'http://localhost:3001/upload-files',
+    action: 'https://webtopup-be.onrender.com/upload-files',
     beforeUpload: (file) => {
       const isDoc = file.type === 'application/msword' || file.type === 'application/pdf' ||// .doc 
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx
@@ -197,7 +197,7 @@ const StudentPostBlog = () => {
   const [detailContribution, setDetailContribution] = useState([]);
   const fetchData = async (eventId) => {
     try {
-      const result = await ContributionService.getDetailContribution(eventId, cookiesAccessToken);
+      const result = await ContributionService.getDetailContributionByEvent(eventId, cookiesAccessToken);
       if (result && result.data) {
         setDetailContribution(result.data);
         setUpdateForm(result.data)

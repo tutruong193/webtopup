@@ -40,12 +40,9 @@ const StudentPage = () => {
     }
     const navigate = useNavigate()
     const handleLogout = async () => {
-        // Xóa access token khỏi cookie
-        removeCookie('access_token');
-        // Gọi API đăng xuất từ UserService
-        await UserService.logoutUser();
-        // Chuyển hướng người dùng đến trang chủ
-        navigate('/');
+        await UserService.logoutUser()
+        navigate('/')
+        window.location.reload();
     };
     return (
         <>

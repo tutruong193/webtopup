@@ -7,6 +7,7 @@ import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 const HeaderComponent = () => {
+    
     const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
     const items = [
         {
@@ -30,6 +31,7 @@ const HeaderComponent = () => {
     const handleSignIn = () => {
         navigate('/signin');
         removeCookie('access_token');
+        window.location.reload();
     };
     return (
         <div>

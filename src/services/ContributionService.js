@@ -9,8 +9,8 @@ export const createContribution = async (data) => {
   })
   return (res.data)
 }
-export const getDetailContribution = async (eventId, access_token) => {
-  const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/detail/${eventId}`)
+export const getDetailContribution = async (id) => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/detail/${id}`)
   return (res.data)
 }
 export const getSubmitedContribution = async (studentId, access_token) => {
@@ -26,8 +26,14 @@ export const getContributionsByEventAndFaculty = async (eventId, facultyId) => {
   return (res.data)
 }
 export const updateContribution = async (id, data) => {
-  console.log(id, data)
   const res = await axios.put(`${process.env.REACT_APP_API_URL}/contribution/update/${id}`, data)
   return (res.data)
 }
-
+export const getAllContributions = async () => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/getall`)
+  return (res.data)
+}
+export const getDetailContributionByEvent = async (eventid, access_token) => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/detailbyevent/${eventid}`)
+  return (res.data)
+}

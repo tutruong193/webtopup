@@ -46,11 +46,9 @@ const CoordinatorPage = () => {
   }
   const navigate = useNavigate()
   const handleLogout = async () => {
-    removeCookie('access_token');
-    // Gọi API đăng xuất từ UserService
-    await UserService.logoutUser();
-    // Chuyển hướng người dùng đến trang chủ
-    navigate('/');
+    await UserService.logoutUser()
+    navigate('/')
+    window.location.reload();
   }
   return (
     <>
