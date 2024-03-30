@@ -1,14 +1,14 @@
 import axios from "axios"
 export const createContribution = async (data) => {
-  const formData = data.formData;
-  console.log('data', formData);
-  const res = await axios.post(`${process.env.REACT_APP_API_URL}/contribution/create`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  return (res.data)
-}
+  try {
+    console.log('data', data)
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/contribution/create`, data);
+    return res.data;
+  } catch (error) {
+    console.error('Error creating contribution:', error);
+    throw error;
+  }
+};
 export const getDetailContribution = async (id) => {
   const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/detail/${id}`)
   return (res.data)

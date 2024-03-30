@@ -99,7 +99,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: 'file',
     multiple: true,
-    action: 'https://webtopup-be.onrender.com/upload-files',
+    action: 'http://localhost:3001/upload-files',
     beforeUpload: (file) => {
       const isDoc = file.type === 'application/msword' || file.type === 'application/pdf' ||// .doc 
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx
@@ -160,30 +160,55 @@ const StudentPostBlog = () => {
     setTitle(e.target.value)
   }
   ///add button
+  const [add, setadd] = useState({
+    studentId: "",
+    title: "",
+    wordFile: "",
+    imageFiles: "",
+    submission_date: "",
+    lastupdated_date: "",
+    eventId: "",
+    facultyId: "",
+    status: ""
+  })
   const mutationAdded = useMutationHooks(
     data => ContributionService.createContribution(data)
   )
   const handleOk = async () => {
     const user = jwtTranslate(cookiesAccessToken);
-    const formData = new FormData();
-    formData.append('studentId', user?.id);
-    formData.append('title', title);
-    formData.append('submission_date', Date.now());
-    formData.append('lastupdated_date', Date.now());
-    formData.append('eventId', eventDetail?._id);
-    formData.append('facultyId', user?.faculty);
-    formData.append('status', 'Pending');
-    formData.append('wordFile', selectedFiles);
-    console.log('selectedfiles', selectedFiles)
+    // const formData = new FormData();
+    // formData.append('studentId', user?.id);
+    // formData.append('title', title);
+    // formData.append('submission_date', Date.now());
+    // formData.append('lastupdated_date', Date.now());
+    // formData.append('eventId', eventDetail?._id);
+    // formData.append('facultyId', user?.faculty);
+    // formData.append('status', 'Pending');
+    // formData.append('wordFile', selectedFiles);
+    // console.log('selectedfiles', selectedFiles)
+    // const imageUrls = fileListImage.map(file => file);
+    // imageUrls.forEach((url, index) => {
+    //   formData.append(`image_${index}`, url);
+    // });
     const imageUrls = fileListImage.map(file => file);
-    imageUrls.forEach((url, index) => {
-      formData.append(`image_${index}`, url);
-    });
-    mutationAdded.mutate({ formData }, {
+    const data = {
+      studentId: user?.id,
+      title: title,
+      wordFile: selectedFiles,
+      imageFiles: imageUrls,
+      submission_date: Date.now(),
+      lastupdated_date: Date.now(),
+      eventId: eventDetail?._id,
+      facultyId: user?.faculty,
+      status: "Pending"
+    };
+    setIsOpenDrawer(false);
+    setIsModalOpen(false);
+    mutationAdded.mutate(data, {
       onSettled: () => {
         submitedQuerry.refetch()
       }
-    })
+    });
   };
   const { data: dataAdded, isLoading: isLoadingAdded, isSuccess: isSuccessAdded, isError: isErrorAdded } = mutationAdded
   useEffect(() => {
@@ -209,8 +234,6 @@ const StudentPostBlog = () => {
       console.error('Error fetching contribution data:', error);
     }
   };
-  console.log('updateform', updateForm)
-  console.log('detail', detailContribution);
   ///delete contribution
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const handleCancelDelete = () => {
@@ -257,7 +280,7 @@ const StudentPostBlog = () => {
   const [titleUpdate, setTitleUpdate] = useState(detailContribution?.title);
   const handleOkUpdate = async () => {
     // Thực hiện logic cập nhật ở đây
-    console.log('Updated title:', titleUpdate);
+    // console.log('Updated title:', titleUpdate);
     // Đóng modal sau khi cập nhật thành công
     setIsModalUpdateOpen(false);
   };
