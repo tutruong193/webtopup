@@ -1,9 +1,9 @@
-import { Card } from "antd";
+
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
     width: 100%;
-    padding: 50px;
+    padding: 5%;
     display: flex;
     background-color: #e6e3e3
 `;
