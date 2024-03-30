@@ -12,6 +12,7 @@ export const WrapperCardStyle = styled.div`
 `;
 
 export const WrapperHeaderCart = styled.div`
+    background-color: white;
     width: 75%;
     height: 100%;
     border-right: solid 1px rgba(160, 160, 160, 0.3);
