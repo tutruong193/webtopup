@@ -18,7 +18,7 @@ export const deleteEvent = async (id, access_token) => {
     return res.data
 }
 export const getAllEventValid = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/event/getvalidevent`)
+    const res = await axios.get(`http://localhost:3001/api/event/getvalidevent`)
     return res.data
 }
 export const getDetailsEvent = async (id) => {

@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Input, Space, Dropdown, message, Upload, Divider, Descriptions } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, AudioOutlined, UploadOutlined } from '@ant-design/icons'
 import { WrapperHeader, WrapperCard } from '../StudentPostBlog/style';
-import TableComponent from '../../TableComponent/TableComponent';
 import * as EventService from '../../../services/EventService'
 import InputComponent from '../../InputComponent/InputComponent';
 import { useMutationHooks } from '../../../hooks/useMutationHook';
 import * as ContributionService from '../../../services/ContributionService'
-import { Card, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 import DrawerComponent from '../../DrawerComponent/DrawerComponent';
 import { getBase64, jwtTranslate } from '../../../utilis';
 import { useCookies } from 'react-cookie';
 import * as Message from '../../../components/Message/Message'
 import { useQuery } from '@tanstack/react-query';
 import ModalComponent from '../../ModalComponent/ModalComponent';
+import axios from 'axios';
 
 const StudentPostBlog = () => {
   ////setup
@@ -29,27 +29,13 @@ const StudentPostBlog = () => {
     facultyId: "",
     status: ""
   })
-  //lấy danh sách bài đã nộp
-  const fetchSubmitedContribution = async (studentId) => {
-    const res = await ContributionService.getSubmitedContribution(studentId);
-    return res.data;
-  };
-  const user = jwtTranslate(cookiesAccessToken);
-  const submitedQuerry = useQuery({
-    queryKey: ['submited', user?.id],
-    queryFn: () => fetchSubmitedContribution(user?.id),
-    config: {
-      retry: 3,
-      retryDelay: 1000,
-    },
-  });
-  const { data: submited } = submitedQuerry;
   ///lấy dữ liệu về event đang valid
   const [itemsEvent, setItemsEvent] = useState([]);
   useEffect(() => {
     const fetchEventData = async () => {
       try {
         const res = await EventService.getAllEventValid();
+        console.log('res', res)
         // Chuyển đổi dữ liệu từ API thành định dạng mong muốn và cập nhật state
         const formattedData = res.data.map(event => ({
           key: event._id, // Gán id vào key
@@ -66,6 +52,22 @@ const StudentPostBlog = () => {
 
     fetchEventData();
   }, []);
+  //lấy danh sách bài đã nộp
+  const fetchSubmitedContribution = async (studentId) => {
+    const res = await ContributionService.getSubmitedContribution(studentId);
+    return res.data;
+  };
+  const user = jwtTranslate(cookiesAccessToken);
+  const submitedQuerry = useQuery({
+    queryKey: ['submited', user?.id],
+    queryFn: () => fetchSubmitedContribution(user?.id),
+    config: {
+      retry: 3,
+      retryDelay: 1000,
+    },
+  });
+  const { data: submited } = submitedQuerry;
+
   //modal add
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCancel = () => {
@@ -99,7 +101,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: 'file',
     multiple: true,
-    action: 'https://webtopup-be.onrender.com/upload-files',
+    action: 'http://localhost:3001/upload-files',
     beforeUpload: (file) => {
       const isDoc = file.type === 'application/msword' || file.type === 'application/pdf' ||// .doc 
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx
@@ -117,7 +119,7 @@ const StudentPostBlog = () => {
     onChange(info, event) {
       const { status } = info.file;
       if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
+        console.log(info.file);
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
@@ -176,31 +178,20 @@ const StudentPostBlog = () => {
   )
   const handleOk = async () => {
     const user = jwtTranslate(cookiesAccessToken);
-    // const formData = new FormData();
-    // formData.append('studentId', user?.id);
-    // formData.append('title', title);
-    // formData.append('submission_date', Date.now());
-    // formData.append('lastupdated_date', Date.now());
-    // formData.append('eventId', eventDetail?._id);
-    // formData.append('facultyId', user?.faculty);
-    // formData.append('status', 'Pending');
-    // formData.append('wordFile', selectedFiles);
-    // console.log('selectedfiles', selectedFiles)
-    // const imageUrls = fileListImage.map(file => file);
-    // imageUrls.forEach((url, index) => {
-    //   formData.append(`image_${index}`, url);
-    // });
     const imageUrls = fileListImage.map(file => file);
+    console.log(imageUrls)
     const data = {
       studentId: user?.id,
       title: title,
-      wordFile: selectedFiles,
+      content: selectedFiles?.response?.htmlContent,
       imageFiles: imageUrls,
       submission_date: Date.now(),
       lastupdated_date: Date.now(),
       eventId: eventDetail?._id,
       facultyId: user?.faculty,
-      status: "Pending"
+      status: "Pending",
+      nameofword: selectedFiles?.name,
+      content: selectedFiles?.response?.htmlContent
     };
 
     mutationAdded.mutate(data, {
@@ -313,8 +304,8 @@ const StudentPostBlog = () => {
       </div>
       <div style={{ paddingTop: '50px' }}>
         <Row gutter={16}>
-          {itemsEvent?.map(event => (
-            <Col span={8} key={event.key} > {/* Sử dụng event.key làm key */}
+          {itemsEvent && itemsEvent.length !== 0 ? itemsEvent.map(event => (
+            <Col span={8} key={event.key}>
               <WrapperCard
                 title={
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -334,7 +325,7 @@ const StudentPostBlog = () => {
                 <p>Final Close Date: {event.finalCloseDate}</p>
               </WrapperCard>
             </Col>
-          ))}
+          )) : <div>none</div>}
         </Row>
       </div>
       <div>
@@ -426,17 +417,16 @@ const StudentPostBlog = () => {
               <Descriptions.Item label="Status">{detailContribution?.status || 'none'}</Descriptions.Item>
               <Descriptions.Item label="Title">{detailContribution?.title || 'none'}</Descriptions.Item>
               <Descriptions.Item label="Last Updated">{detailContribution?.lastupdated_date || 'none'}</Descriptions.Item>
-              <Descriptions.Item label="File Word">{detailContribution?.wordFile || 'none'}</Descriptions.Item>
+              <Descriptions.Item label="File Word">{detailContribution?.nameofword || 'none'}</Descriptions.Item>
               <Descriptions.Item label="File Image">
-                {detailContribution?.imageFiles ? (
+                {detailContribution?.imageFiles?.length !== 0 ? (
                   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {detailContribution?.imageFiles.map((image, index) => (
+                    {detailContribution?.imageFiles?.map((image, index) => (
                       <img key={index} src={image} alt={`Image ${index}`} style={{ marginRight: '10px', marginBottom: '10px', maxHeight: '100px' }} />
                     ))}
                   </div>
                 ) : 'none'}
               </Descriptions.Item>
-              {/* <Descriptions.Item label="FileImage">{detailContribution?.imageFiles || 'none'}</Descriptions.Item> */}
             </Descriptions>
             <div style={{
               width: '100%',
@@ -565,3 +555,4 @@ const StudentPostBlog = () => {
 }
 
 export default StudentPostBlog
+

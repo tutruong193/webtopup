@@ -5,32 +5,32 @@ import { Menu } from 'antd'
 import * as UserService from '../../services/UserService'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
-import ManagerAccount from '../../components/ManagerComponent/ManagerAccount/ManagerAccount';
 import ManagerEvent from '../../components/ManagerComponent/ManagerEvent/ManagerEvent';
 import ManagerFalcuty from '../../components/ManagerComponent/ManagerFalcuty/ManagerFalcuty';
+import ManagerDashboard from '../../components/ManagerComponent/ManagerDashboard/ManagerDashboard';
 
 const ManagerPage = () => {
-  
+
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />),  getItem('Create Falcuty', 'falcuty', <FormOutlined />)], 'group'),
+    getItem('Item 2', 'g2', null, [getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />), getItem('Create Falcuty', 'falcuty', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
-      case 'user':
+      case 'dashboard':
         return (
-          <ManagerAccount />
-          
+          <ManagerDashboard />
+
         )
-        case 'falcuty':
+      case 'falcuty':
         return (
           <ManagerFalcuty />
-          
+
         )
       case 'listBlog':
         return (
           <ManagerEvent />
-          
+
         )
 
       case 'logout':
@@ -41,7 +41,7 @@ const ManagerPage = () => {
         return <></>
     }
   }
-  const [keySelected, setKeySelected] = useState('')
+  const [keySelected, setKeySelected] = useState('dashboard')
 
   const handleOnCLick = ({ key }) => {
     setKeySelected(key)

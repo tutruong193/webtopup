@@ -15,6 +15,7 @@ import { useMutationHooks } from '../../../hooks/useMutationHook'
 import * as Message from '../../../components/Message/Message'
 import { jwtTranslate } from '../../../utilis'
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer'
+import ModalComponent from '../../ModalComponent/ModalComponent'
 const CoordinatorContribution = ({ eventId, facultyId }) => {
     ///setup trạng thái
     const items = [
@@ -125,6 +126,12 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             [e.target.name]: `e.target.value^${marketingaccount?.id}`
         })
     }
+    const handleOnChangeScore = (e) => {
+        setContributionDetail({
+            ...contributionDetail,
+            [e.target.name]: e.target.value
+        })
+    }
     const handleStatusClick = ({ key }) => {
         setContributionDetail({
             ...contributionDetail,
@@ -149,6 +156,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             }
         })
     }
+    console.log(contributionDetail)
     const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
     useEffect(() => {
         if (isSuccessUpdated && dataUpdated?.status === 'OK') {
@@ -158,31 +166,21 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             Message.error()
         }
     }, [isSuccessUpdated])
-    ////xem file
-    // const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [wordContent, setWordContent] = useState('');
-    // const [isLoading, setIsLoading] = useState(false);
-    // const docs = [
-    //     {
-    //         uri: require("E:/study/TOPUP/Web thay tho/project/webtopup-be/src/files/1711362872190Ánh.docx")
-    //     }, // Remote file
-    // ];
-    // const handleViewWord = async (wordFilePath) => {
-    //     try {
-    //         setIsLoading(true);
-    //         const response = await axios.get(`http://localhost:3001/getfiles/${wordFilePath}`);
-    //         // Lưu nội dung của file word vào state
-    //         console.log(response.data)
-    //         setWordContent(response.data.link);
-    //         // Mở modal
-    //         setIsModalOpen(true);
-    //     } catch (error) {
-    //         console.error('Error fetching word content:', error);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }
-    // console.log('link', wordContent)
+    //xem file
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [wordContent, setWordContent] = useState('');
+    const [wordName, setWordName] = useState('');
+    const handleViewWord = async (content, name) => {
+        try {
+            // Lưu nội dung của file word vào state
+            setWordContent(content);
+            setWordName(name);
+            // Mở modal
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('Error fetching word content:', error);
+        }
+    }
     return (
         <div>
             <div>
@@ -247,7 +245,6 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                         <span style={{ display: 'block' }}>Last Update: {item.lastupdated_date}</span>
                                     </div>}
                             />
-                            {item.content}
                         </List.Item>
                     )}
                 />
@@ -259,10 +256,10 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                         <Descriptions.Item label="Status">{contributionDetail?.status}</Descriptions.Item>
                         <Descriptions.Item label="Student">{studentLabel(contributionDetail?.studentId)}</Descriptions.Item>
                         <Descriptions.Item label="Last Updated">{formatDateTime(contributionDetail?.lastupdated_date)}</Descriptions.Item>
-                        <Descriptions.Item label="File Word">{contributionDetail?.wordFile}
+                        <Descriptions.Item label="File Word">{contributionDetail?.nameofword}
                             <Button
                                 style={{ marginLeft: '20px' }}
-                            // onClick={() => handleViewWord(contributionDetail?.wordFile)}
+                                onClick={() => handleViewWord(contributionDetail?.content, contributionDetail?.nameofword)}
                             >
                                 View</Button>
                         </Descriptions.Item>
@@ -306,8 +303,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                     type='number'
                                     min={0}
                                     max={10}
-                                    value={contributionDetail.score} // Thay đổi giá trị value này
-                                    onChange={(e) => handleOnChangeComment(e)}
+                                    onChange={(e) => handleOnChangeScore(e)}
                                 />
                             </Descriptions.Item>
                         ) : null}
@@ -325,9 +321,9 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                 </div>
                 <Button type="dashed" onClick={handleMarking}>Submit</Button>
             </DrawerComponent>
-            {/* <ModalComponent title="Xóa người dùng" open={isModalOpen} onCancel={() => setIsModalOpen(false)}>
-                <DocViewer documents={docs} pluginRenderers={DocViewerRenderers} />
-            </ModalComponent> */}
+            <ModalComponent title={wordName} open={isModalOpen} onCancel={() => setIsModalOpen(false)} width='fit-content' footer=''>
+                <div dangerouslySetInnerHTML={{ __html: wordContent }}></div>
+            </ModalComponent>
         </div>
     )
 }

@@ -1,7 +1,9 @@
 import axios from "axios"
 export const createContribution = async (data) => {
   try {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/contribution/create`, data);
+    console.log(data)
+    const res = await axios.post(`http://localhost:3001/api/contribution/create`, data);
+    console.log('res', res)
     return res.data;
   } catch (error) {
     console.error('Error creating contribution:', error);
