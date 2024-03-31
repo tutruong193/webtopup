@@ -38,3 +38,4 @@ export const getDetailContributionByEvent = async (eventid, access_token) => {
   const res = await axios.get(`${process.env.REACT_APP_API_URL}/contribution/detailbyevent/${eventid}`)
   return (res.data)
 }
+

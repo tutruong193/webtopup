@@ -5,15 +5,14 @@ import { Menu } from 'antd'
 import * as UserService from '../../services/UserService'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
-import ManagerEvent from '../../components/ManagerComponent/ManagerEvent/ManagerEvent';
-import ManagerFalcuty from '../../components/ManagerComponent/ManagerFalcuty/ManagerFalcuty';
 import ManagerDashboard from '../../components/ManagerComponent/ManagerDashboard/ManagerDashboard';
+import ManagerContribution from '../../components/ManagerComponent/ManagerContribution/ManagerContribution';
 
 const ManagerPage = () => {
 
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />), getItem('Create Falcuty', 'falcuty', <FormOutlined />)], 'group'),
+    getItem('Item 2', 'g2', null, [getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
@@ -22,15 +21,9 @@ const ManagerPage = () => {
           <ManagerDashboard />
 
         )
-      case 'falcuty':
+      case 'listContribution':
         return (
-          <ManagerFalcuty />
-
-        )
-      case 'listBlog':
-        return (
-          <ManagerEvent />
-
+          <ManagerContribution />
         )
 
       case 'logout':

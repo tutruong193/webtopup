@@ -55,6 +55,7 @@ const AdminEvent = () => {
       key: 'action',
       render: renderAction
     },
+    
   ];
   ///getall event
   const fetchEventAll = async () => {
