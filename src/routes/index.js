@@ -7,12 +7,18 @@ import PageDetail from "../pages/PageDetail/PageDetail";
 import FacultyArticlePage from "../pages/FacultyArticlePage/FacultyArticlePage";
 import CoordinatorPage from "../pages/CoordinatorPage/CoordinatorPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
-import CoordinatorContribution from "../components/CoordinatorComponent/CoordinatorContribution/CoordinatorContribution";
+import ActivePage from "../pages/ActivePage/ActivePage";
 export const routes = [
     {
         path: '/',
         page: HomePage,
         isShowHeader: true,
+        requiresAuth: false
+    },
+    {
+        path: '/active/:id',
+        page: ActivePage,
+        isShowHeader: false,
         requiresAuth: false
     },
     {

@@ -71,7 +71,7 @@ const AdminUser = () => {
         role: '',
         faculty: ''
     })
-    
+
     //mỗi khi thay đổi input nhập vào, sẽ lưu luôn vào biến bằng useState
     const handleOnchangeUser = (e) => {
         setStateUser({
@@ -145,15 +145,14 @@ const AdminUser = () => {
         config: { retry: 3, retryDelay: 1000 }
     });
     const { data: users } = userQuerry
-
     const dataTable = users?.data?.filter(user => user.role !== 'Admin')
-    .map((user) => ({
-        key: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        faculty: facultyLabel(user.faculty)
-    }));
+        .map((user) => ({
+            key: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            faculty: facultyLabel(user.faculty)
+        }));
     ///add user
     const mutationAdded = useMutationHooks(
         data => UserService.createUser(data)

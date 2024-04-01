@@ -35,7 +35,6 @@ const StudentPostBlog = () => {
     const fetchEventData = async () => {
       try {
         const res = await EventService.getAllEventValid();
-        console.log('res', res)
         // Chuyển đổi dữ liệu từ API thành định dạng mong muốn và cập nhật state
         const formattedData = res.data.map(event => ({
           key: event._id, // Gán id vào key
@@ -179,7 +178,6 @@ const StudentPostBlog = () => {
   const handleOk = async () => {
     const user = jwtTranslate(cookiesAccessToken);
     const imageUrls = fileListImage.map(file => file);
-    console.log(imageUrls)
     const data = {
       studentId: user?.id,
       title: title,
@@ -215,10 +213,10 @@ const StudentPostBlog = () => {
   const [detailContribution, setDetailContribution] = useState([]);
   const fetchData = async (eventId) => {
     try {
-      const result = await ContributionService.getDetailContributionByEvent(eventId, cookiesAccessToken);
-      if (result && result.data) {
-        setDetailContribution(result.data);
-        setUpdateForm(result.data)
+      const result = submited.filter(data => data.eventId === eventId);
+      if (result && result[0]) {
+        setDetailContribution(result[0]);
+        setUpdateForm(result)
       } else {
         setDetailContribution([]); // Nếu không có dữ liệu, setDetailContribution thành mảng rỗng
       }

@@ -232,7 +232,6 @@ const AdminEvent = () => {
         finalCloseDate: res?.data?.finalCloseDate
       })
     }
-    console.log("resdata", stateDetailEvent)
   }
   const mutationUpdate = useMutationHooks(
     (data) => {

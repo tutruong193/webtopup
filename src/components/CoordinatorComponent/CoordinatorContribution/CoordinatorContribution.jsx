@@ -91,8 +91,8 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
     };
     //lấy dữ liệu contribution
     const fetchListContribution = async () => {
-        const res = await ContributionService.getContributionsByEventAndFaculty(eventId, facultyId);
-        return res.data;
+        const res = await ContributionService.getAllContributions();
+        return res?.data?.filter(contribution => contribution?.eventId === eventId && contribution?.facultyId === facultyId);
     };
     const contributionQuerry = useQuery({
         queryKey: ['contributions'],
@@ -115,8 +115,8 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         score: "",
         comment: "",
     });
-    const handleOpenDrawer = async () => {
-        const res = await ContributionService.getDetailContributionByEvent(eventId, cookiesAccessToken)
+    const handleOpenDrawer = async (id) => {
+        const res = await ContributionService.getDetailContribution(id, cookiesAccessToken)
         setContributionDetail(res.data)
         setIsOpenDrawer(true);
     }
@@ -156,7 +156,6 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             }
         })
     }
-    console.log(contributionDetail)
     const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
     useEffect(() => {
         if (isSuccessUpdated && dataUpdated?.status === 'OK') {
@@ -213,7 +212,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                     />
                                 )
                             }
-                            onClick={() => handleOpenDrawer()}
+                            onClick={() => handleOpenDrawer(item?._id)}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={item.avatar} />}

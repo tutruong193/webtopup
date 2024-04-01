@@ -26,7 +26,6 @@ const HomePage = () => {
 
     fetchContribution();
   }, [])
-  console.log(contributions)
   return (
     <Wrapper>
       <WrapperSlider>

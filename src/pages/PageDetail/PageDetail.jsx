@@ -33,7 +33,6 @@ const PageDetail = () => {
 
     fetchDetail();
   }, []);
-  console.log(detail)
   ////lấy tên học sinh
   const [itemsStudent, setItemsStudent] = useState([]);
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Image, Popconfirm, Select } from 'antd'
+import { Button, Image, Popconfirm, Select, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import * as EventService from '../../../services/EventService'
 import * as ContributionService from '../../../services/ContributionService'
@@ -10,17 +10,9 @@ import { useCookies } from 'react-cookie'
 import ModalComponent from '../../ModalComponent/ModalComponent'
 import axios from 'axios'
 import * as Message from '../../../components/Message/Message'
+import { useMutationHooks } from '../../../hooks/useMutationHook'
 const ManagerContribution = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
-    ///action
-    const renderAction = (record) => {
-        return (
-            <div>
-                <EyeOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => hanldeView(record.key)} />
-                <DownloadOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} />
-            </div>
-        )
-    }
     ///columns
     const columns = [
         {
@@ -126,22 +118,24 @@ const ManagerContribution = () => {
     const fetchContributionData = async () => {
         if (selectedEvent && selectedFaculty) {
             try {
-                const res = await ContributionService.getContributionsByEventAndFaculty(selectedEvent, selectedFaculty);
+                const res = await ContributionService.getAllContributions();
                 if (res?.data) {
-                    const dataTableData = res.data.map(contribution => {
-                        const user = stateUser.find(user => user._id === contribution.studentId);
-                        return {
-                            key: contribution._id,
-                            name: user?.name || 'N/A',
-                            email: user?.email || 'N/A',
-                            faculty: user?.faculty || 'N/A',
-                            lastupdated_date: contribution.lastupdated_date,
-                            status: contribution.status,
-                            wordFile: contribution.wordFile,
-                            imageFiles: contribution.imageFiles,
-                            fileName: contribution.nameofword
-                        };
-                    });
+                    const dataTableData = res.data
+                        .filter(contribution => contribution.facultyId === selectedFaculty && contribution.eventId === selectedEvent)
+                        .map(contribution => {
+                            const user = stateUser.find(user => user._id === contribution.studentId);
+                            return {
+                                key: contribution._id,
+                                name: user?.name || 'N/A',
+                                email: user?.email || 'N/A',
+                                faculty: user?.faculty || 'N/A',
+                                lastupdated_date: contribution.lastupdated_date,
+                                status: contribution.status,
+                                wordFile: contribution.wordFile,
+                                imageFiles: contribution.imageFiles,
+                                fileName: contribution.nameofword
+                            };
+                        });
                     setDataTable(dataTableData);
                 }
             } catch (error) {
@@ -176,7 +170,7 @@ const ManagerContribution = () => {
             // Tạo một thẻ a để tải xuống tệp
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Files.zip`; // Tên của tệp tải xuống
+            a.download = `File.zip`; // Tên của tệp tải xuống
             document.body.appendChild(a);
             a.click();
             // Giải phóng đường dẫn URL
@@ -187,6 +181,34 @@ const ManagerContribution = () => {
             Message.error('Failed to download file');
         }
     }
+    ///download nhiều file
+    const [selectedIds, setSelectedIds] = useState([]);
+    const handleSelectedIdsChange = (ids) => {
+        setSelectedIds(ids);
+    };
+    const handleDownloadSelected = async () => {
+        try {
+            const res = await axios.get(`http://localhost:3001/downloadZips?selectedIds=${selectedIds.join(',')}`, {
+                responseType: 'blob', // Set the response data type to blob
+            });
+            // Create a temporary URL for the blob
+            const url = window.URL.createObjectURL(res.data);
+            // Create an anchor element to download the file
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Files.zip`; // Set the downloaded file name
+            document.body.appendChild(a);
+            a.click();
+            // Release the URL object
+            window.URL.revokeObjectURL(url);
+            // Show a success message
+            Message.success('Successfully downloaded files');
+        } catch (error) {
+            console.error('Error downloading file:', error);
+            Message.error('Failed to download file');
+        }
+    };
+
     return (
         <div>
             <div>DANH SÁCH TÀI LIỆU</div>
@@ -207,7 +229,17 @@ const ManagerContribution = () => {
             />
             {selectedFaculty && selectedEvent && (
                 <div>
-                    <TableComponent columns={columns} dataSource={dataTable} />
+                    {selectedIds && selectedIds.length > 0 && (
+                        <Popconfirm title={`Download those files ?`} onConfirm={() => handleDownloadSelected()}>
+                            <Button onClick={handleDownloadSelected}>Download</Button>
+                        </Popconfirm>
+                    )}
+                    <TableComponent
+                        columns={columns}
+                        dataSource={dataTable}
+                        kindoftable='manager'
+                        onSelectChange={handleSelectedIdsChange}
+                    />
                 </div>
             )}
             <ModalComponent title={detailContribution?.nameofword} open={isModalOpen} onCancel={() => setIsModalOpen(false)} width='80%' footer=''>

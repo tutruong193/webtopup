@@ -2,25 +2,28 @@ import { Divider, Radio, Table } from 'antd';
 import React, { useState } from 'react'
 
 const TableComponent = (props) => {
-  const { selectionType = 'checkbox', data: dataSource = [], columns = [], handleDeleteMany } = props
-  const [rowSelectedKeys, setRowSelectedKeys] = useState([])
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setRowSelectedKeys(selectedRowKeys)
-    },
-    // getCheckboxProps: (record) => ({
-    //   disabled: record.name === 'Disabled User',
-    //   // Column configuration not to be checked
-    //   name: record.name,
-    // }),
+  const { selectionType = 'checkbox', data: dataSource = [], columns = [], size = 5, onSelectChange } = props
+  const [ids, setIds] = useState([])
+  const handleSelectChange = (newSelectedRowKeys) => {
+    setIds(newSelectedRowKeys);
+    onSelectChange(newSelectedRowKeys); // Gọi prop callback để truyền danh sách ID đã chọn lên component cha
   };
+  const rowSelection = {
+    ids,
+    onChange: handleSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_NONE,
+    ]
+  }
   return (
     <div>
+
       <Table
         rowSelection={{
-          type: selectionType,
           ...rowSelection,
         }}
+        pagination={{ pageSize: size }}
         columns={columns}
         dataSource={dataSource}
         {...props}
@@ -30,3 +33,31 @@ const TableComponent = (props) => {
 }
 
 export default TableComponent
+{/* <div style={{ display: 'none' }}>{kindoftable}</div>
+      {rowSelectedKeys.length > 0 && kindoftable == 'manager' ? (
+        <div style={{
+          background: '#1d1ddd',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '10px',
+          cursor: 'pointer'
+        }}
+          onClick={handleDownloadMany}
+        >
+          Dowdload selected
+        </div>
+      ) : null} */}
+{/* {rowSelectedKeys.length > 0 && kindoftable !== 'manager' ? 
+      (
+        <div style={{
+          background: '#1d1ddd',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '10px',
+          cursor: 'pointer'
+        }}
+        // onClick={handleDeleteAll}
+        >
+          Delete Selected
+        </div>
+      ) : null} */}
