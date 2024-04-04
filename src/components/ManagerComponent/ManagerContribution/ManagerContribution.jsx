@@ -231,7 +231,7 @@ const ManagerContribution = () => {
                 <div>
                     {selectedIds && selectedIds.length > 0 && (
                         <Popconfirm title={`Download those files ?`} onConfirm={() => handleDownloadSelected()}>
-                            <Button onClick={handleDownloadSelected}>Download</Button>
+                            <Button>Download</Button>
                         </Popconfirm>
                     )}
                     <TableComponent

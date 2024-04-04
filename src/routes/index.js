@@ -9,61 +9,66 @@ import CoordinatorPage from "../pages/CoordinatorPage/CoordinatorPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ActivePage from "../pages/ActivePage/ActivePage";
 export const routes = [
-    {
-        path: '/',
-        page: HomePage,
-        isShowHeader: true,
-        requiresAuth: false
-    },
-    {
-        path: '/active/:id',
-        page: ActivePage,
-        isShowHeader: false,
-        requiresAuth: false
-    },
-    {
-        path: '/detail/:id',
-        page: PageDetail,
-        isShowHeader: true
-    },
-    {
-        path: '/faculty',
-        page: FacultyArticlePage,
-        isShowHeader: true
-    },
-    {
-        path: '/signin',
-        page: SignInPage,
-        isShowHeader: false,
-        requiresAuth: false
-    },
-    {
-        path: '/system/admin',
-        page: AdminPage,
-        isShowHeader: false,
-        requiresAuth: true
-    },
-    {
-        path: '/system/student',
-        page: StudentPage,
-        isShowHeader: false,
-        requiresAuth: true
-    },
-    {
-        path: '/system/coordinator',
-        page: CoordinatorPage,
-        isShowHeader: false,
-        requiresAuth: true
-    },
-    {
-        path: '/system/manager',
-        page: ManagerPage,
-        isShowHeader: false,
-        requiresAuth: true
-    },
+  {
+    path: "/",
+    page: HomePage,
+    isShowHeader: true,
+    requiresAuth: false,
+  },
+  {
+    path: "/active/:id",
+    page: ActivePage,
+    isShowHeader: false,
+    requiresAuth: false,
+  },
+  {
+    path: "/detail/:id",
+    page: PageDetail,
+    isShowHeader: true,
+  },
+  {
+    path: "/faculty",
+    page: FacultyArticlePage,
+    isShowHeader: true,
+  },
+  {
+    path: "/faculty/?facul=:id",
+    page: FacultyArticlePage,
+    isShowHeader: true,
+  },
+  {
+    path: "/signin",
+    page: SignInPage,
+    isShowHeader: false,
+    requiresAuth: false,
+  },
+  {
+    path: "/system/admin",
+    page: AdminPage,
+    isShowHeader: false,
+    requiresAuth: true,
+  },
+  {
+    path: "/system/student",
+    page: StudentPage,
+    isShowHeader: false,
+    requiresAuth: true,
+  },
+  {
+    path: "/system/coordinator",
+    page: CoordinatorPage,
+    isShowHeader: false,
+    requiresAuth: true,
+  },
+  {
+    path: "/system/manager",
+    page: ManagerPage,
+    isShowHeader: false,
+    requiresAuth: true,
+  },
 
-    {
-        path: '*',
-        page: NotFoundPage
-    },
-]
+  {
+    path: "*",
+    page: NotFoundPage,
+  },
+];

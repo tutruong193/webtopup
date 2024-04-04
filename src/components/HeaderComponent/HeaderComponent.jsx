@@ -96,11 +96,11 @@ const HeaderComponent = () => {
                                 items: itemsFaculty,
                             }}
                         >
-                            <a onClick={(e) => e.preventDefault()}>
+                            <div onClick={(e) => e.preventDefault()}>
                                 <Space style={{ color: 'black' }}>
                                     <a onClick={handleFaculty} style={{ color: 'black' }}>Faculty</a>
                                 </Space>
-                            </a>
+                            </div>
                         </Dropdown>
                     </WrapperText>
                     <WrapperText>Contact</WrapperText>
