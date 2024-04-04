@@ -58,6 +58,7 @@ const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, i
                 width: '100%',
                 height: '20%',
                 display: 'flex',
+                padding: '50px 0px',
                 borderBottom: 'solid 2px rgba(160, 160, 160, 0.3)',
             }}>
                 <WrapperHeaderCart>
@@ -96,7 +97,7 @@ const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, i
             <WrapperCard>
                 <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '50px' }}>
                     <img style={{
-                        maxHeight: '60%',
+                        maxWidth: '80%'
                     }}
                         alt="example" src={img} />
                 </div>

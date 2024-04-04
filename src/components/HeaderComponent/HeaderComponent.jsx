@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd';
 import { WrapperText, WrapperIcon } from './style';
@@ -6,8 +6,9 @@ import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import * as FacultyService from '../../services/FacultyService'
 const HeaderComponent = () => {
-    
+    //setup
     const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
     const items = [
         {
@@ -33,6 +34,32 @@ const HeaderComponent = () => {
         removeCookie('access_token');
         window.location.reload();
     };
+    const handleFaculty = () => {
+        navigate('/faculty');
+        window.location.reload();
+    }
+    //Laays faculty hieenj cos
+    const [itemsFaculty, setItemsFaculty] = useState([]);
+    useEffect(() => {
+        const fetchFacultyData = async () => {
+            try {
+                const res = await FacultyService.getAllFaculty();
+                // Chuyển đổi dữ liệu từ API thành định dạng mong muốn và cập nhật state
+                const formattedData = res.data.map(faculty => ({
+                    key: faculty._id, // Gán id vào key
+                    label: (
+                        <a href={`/faculty/?fac=${faculty.name}`}>
+                            {faculty.name}
+                        </a>
+                    ), // Gán name vào name
+                }));
+                setItemsFaculty(formattedData);
+            } catch (error) {
+                console.error('Error fetching faculty data:', error);
+            }
+        };
+        fetchFacultyData();
+    })
     return (
         <div>
             <Row style={{
@@ -66,12 +93,12 @@ const HeaderComponent = () => {
                     <WrapperText>
                         <Dropdown
                             menu={{
-                                items,
+                                items: itemsFaculty,
                             }}
                         >
                             <a onClick={(e) => e.preventDefault()}>
                                 <Space style={{ color: 'black' }}>
-                                    Faculty
+                                    <a onClick={handleFaculty} style={{ color: 'black' }}>Faculty</a>
                                 </Space>
                             </a>
                         </Dropdown>

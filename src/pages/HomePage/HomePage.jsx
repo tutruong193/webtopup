@@ -62,7 +62,7 @@ const HomePage = () => {
       </WrapperSlider>
       <WrapperContent>
         {contributions && contributions.map((contribution) => (
-          <div style={{ paddingBottom: '40px' }}>
+          <div style={{ marginBottom: '50px' }}>
             <BigCardComponent
               title={contribution.title}
               date={contribution.lastupdated_date}

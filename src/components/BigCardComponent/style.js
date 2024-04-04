@@ -3,8 +3,6 @@ import styled from "styled-components";
 
 export const WrapperCardStyle = styled.div`
     width: 900px;
-    height: 800px;
-    position: relative;
     border: solid 1px rgba(160, 160, 160, 0.3);
     justify-items: center;
     align-content: center;
@@ -13,7 +11,7 @@ export const WrapperCardStyle = styled.div`
 
 export const WrapperHeaderCart = styled.div`
     background-color: white;
-    width: 75%;
+    width: 75%; 
     height: 100%;
     border-right: solid 1px rgba(160, 160, 160, 0.3);
     display: flex;

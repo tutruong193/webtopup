@@ -15,7 +15,6 @@ const SignInPage = () => {
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [activationCode, setActivationCode] = useState('');
     const [cookiesAccessToken, setCookieAccessToken] = useCookies('');
     const mutation = useMutationHooks(
         data => UserService.loginUser(data),
