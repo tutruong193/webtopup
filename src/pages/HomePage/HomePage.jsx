@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import SmallCartComponent from "../../components/SmallCardComponent/SmallCardComponent";
 import BigCardComponent from "../../components/BigCardComponent/BigCardComponent";
 import * as ContributionService from "../../services/ContributionService";
-
 import {
   Wrapper,
   WrapperSlider,
@@ -10,7 +9,11 @@ import {
   WrapperContent,
 } from "./style";
 import logo from "../../assets/images/logo.jpg";
+import { useNavigate } from "react-router-dom";
+import Loading from "../../components/LoadingComponent/LoadingComponent";
 const HomePage = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   ///lấy những bài đã accepted
   const [contributions, setContributions] = useState();
   useEffect(() => {
@@ -22,13 +25,18 @@ const HomePage = () => {
             (contribution) => contribution?.status == "Accepted"
           )
         );
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching faculty data:", error);
       }
     };
-
     fetchContribution();
   }, []);
+  /// ấn card bé
+  const handleSmallCardClick = (id) => {
+    // Navigate to detail/:id page when a SmallCardComponent is clicked
+    navigate(`/detail/${id}`);
+  };
   return (
     <Wrapper>
       <WrapperSlider>
@@ -59,35 +67,43 @@ const HomePage = () => {
             ANOTHER FINE RESPONSIVE SITE TEMPLATE BY HTML5 UP
           </div>
         </div>
-        {contributions &&
-          contributions.map((contribution) => (
-            <div
-              key={contribution._id}
-              style={{ width: "33.33%", padding: "5px" }}
-            >
-              <WrapperMiniPost>
-                <SmallCartComponent contribution={contribution} />
-              </WrapperMiniPost>
-            </div>
-          ))}
+        <div style={{display: 'flex', justifyContent:'center'}}>
+          <Loading isLoading={isLoading}>
+            {contributions &&
+              contributions.map((contribution) => (
+                <div
+                  key={contribution._id}
+                  style={{ width: "33.33%", padding: "5px" }}
+                >
+                  <WrapperMiniPost
+                    onClick={() => handleSmallCardClick(contribution._id)}
+                  >
+                    <SmallCartComponent contribution={contribution} />
+                  </WrapperMiniPost>
+                </div>
+              ))}
+          </Loading>
+        </div>
       </WrapperSlider>
       <WrapperContent>
-        {contributions &&
-          contributions.map((contribution) => (
-            <div style={{ marginBottom: "50px" }}>
-              <BigCardComponent
-                title={contribution.title}
-                date={contribution.lastupdated_date}
-                author={contribution.studentId}
-                key={contribution._id}
-                img={
-                  contribution?.imageFiles?.length > 0 &&
-                  contribution.imageFiles[0]
-                }
-                id={contribution?._id}
-              />
-            </div>
-          ))}
+        <Loading isLoading={isLoading}>
+          {contributions &&
+            contributions.map((contribution) => (
+              <div style={{ marginBottom: "50px" }}>
+                <BigCardComponent
+                  title={contribution.title}
+                  date={contribution.lastupdated_date}
+                  author={contribution.studentId}
+                  key={contribution._id}
+                  img={
+                    contribution?.imageFiles?.length > 0 &&
+                    contribution.imageFiles[0]
+                  }
+                  id={contribution?._id}
+                />
+              </div>
+            ))}
+        </Loading>
       </WrapperContent>
     </Wrapper>
   );

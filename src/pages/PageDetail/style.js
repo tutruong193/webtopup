@@ -26,10 +26,10 @@ export const WrapperBigTextHeaderCartStyle = styled.h2`
     font-weight: bold;
 `;
 
-export const WrapperSmallTextHeaderCartStyle = styled.h5`
-    font-family: "Raleway", Helvetica, sans-serif;
-    font-size: 12px;
-`;
+// export const WrapperSmallTextHeaderCartStyle = styled.h5`
+//     font-family: "Raleway", Helvetica, sans-serif;
+//     font-size: 12px;
+// `;
 
 export const WrapperLinkAuthor = styled.a`
     margin-right: 20px; 

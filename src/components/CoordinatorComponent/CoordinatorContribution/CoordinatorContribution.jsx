@@ -109,6 +109,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         imageFiles: "",
         submission_date: "",
         lastupdated_date: "",
+        confirmed_date: "",
         eventId: "",
         facultyId: "",
         status: "",
@@ -150,7 +151,12 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         }
     )
     const handleMarking = () => {
-        mutationUpdate.mutate({ id: contributionDetail?._id, contributionDetail }, {
+        const updatedContribution = {
+            ...contributionDetail,
+            confirm_date: new Date(), // Thêm trường confirm_date là thời điểm hiện tại
+        };
+        console.log(updatedContribution)
+        mutationUpdate.mutate({ id: updatedContribution?._id, contributionDetail: updatedContribution }, {
             onSettled: () => {
                 contributionQuerry.refetch()
             }

@@ -3,7 +3,6 @@ import {
   WrapperCardStyle,
   WrapperBigTextHeaderCartStyle,
   WrapperHeaderCart,
-  WrapperSmallTextHeaderCartStyle,
   WrapperLinkAuthor,
   WrapperDatePulisher,
   WrapperCard,
@@ -17,7 +16,9 @@ import * as ContributionService from "../../services/ContributionService";
 import * as UserService from "../../services/UserService";
 import * as FacultyService from "../../services/FacultyService";
 import { format } from "date-fns";
+import Loading from "../../components/LoadingComponent/LoadingComponent";
 const PageDetail = () => {
+  const [isLoading, setIsLoading] = useState(true);
   ///lấy detail bài báo cáo
   const { id } = useParams();
   const [detail, setDetail] = useState();
@@ -26,6 +27,7 @@ const PageDetail = () => {
       try {
         const res = await ContributionService.getDetailContribution(id);
         setDetail(res.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching student data:", error);
       }
@@ -92,104 +94,103 @@ const PageDetail = () => {
   };
   return (
     <div style={{ padding: "48px", backgroundColor: "#e6e3e3" }}>
-      <div
-        style={{
-          marginBottom: "20px",
-        }}
-      >
-        Faculty / {facultyLabel(detail?.facultyId)} / {detail?.title}{" "}
-      </div>
-      <WrapperCardStyle>
+      <Loading isLoading={isLoading}>
         <div
           style={{
-            width: "100%",
-            height: "180px",
-            display: "flex",
-            borderBottom: "solid 2px rgba(160, 160, 160, 0.3)",
+            marginBottom: "20px",
           }}
         >
-          <WrapperHeaderCart>
-            <WrapperBigTextHeaderCartStyle>
-              {detail?.title}
-            </WrapperBigTextHeaderCartStyle>
-            <WrapperSmallTextHeaderCartStyle>
-              LOREM IPSUM DOLOR AMET NULLAM CONSEQUAT ETIAM FEUGIAT
-            </WrapperSmallTextHeaderCartStyle>
-          </WrapperHeaderCart>
+          Home / Faculty / {facultyLabel(detail?.facultyId)} / {detail?.title}{" "}
+        </div>
+        <WrapperCardStyle>
           <div
             style={{
-              width: "25%",
+              width: "100%",
+              height: "180px",
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "flex-end",
-              paddingRight: "30px",
-              backgroundColor: "white",
+              borderBottom: "solid 2px rgba(160, 160, 160, 0.3)",
             }}
           >
-            <WrapperDatePulisher>
-              {detail?.lastupdated_date && formatDate(detail?.lastupdated_date)}
-            </WrapperDatePulisher>
-            <div>
-              <WrapperLinkAuthor href="#">
-                {studentLabel(detail?.studentId)}
-              </WrapperLinkAuthor>
-              <img
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "100%",
-                }}
-                src={avatar}
-                alt="avatar"
-              ></img>
+            <WrapperHeaderCart>
+              <WrapperBigTextHeaderCartStyle>
+                {detail?.title}
+              </WrapperBigTextHeaderCartStyle>
+            </WrapperHeaderCart>
+            <div
+              style={{
+                width: "25%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <WrapperDatePulisher>
+                {detail?.lastupdated_date &&
+                  formatDate(detail?.lastupdated_date)}
+              </WrapperDatePulisher>
+              <div>
+                <WrapperLinkAuthor href="#">
+                  {studentLabel(detail?.studentId)}
+                </WrapperLinkAuthor>
+                <img
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "100%",
+                  }}
+                  src={avatar}
+                  alt="avatar"
+                ></img>
+              </div>
             </div>
           </div>
-        </div>
-        <WrapperCard>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              paddingBottom: "50px",
-            }}
-          >
-            <img
-              style={{
-                width: "90%",
-                height: "60%",
-              }}
-              alt="example"
-              src={pic01}
-            />
-          </div>
-          <div
-            style={{ padding: "25px 65px", justifyContent: "space-between" }}
-          >
-            <div dangerouslySetInnerHTML={{ __html: detail?.content }}></div>
-          </div>
-          <WrapperActionCard>
+          <WrapperCard>
             <div
               style={{
                 display: "flex",
-                flexDirection: "row",
-                paddingLeft: "25px",
-                opacity: "0.5",
+                justifyContent: "center",
+                paddingBottom: "50px",
               }}
             >
-              <div style={{ paddingRight: "10px" }}>
-                <HeartOutlined />{" "}
-                <span style={{ marginLeft: "5px", opacity: 0.5 }}>20</span>
-              </div>
-              <div style={{ paddingRight: "10px" }}>
-                <CommentOutlined />{" "}
-                <span style={{ marginLeft: "5px", opacity: 0.5 }}>100</span>
-              </div>
+              <img
+                style={{
+                  width: "90%",
+                  height: "60%",
+                }}
+                alt="example"
+                src={pic01}
+              />
             </div>
-          </WrapperActionCard>
-        </WrapperCard>
-      </WrapperCardStyle>
+            <div
+              style={{ padding: "25px 65px", justifyContent: "space-between" }}
+            >
+              <div dangerouslySetInnerHTML={{ __html: detail?.content }}></div>
+            </div>
+            <WrapperActionCard>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  paddingLeft: "25px",
+                  opacity: "0.5",
+                }}
+              >
+                <div style={{ paddingRight: "10px" }}>
+                  <HeartOutlined />{" "}
+                  <span style={{ marginLeft: "5px", opacity: 0.5 }}>20</span>
+                </div>
+                <div style={{ paddingRight: "10px" }}>
+                  <CommentOutlined />{" "}
+                  <span style={{ marginLeft: "5px", opacity: 0.5 }}>100</span>
+                </div>
+              </div>
+            </WrapperActionCard>
+          </WrapperCard>
+        </WrapperCardStyle>
+      </Loading>
     </div>
   );
 };
