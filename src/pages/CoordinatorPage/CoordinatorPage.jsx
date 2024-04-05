@@ -13,21 +13,19 @@ const CoordinatorPage = () => {
   const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
   const items = [
     getItem('Marketing Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
+    getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
-      case 'user':
+      case 'account':
         return (
           <CoordinatorAccount />
-
         )
       case 'listBlog':
         return (
           <CoordinatorEvent />
-
         )
-      case 'contribution': // Hiển thị CoordinatorContribution nếu keySelected là 'contribution'
+      case 'contribution':
         return (
           <CoordinatorContribution />
         )

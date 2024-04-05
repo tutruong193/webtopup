@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Input, Popover, Row } from "antd";
+import { Button, Card, Col, Empty, Input, Popover, Row } from "antd";
 import { WrapperText, WrapperIcon } from "./style";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const HeaderComponent = () => {
         // Process faculty data
         const formattedFacultyData = facultyRes.data.map((faculty) => ({
           key: faculty._id,
-          label: <a href={`/faculty/?fac=${faculty.name}`}>{faculty.name}</a>,
+          label: <a href={`/faculty/?fac=${faculty._id}`}>{faculty.name}</a>,
         }));
         setItemsFaculty(formattedFacultyData);
         // Process student data
@@ -139,7 +139,6 @@ const HeaderComponent = () => {
     );
     setFilteredContributions(filtered);
   };
-  console.log(isLoadingData)
   return (
     <div>
       <Row

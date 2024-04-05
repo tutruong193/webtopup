@@ -7,13 +7,18 @@ import AdminEvent from '../../components/AdminComponent/AdminEvent/AdminEvent';
 import * as UserService from '../../services/UserService'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
+import AdminAccount from '../../components/AdminComponent/AdminAccount/AdminAccount';
 const AdminPage = () => {
     const items = [
         getItem('Admin', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-        getItem('Item 2', 'g2', null, [getItem('Người dùng', 'user', <UserOutlined />), getItem('Sự Kiện', 'event', <AppstoreOutlined />)], 'group'),
+        getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('Người dùng', 'user', <UserOutlined />),getItem('Sự Kiện', 'event', <AppstoreOutlined />)], 'group'),
     ];
     const renderPage = (key) => {
         switch (key) {
+            case 'account':
+                return (
+                    <AdminAccount />
+                )
             case 'user':
                 return (
                     <AdminUser />

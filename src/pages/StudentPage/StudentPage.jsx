@@ -24,7 +24,6 @@ const StudentPage = () => {
                     <StudentPostBlog />
 
                 )
-
             case 'logout':
                 return (
                     <div onClick={handleLogout}>logout</div>

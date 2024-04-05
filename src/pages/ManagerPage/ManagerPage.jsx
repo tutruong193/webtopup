@@ -7,15 +7,20 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
 import ManagerDashboard from '../../components/ManagerComponent/ManagerDashboard/ManagerDashboard';
 import ManagerContribution from '../../components/ManagerComponent/ManagerContribution/ManagerContribution';
+import ManagerAccount from '../../components/ManagerComponent/ManagerAccount/ManagerAccount';
 
 const ManagerPage = () => {
 
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
+    getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />),getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
+      case 'account':
+        return (
+          <ManagerAccount/>
+        )
       case 'dashboard':
         return (
           <ManagerDashboard />

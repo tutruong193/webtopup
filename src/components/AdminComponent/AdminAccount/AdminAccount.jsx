@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import { WrapperUploadFile } from "./style";
-import { WrapperHeader } from "../StudentAccount/style";
+import { WrapperHeader } from "./style";
 import InputComponent from "../../InputComponent/InputComponent";
 import { getBase64, jwtTranslate } from "../../../utilis";
 import { useCookies } from "react-cookie";
 import * as UserService from "../../../services/UserService";
 import * as FacultyService from "../../../services/FacultyService";
-import * as Message from "../../../components/Message/Message";
+import * as Message from "../../Message/Message";
 import { useMutationHooks } from "../../../hooks/useMutationHook";
-import Loading from "../../../components/LoadingComponent/LoadingComponent";
-const StudentAccount = () => {
+import Loading from "../../LoadingComponent/LoadingComponent";
+const AdminAccount = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [detailUser, setDetailUser] = useState("");
   const [itemsFaculty, setItemsFaculty] = useState([]);
@@ -44,6 +44,14 @@ const StudentAccount = () => {
     const faculty = itemsFaculty.find((faculty) => faculty.key === facultyId);
     return faculty ? faculty.name : "";
   };
+  // console.log("User", detailUser);
+  // const userQuerry = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: fetchDetailUser,
+  //   config: { retry: 3, retryDelay: 1000 },
+  // });
+  // const { data: users } = userQuerry;
+  ///cho vào form
   const [form] = Form.useForm();
   useEffect(() => {
     form.setFieldsValue(detailUser);
@@ -184,9 +192,11 @@ const StudentAccount = () => {
               <Form.Item label="Email" name="email">
                 <div>{detailUser?.email}</div>
               </Form.Item>
-              <Form.Item label="Faculty" name="faculty">
-                <div>{facultyLabel(user.faculty)}</div>
-              </Form.Item>
+              {detailUser?.facultyId && (
+                <Form.Item label="Faculty" name="faculty">
+                  <div>{facultyLabel(user.faculty)}</div>
+                </Form.Item>
+              )}
               <Form.Item
                 label="Name"
                 name="name"
@@ -362,4 +372,4 @@ const StudentAccount = () => {
   );
 };
 
-export default StudentAccount;
+export default AdminAccount;

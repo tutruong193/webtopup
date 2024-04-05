@@ -181,7 +181,7 @@ const AdminEvent = () => {
       Message.error()
     }
   }, [isSuccessDelected])
-  // ////update user
+  // ////update event
   const [formUpdate] = Form.useForm()
   const [isOpenDrawer, setIsOpenDrawer] = useState(false)
   const [stateDetailEvent, setStateDetailEvent] = useState({
