@@ -324,7 +324,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
@@ -342,7 +342,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
@@ -360,7 +360,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
@@ -374,10 +374,10 @@ const AdminEvent = () => {
               </Form.Item>
             </Form>
           </Modal>
-          <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
-            <div>Bạn có chắc xóa tài khoản này không? </div>
+          <ModalComponent title="Delete User Account" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
+            <div>Are you sure to delete this account? </div>
           </ModalComponent>
-          <DrawerComponent title='Chi tiết event' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
+          <DrawerComponent title='Event Details' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
             <Form
               name="basic"
               labelCol={{
@@ -414,7 +414,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
@@ -432,7 +432,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
@@ -450,7 +450,7 @@ const AdminEvent = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input name',
+                    message: 'Please input date',
                   },
                 ]}
               >
