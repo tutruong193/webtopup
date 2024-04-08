@@ -20,10 +20,6 @@ const CoordinatorPage = () => {
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const user = jwtTranslate(cookiesAccessToken);
   const items = [
-<<<<<<< Updated upstream
-    getItem('Marketing Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Functions', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('List Of Contributions', 'listBlog', <FormOutlined />)], 'group'),
-=======
     getItem(
       "Marketing Coordinator",
       "grp",
@@ -32,16 +28,15 @@ const CoordinatorPage = () => {
       "group"
     ),
     getItem(
-      "Item 2",
+      "Functions",
       "g2",
       null,
       [
         getItem("Account", "account", <UserOutlined />),
-        getItem("Danh sách duyệt", "listBlog", <FormOutlined />),
+        getItem("List Of Contributions", "listBlog", <FormOutlined />),
       ],
       "group"
     ),
->>>>>>> Stashed changes
   ];
   const renderPage = (key) => {
     switch (key) {

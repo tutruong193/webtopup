@@ -118,40 +118,6 @@ const CoordinatorEvent = () => {
             style={{
               width: 200,
             }}
-<<<<<<< Updated upstream
-        />
-    );
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
-    return (
-        <div>
-            <WrapperHeader><p>List Of Contributions </p></WrapperHeader>
-            <div>
-                <Space direction="vertical">
-                    <Search
-                        placeholder="Search by title"
-                        onSearch={onSearch}
-                        style={{
-                            width: 200,
-                        }}
-                    />
-                </Space>
-            </div>
-            <div style={{ padding: '50px' }}>
-                {!showContribution && (
-                    <>
-                        <div>Sự kiện đang diễn ra</div>
-                        <List
-                            className="demo-loadmore-list"
-                            loading={initLoading}
-                            itemLayout="horizontal"
-                            dataSource={itemsEvent}
-                            renderItem={(item) => {
-                                // Hàm định dạng lại giờ và phút thành chuỗi có hai chữ số
-                                const formatTime = (time) => {
-                                    const formattedTime = time.toString().padStart(2, '0');
-                                    return formattedTime;
-                                };
-=======
           />
         </Space>
       </div>
@@ -170,7 +136,6 @@ const CoordinatorEvent = () => {
                   const formattedTime = time.toString().padStart(2, "0");
                   return formattedTime;
                 };
->>>>>>> Stashed changes
 
                 // Hàm định dạng lại ngày và giờ thành chuỗi theo định dạng mong muốn
                 const formatDateTime = (dateTime) => {

@@ -480,15 +480,8 @@ const StudentPostBlog = () => {
   );
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
-<<<<<<< Updated upstream
     <div style={{ padding: '50px' }}>
       <WrapperHeader><p>List Of Contributions</p></WrapperHeader>
-=======
-    <div style={{ padding: "50px" }}>
-      <WrapperHeader>
-        <p>Danh sách bài đăng</p>
-      </WrapperHeader>
->>>>>>> Stashed changes
       <div>
         <Space direction="vertical">
           <Search
@@ -601,17 +594,7 @@ const StudentPostBlog = () => {
         </Loading>
       </div>
       <div>
-<<<<<<< Updated upstream
         <Modal width={800} title="Add New Contributions" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-=======
-        <Modal
-          width={800}
-          title="Thêm Bài Blog"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
->>>>>>> Stashed changes
           <Form
             name="basic"
             labelCol={{
@@ -807,7 +790,7 @@ const StudentPostBlog = () => {
                       borderTop: "1px solid rgba(5, 5, 5, 0.06)",
                       marginTop: "30px",
                       paddingTop: "10px",
-                      display: !isBeforeFinalCloseDate ? "none" : null,
+                      display: !isBeforeFinalCloseDate  || detailContribution?.status === 'Pending' ? "none" : null,
                     }}
                   >
                     <span>Comment</span>
@@ -872,18 +855,8 @@ const StudentPostBlog = () => {
             </div>
           </div>
         </DrawerComponent>
-<<<<<<< Updated upstream
         <ModalComponent title="Delete contribution" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
           <div>Are you sure to delete this contribution? </div>
-=======
-        <ModalComponent
-          title="Xóa contribution"
-          open={isModalOpenDelete}
-          onCancel={handleCancelDelete}
-          onOk={handleDeleteUser}
-        >
-          <div>Bạn có chắc xóa tài khoản này không? </div>
->>>>>>> Stashed changes
         </ModalComponent>
         <Modal
           width={800}

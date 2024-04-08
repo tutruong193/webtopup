@@ -7,7 +7,7 @@ import {
   Button,
   Descriptions,
   Dropdown,
-  InputNumber,
+  Input,
   List,
   Space,
 } from "antd";
@@ -92,7 +92,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         const formattedData = filteredStudents.map((student) => ({
           key: student._id,
           label: student.name,
-          facultyId: student.facultyId
+          facultyId: student.facultyId,
         }));
         setItemsStudent(formattedData);
       } catch (error) {
@@ -124,6 +124,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   const { data: contributions } = contributionQuerry;
   /////drawer để xem:
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [status, setStatus] = useState();
   const [contributionDetail, setContributionDetail] = useState({
     studentId: "",
     title: "",
@@ -144,6 +145,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
       cookiesAccessToken
     );
     setContributionDetail(res.data);
+    setStatus(res.data.status)
     setIsOpenDrawer(true);
   };
   const handleOnChangeComment = (e) => {
@@ -219,151 +221,28 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
     } catch (error) {
       console.error("Error fetching word content:", error);
     }
-<<<<<<< Updated upstream
-    return (
-        <div>
-            <div>
-                <List
-                    itemLayout="vertical"
-                    size="large"
-                    pagination={{
-                        onChange: (page) => {
-                            console.log(page);
-                        },
-                        pageSize: 5,
-                    }}
-                    hoverable={true}
-                    dataSource={contributions}
-                    renderItem={(item) => (
-                        <List.Item
-                            key={item?._id}
-                            extra={
-                                item && item.imageFiles && item?.imageFiles?.length > 0 ? (
-                                    <img
-                                        width={200}
-                                        alt="logo"
-                                        src={item.imageFiles[0]}
-                                    />
-                                ) : (
-                                    <img
-                                        width={200}
-                                        alt="file-icon"
-                                        src={wordlogo}
-                                    />
-                                )
-                            }
-                            onClick={() => handleOpenDrawer(item?._id)}
-                        >
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.avatar} />}
-                                title={
-                                    <div style={{ gap: '20px' }}>
-                                        <div>{item.title}</div>
-                                        <div style={{ fontSize: '12px' }}>
-                                            {item.status === 'Pending' ? (
-                                                <>
-                                                    Pending <ReloadOutlined />
-                                                </>
-                                            ) : item.status === 'Accepted' ? (
-                                                <>
-                                                    <span style={{ color: 'green' }}>{item.status}</span> <CheckCircleOutlined />
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span style={{ color: 'red' }}>{item.status}</span> <CloseCircleOutlined />
-                                                </>
-                                            )}
-                                        </div>
-
-                                    </div>
-                                }
-                                description={
-                                    <div>
-                                        <span style={{ display: 'block' }}>Student ID: {studentLabel(item.studentId)}</span>
-                                        <span style={{ display: 'block' }}>Faculty ID: {facultyLabel(item?.facultyId)}</span>
-                                        <span style={{ display: 'block' }}>Last Update: {item.lastupdated_date}</span>
-                                    </div>}
-                            />
-                        </List.Item>
-                    )}
-                />
-            </div>
-            <DrawerComponent title='Details of contributions' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
-                <div style={{ padding: '0px 200px' }}>
-                    <Descriptions title="User Info" bordered contentStyle={{ width: '70%' }} label={{ width: '30%' }} column={1} size='middle'>
-                        <Descriptions.Item label="Title">{contributionDetail?.title}</Descriptions.Item>
-                        <Descriptions.Item label="Status">{contributionDetail?.status}</Descriptions.Item>
-                        <Descriptions.Item label="Student">{studentLabel(contributionDetail?.studentId)}</Descriptions.Item>
-                        <Descriptions.Item label="Last Updated">{formatDateTime(contributionDetail?.lastupdated_date)}</Descriptions.Item>
-                        <Descriptions.Item label="File Word">{contributionDetail?.nameofword}
-                            <Button
-                                style={{ marginLeft: '20px' }}
-                                onClick={() => handleViewWord(contributionDetail?.content, contributionDetail?.nameofword)}
-                            >
-                                View</Button>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="File Image">
-                            {contributionDetail?.imageFiles?.length > 0 ? (
-                                <>
-                                    {`${contributionDetail?.imageFiles.length} pictures`}
-                                    <Button style={{ marginLeft: '20px' }}>View</Button>
-                                </>
-                            ) : (
-                                'none'
-                            )}
-                        </Descriptions.Item>
-                    </Descriptions>
-                </div>
-                <div style={{ padding: '0px 200px' }}>
-                    <Descriptions title="Coordinator's Comments" bordered contentStyle={{ width: '70%' }} label={{ width: '30%' }} column={1} size='middle'>
-                        <Descriptions.Item label="Status">
-                            <Dropdown
-                                menu={menuStatus}
-                                trigger={['click']}
-                                onClick={handleStatusClick}
-                            >
-                                <a onClick={(e) => e.preventDefault()}>
-                                    <Space>
-                                        {contributionDetail['status'] !== 'Pending' ? (
-                                            <span>{contributionDetail['status']} <DownOutlined /></span>
-                                        ) : (
-                                            <span>{contributionDetail['status']}<DownOutlined /></span>
-                                        )}
-                                    </Space>
-                                </a>
-                            </Dropdown>
-                        </Descriptions.Item>
-                        {contributionDetail['status'] === 'Accepted' ? (
-                            <Descriptions.Item label="Mark">
-                                <InputComponent
-                                    status={contributionDetail?.score < 0 || contributionDetail?.score > 10 ? "error" : undefined}
-                                    name='score'
-                                    style={{ width: 'fit-content', bordered: 'none' }}
-                                    type='number'
-                                    min={0}
-                                    max={10}
-                                    onChange={(e) => handleOnChangeScore(e)}
-                                />
-                            </Descriptions.Item>
-                        ) : null}
-                        <Descriptions.Item label="Comments" style={{ height: 'fit-content' }}>
-                            <TextArea
-                                showCount
-                                maxLength={100}
-                                name='comment'
-                                onChange={handleOnChangeComment}
-                                placeholder={contributionDetail?.comment && contributionDetail.comment.includes('^') ? contributionDetail.comment.split('^')[0] : 'disable resize'}
-                                style={{ height: 120, resize: 'none' }}
-                            />
-                        </Descriptions.Item>
-                    </Descriptions>
-                </div>
-                <Button type="dashed" onClick={handleMarking}>Submit</Button>
-            </DrawerComponent>
-            <ModalComponent title={wordName} open={isModalOpen} onCancel={() => setIsModalOpen(false)} width='fit-content' footer=''>
-                <div dangerouslySetInnerHTML={{ __html: wordContent }}></div>
-            </ModalComponent>
-=======
+  };
+  //comment
+  const [isBeforeFinalCloseDate, setIsBeforeFinalCloseDate] = useState(true);
+  const [newComment, setNewComment] = useState("");
+  const [comment, setComment] = useState("");
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+  const handleCommentSubmit = async () => {
+    if (comment.trim() !== "") {
+      setComment("");
+    }
+    const res = await ContributionService.updateCommentContributions(
+      contributionDetail?._id,
+      `${comment}^${marketingaccount?.id}`
+    );
+    if (res.status === "OK") {
+      Message.success();
+      setNewComment(`${comment}^${marketingaccount?.id}`);
+    } else if (res.status === "ERR") {
+      Message.success(`ERR: ${res.status}`);
+    }
   };
   return (
     <div>
@@ -485,7 +364,6 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
               )}
             </Descriptions.Item>
           </Descriptions>
->>>>>>> Stashed changes
         </div>
         <div style={{ padding: "0px 200px" }}>
           <Descriptions
@@ -537,26 +415,83 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                 />
               </Descriptions.Item>
             ) : null}
-            <Descriptions.Item
-              label="Nhận xét"
-              style={{ height: "fit-content" }}
-            >
-              <TextArea
-                showCount
-                maxLength={100}
-                name="comment"
-                onChange={handleOnChangeComment}
-                placeholder={
-                  contributionDetail?.comment
-                    ? contributionDetail?.comment[0].split("^")[0]
-                    : "Comment"
-                }
-                style={{ height: 120, resize: "none" }}
-              />
-            </Descriptions.Item>
+            {status !== "Pending" ? (
+              <Descriptions.Item
+                label="Comment"
+                style={{ height: "fit-content" }}
+              >
+                <div>
+                  {contributionDetail?.comment?.length !== 0
+                    ? contributionDetail?.comment?.map((comment) => (
+                        <div>
+                          <span>
+                            {comment.split("^")[1] !== marketingaccount?.id
+                              ? "Student"
+                              : "Me"}
+                          </span>
+                          <span>: {comment.split("^")[0]}</span>
+                        </div>
+                      ))
+                      
+                    : null}
+                </div>
+                {newComment && (
+                    <div>
+                      <span>
+                        {newComment.split("^")[1] !== marketingaccount?.id
+                          ? "Student"
+                          : "Me"}
+                      </span>
+                      <span>: {newComment.split("^")[0]}</span>
+                    </div>
+                  )}
+                <div
+                  style={{
+                    borderTop: "1px solid rgba(5, 5, 5, 0.06)",
+                    marginTop: "30px",
+                    paddingTop: "10px",
+                  }}
+                >
+                  <span>Comment</span>
+                  <div style={{ display: "flex" }}>
+                    <Input
+                      value={comment}
+                      onChange={handleCommentChange}
+                      placeholder="Nhập nội dung comment"
+                    />
+                    <Button
+                      onClick={handleCommentSubmit}
+                      disabled={!comment.trim()}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </div>
+              </Descriptions.Item>
+            ) : (
+              <Descriptions.Item
+                label="Nhận xét"
+                style={{ height: "fit-content" }}
+              >
+                <TextArea
+                  showCount
+                  maxLength={100}
+                  name="comment"
+                  onChange={handleOnChangeComment}
+                  style={{ height: 120, resize: "none" }}
+                />
+              </Descriptions.Item>
+            )}
           </Descriptions>
         </div>
-        <div style={{width: "100%", display: 'flex', justifyContent: 'center', marginTop: '50px'}}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "50px",
+          }}
+        >
           <Button type="dashed" onClick={handleMarking}>
             Submit
           </Button>
