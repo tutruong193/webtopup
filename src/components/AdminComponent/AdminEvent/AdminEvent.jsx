@@ -262,7 +262,7 @@ const AdminEvent = () => {
   // //
   return (
     <div style={{ padding: '30px' }}>
-      <WrapperHeader><p>Quản lý Sự Kiện</p></WrapperHeader>
+      <WrapperHeader><p>Event Management</p></WrapperHeader>
       <WrapperAction>
         <div style={{
           paddingLeft: '20px'

@@ -11,7 +11,7 @@ import AdminAccount from '../../components/AdminComponent/AdminAccount/AdminAcco
 const AdminPage = () => {
     const items = [
         getItem('Admin', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-        getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('Người dùng', 'user', <UserOutlined />),getItem('Sự Kiện', 'event', <AppstoreOutlined />)], 'group'),
+        getItem('Functions', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('User Management', 'user', <UserOutlined />),getItem('Event Management', 'event', <AppstoreOutlined />)], 'group'),
     ];
     const renderPage = (key) => {
         switch (key) {

@@ -58,7 +58,7 @@ const CoordinatorEvent = () => {
     const onSearch = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
-            <WrapperHeader><p>Danh sách bài đăng</p></WrapperHeader>
+            <WrapperHeader><p>List of </p></WrapperHeader>
             <div>
                 <Space direction="vertical">
                     <Search

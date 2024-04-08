@@ -307,7 +307,7 @@ const AdminUser = () => {
     //
     return (
         <div style={{ padding: '30px' }}>
-            <WrapperHeader><p>Quản Lý Người Dùng</p></WrapperHeader>
+            <WrapperHeader><p>User Management</p></WrapperHeader>
             <WrapperAction>
                 <div style={{
                     paddingLeft: '20px'
@@ -329,7 +329,7 @@ const AdminUser = () => {
                     };
                 }} />
             </div>
-            <Modal title="Tạo tài khoản người dùng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Create User Account" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <Form
                     form={form}
                     name="basic"
@@ -354,7 +354,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your name',
                             },
                         ]}
                     >
@@ -366,7 +366,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your role!',
                             },
                         ]}
                     >
@@ -389,7 +389,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your faculty!',
                             },
                         ]}
                     >
@@ -459,7 +459,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your name!',
                             },
                         ]}
                     >
@@ -471,7 +471,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your role!',
                             },
                         ]}
                     >
@@ -494,7 +494,7 @@ const AdminUser = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your email!',
+                                message: 'Please input your faculty!',
                             },
                         ]}
                     >
@@ -543,8 +543,8 @@ const AdminUser = () => {
                     </Form.Item>
                 </Form>
             </DrawerComponent>
-            <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
-                <div>Bạn có chắc xóa tài khoản này không? </div>
+            <ModalComponent title="Delete Account" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
+                <div>Are you sure to delete this account? </div>
             </ModalComponent>
         </div>
     )

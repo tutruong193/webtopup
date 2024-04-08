@@ -327,7 +327,7 @@ const StudentPostBlog = () => {
         </Row>
       </div>
       <div>
-        <Modal width={800} title="Thêm Bài Blog" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal width={800} title="Add New Contributions" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
           <Form
             name="basic"
             labelCol={{
@@ -446,8 +446,8 @@ const StudentPostBlog = () => {
             </div>
           </div>
         </DrawerComponent>
-        <ModalComponent title="Xóa contribution" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
-          <div>Bạn có chắc xóa tài khoản này không? </div>
+        <ModalComponent title="Delete contribution" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
+          <div>Are you sure to delete this contribution? </div>
         </ModalComponent>
         <Modal width={800} title="Update" open={isModalUpdateOpen} onCancel={handleUpdateCancel} onOk={handleOkUpdate}>
           <Form
