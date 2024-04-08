@@ -130,6 +130,7 @@ const ManagerDashboard = () => {
   return (
     <div>
       <div>Dashboard</div>
+      <div>abc</div>
       {/* <Select
         defaultValue="lucy"
         style={{
