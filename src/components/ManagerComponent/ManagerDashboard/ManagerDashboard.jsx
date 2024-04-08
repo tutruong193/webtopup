@@ -130,7 +130,7 @@ const ManagerDashboard = () => {
   return (
     <div>
       <div>Dashboard</div>
-      <Select
+      {/* <Select
         defaultValue="lucy"
         style={{
           width: 120,
@@ -155,7 +155,7 @@ const ManagerDashboard = () => {
             disabled: true,
           },
         ]}
-      />
+      /> */}
       {/* Render charts if contribution data is available
             {contributionData && (
                     <Bar data={createBarChartData(contributionData)} />
