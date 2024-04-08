@@ -286,7 +286,7 @@ const AdminEvent = () => {
       </div>
       <div>
         <div>
-          <Modal title="Thêm Sự Kiện" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Modal title="Add Event" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             {dataAdded?.status == 'ERR' && <p style={{ color: 'red' }}>{dataAdded?.message}</p>}
             <Form
               name="basic"
@@ -374,8 +374,8 @@ const AdminEvent = () => {
               </Form.Item>
             </Form>
           </Modal>
-          <ModalComponent title="Delete User Account" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
-            <div>Are you sure to delete this account? </div>
+          <ModalComponent title="Delete Event" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteEvent}>
+            <div>Are you sure to delete this event? </div>
           </ModalComponent>
           <DrawerComponent title='Event Details' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
             <Form

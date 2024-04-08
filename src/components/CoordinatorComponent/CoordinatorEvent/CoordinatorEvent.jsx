@@ -108,7 +108,7 @@ const CoordinatorEvent = () => {
   return (
     <div>
       <WrapperHeader>
-        <p>Danh sách bài đăng</p>
+        <p>List Of Contributions</p>
       </WrapperHeader>
       <div>
         <Space direction="vertical">
@@ -124,7 +124,7 @@ const CoordinatorEvent = () => {
       <div style={{ padding: "50px" }}>
         {!showContribution && (
           <>
-            <div>Sự kiện đang diễn ra</div>
+            <div>Events Available</div>
             <List
               className="demo-loadmore-list"
               loading={initLoading}

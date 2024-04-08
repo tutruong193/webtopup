@@ -457,7 +457,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                     <Input
                       value={comment}
                       onChange={handleCommentChange}
-                      placeholder="Nhập nội dung comment"
+                      placeholder="Input Comment"
                     />
                     <Button
                       onClick={handleCommentSubmit}
@@ -470,7 +470,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
               </Descriptions.Item>
             ) : (
               <Descriptions.Item
-                label="Nhận xét"
+                label="Comment"
                 style={{ height: "fit-content" }}
               >
                 <TextArea

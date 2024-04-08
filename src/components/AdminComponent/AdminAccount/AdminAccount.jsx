@@ -231,7 +231,7 @@ const AdminAccount = () => {
                   />
                   {!checkPhone && (
                     <span style={{ color: "red" }}>
-                      Số điện thoại không hợp lệ
+                      Your phone number is invalid!!!
                     </span>
                   )}
                 </div>
