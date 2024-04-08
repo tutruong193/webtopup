@@ -13,7 +13,7 @@ const CoordinatorPage = () => {
   const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
   const items = [
     getItem('Marketing Coordinator', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('Danh sách duyệt', 'listBlog', <FormOutlined />)], 'group'),
+    getItem('Functions', 'g2', null, [getItem('Account', 'account', <UserOutlined />), getItem('List Of Contributions', 'listBlog', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {

@@ -254,7 +254,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                     )}
                 />
             </div>
-            <DrawerComponent title='Chi tiết bài nộp' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
+            <DrawerComponent title='Details of contributions' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width='90%'>
                 <div style={{ padding: '0px 200px' }}>
                     <Descriptions title="User Info" bordered contentStyle={{ width: '70%' }} label={{ width: '30%' }} column={1} size='middle'>
                         <Descriptions.Item label="Title">{contributionDetail?.title}</Descriptions.Item>
@@ -281,7 +281,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                     </Descriptions>
                 </div>
                 <div style={{ padding: '0px 200px' }}>
-                    <Descriptions title="Coordinator nhận xét" bordered contentStyle={{ width: '70%' }} label={{ width: '30%' }} column={1} size='middle'>
+                    <Descriptions title="Coordinator's Comments" bordered contentStyle={{ width: '70%' }} label={{ width: '30%' }} column={1} size='middle'>
                         <Descriptions.Item label="Status">
                             <Dropdown
                                 menu={menuStatus}
@@ -300,7 +300,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                             </Dropdown>
                         </Descriptions.Item>
                         {contributionDetail['status'] === 'Accepted' ? (
-                            <Descriptions.Item label="Chấm điểm">
+                            <Descriptions.Item label="Mark">
                                 <InputComponent
                                     status={contributionDetail?.score < 0 || contributionDetail?.score > 10 ? "error" : undefined}
                                     name='score'
@@ -312,7 +312,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                                 />
                             </Descriptions.Item>
                         ) : null}
-                        <Descriptions.Item label="Nhận xét" style={{ height: 'fit-content' }}>
+                        <Descriptions.Item label="Comments" style={{ height: 'fit-content' }}>
                             <TextArea
                                 showCount
                                 maxLength={100}

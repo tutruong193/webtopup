@@ -13,7 +13,7 @@ const ManagerPage = () => {
 
   const items = [
     getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-    getItem('Item 2', 'g2', null, [getItem('Account', 'account', <UserOutlined />),getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
+    getItem('Functions', 'g2', null, [getItem('Account', 'account', <UserOutlined />),getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {

@@ -288,7 +288,7 @@ const StudentPostBlog = () => {
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
     <div style={{ padding: '50px' }}>
-      <WrapperHeader><p>Danh sách bài đăng</p></WrapperHeader>
+      <WrapperHeader><p>List Of Contributions</p></WrapperHeader>
       <div>
         <Space direction="vertical">
           <Search

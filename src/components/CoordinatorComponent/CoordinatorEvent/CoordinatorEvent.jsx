@@ -58,7 +58,7 @@ const CoordinatorEvent = () => {
     const onSearch = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
-            <WrapperHeader><p>List of </p></WrapperHeader>
+            <WrapperHeader><p>List Of Contributions </p></WrapperHeader>
             <div>
                 <Space direction="vertical">
                     <Search

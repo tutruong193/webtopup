@@ -11,7 +11,7 @@ const StudentPage = () => {
     const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
     const items = [
         getItem('Student', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
-        getItem('Item 2', 'g2', null, [getItem('Thông tin cá nhân', 'user', <UserOutlined />), getItem('Đăng bài', 'postBlog', <FormOutlined />)], 'group'),
+        getItem('Functions', 'g2', null, [getItem('User Profile', 'user', <UserOutlined />), getItem('Post Contributions', 'postBlog', <FormOutlined />)], 'group'),
     ];
     const renderPage = (key) => {
         switch (key) {
