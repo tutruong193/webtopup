@@ -29,4 +29,7 @@ export const getAllContributions = async () => {
   const res = await axios.get(`http://localhost:3001/api/contribution/getall`)
   return (res.data)
 }
-
+export const updateCommentContributions = async (id, comment) => {
+  const res = await axios.put(`http://localhost:3001/api/contribution/updatecomment/${id}`, {comment})
+  return (res.data)
+}

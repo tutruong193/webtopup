@@ -14,7 +14,7 @@ import { HeartOutlined, CommentOutlined } from '@ant-design/icons';
 import * as UserService from '../../services/UserService'
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
-const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, id, ...props }) => {
+const BigCardComponent = ({ title, date, author, img = pic01, id, ...props }) => {
     const navigate = useNavigate()
     ////lấy tên học sinh
     const [itemsStudent, setItemsStudent] = useState([]);
@@ -26,6 +26,7 @@ const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, i
                 const formattedData = filteredStudents.map(student => ({
                     key: student._id,
                     label: student.name,
+                    avatar: student.avatar
                 }));
                 setItemsStudent(formattedData);
             } catch (error) {
@@ -89,7 +90,7 @@ const BigCardComponent = ({ title, date, author, Avatar = avatar, img = pic01, i
                                 height: '40px',
                                 borderRadius: '100%',
                             }}
-                            src={Avatar}></img>
+                            src={avatar}></img>
                     </div>
                 </div>
 

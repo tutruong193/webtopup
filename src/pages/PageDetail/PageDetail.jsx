@@ -92,6 +92,7 @@ const PageDetail = () => {
     const formattedDate = format(date, "MMMM dd, yyyy");
     return formattedDate;
   };
+  console.log(detail?.imageFiles);
   return (
     <div style={{ padding: "48px", backgroundColor: "#e6e3e3" }}>
       <Loading isLoading={isLoading}>
@@ -147,23 +148,27 @@ const PageDetail = () => {
               </div>
             </div>
           </div>
-          <WrapperCard>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                paddingBottom: "50px",
-              }}
-            >
-              <img
+          <WrapperCard> 
+            {detail?.imageFiles && detail?.imageFiles.length > 0 && (
+              <div
                 style={{
-                  width: "90%",
-                  height: "60%",
+                  display: "flex",
+                  justifyContent: "center",
                 }}
-                alt="example"
-                src={pic01}
-              />
-            </div>
+              >
+                {detail.imageFiles.map((imageFile, index) => (
+                  <img
+                    key={index}
+                    style={{
+                      width: "90%",
+                      height: "60%",
+                    }}
+                    alt={`Image ${index + 1}`}
+                    src={imageFile}
+                  />
+                ))}
+              </div>
+            )}
             <div
               style={{ padding: "25px 65px", justifyContent: "space-between" }}
             >
