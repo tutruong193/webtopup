@@ -165,7 +165,7 @@ const HeaderComponent = () => {
         >
           {" "}
           <a style={{ color: "black" }} href="/">
-            Future Imperfect
+            FUTURE TIMES
           </a>
         </Col>
         <Col

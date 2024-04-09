@@ -52,7 +52,7 @@ const HomePage = () => {
               marginTop: "14px",
             }}
           >
-            FUTURE IMPERFECT
+            FUTURE TIMES
           </h1>
           <div
             style={{
@@ -64,7 +64,7 @@ const HomePage = () => {
               marginBottom: "50px",
             }}
           >
-            ANOTHER FINE RESPONSIVE SITE TEMPLATE BY HTML5 UP
+            THINK GLOBALLY, ACT LOCALLY
           </div>
         </div>
         <div style={{display: 'flex', justifyContent:'center'}}>
