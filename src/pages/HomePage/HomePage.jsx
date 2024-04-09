@@ -8,7 +8,7 @@ import {
   WrapperMiniPost,
   WrapperContent,
 } from "./style";
-import logo from "../../assets/images/logo.jpg";
+import logo from "../../assets/images/logo2.png";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/LoadingComponent/LoadingComponent";
 const HomePage = () => {
@@ -40,20 +40,8 @@ const HomePage = () => {
   return (
     <Wrapper>
       <WrapperSlider>
-        <div>
-          <img src={logo}></img>
-          <h1
-            style={{
-              fontFamily: "'Raleway', 'Helvetica', sans-serif",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              fontWeight: "900",
-              padding: "20px 0",
-              marginTop: "14px",
-            }}
-          >
-            FUTURE TIMES
-          </h1>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <img src={logo} style={{width: '15rem', backgroundColor: 'transparent'}}></img>
           <div
             style={{
               fontFamily: "'Raleway', 'Helvetica', sans-serif",
@@ -91,6 +79,7 @@ const HomePage = () => {
             contributions.map((contribution) => (
               <div style={{ marginBottom: "50px" }}>
                 <BigCardComponent
+                  contribution={contribution}
                   title={contribution.title}
                   date={contribution.lastupdated_date}
                   author={contribution.studentId}

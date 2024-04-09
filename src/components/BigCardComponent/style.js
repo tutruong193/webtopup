@@ -18,7 +18,6 @@ export const WrapperHeaderCart = styled.div`
     flex-direction: column;
     justify-content: center;
     padding: 0px 50px;
-
 `;
 
 export const WrapperBigTextHeaderCartStyle = styled.h2`
