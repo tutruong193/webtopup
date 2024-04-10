@@ -10,7 +10,7 @@ import {
   WrapperActionCard,
 } from "./style";
 import avatar from "../../assets/images/avatar.jpg";
-import pic01 from "../../assets/images/pic01.jpg";
+import pic01 from "../../assets/images/ngang1.png";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import { HeartOutlined, CommentOutlined } from "@ant-design/icons";
 import * as UserService from "../../services/UserService";

@@ -82,7 +82,7 @@ const StudentPostBlog = () => {
     setIsLoading(false);
     return res.data;
   };
-  const user = jwtTranslate(cookiesAccessToken);
+  const user = jwtTranslate(cookiesAccessToken.access_token);
   const submitedQuerry = useQuery({
     queryKey: ["submited", user?.id],
     queryFn: () => fetchSubmitedContribution(user?.id),
@@ -215,7 +215,7 @@ const StudentPostBlog = () => {
     ContributionService.createContribution(data)
   );
   const handleOk = async () => {
-    const user = jwtTranslate(cookiesAccessToken);
+    const user = jwtTranslate(cookiesAccessToken.access_token);
     const imageUrls = fileListImage.map((file) => file);
     const data = {
       studentId: user?.id,
@@ -236,8 +236,10 @@ const StudentPostBlog = () => {
         submitedQuerry.refetch();
       },
     });
+    setIsData(false);
     setIsOpenDrawer(false);
     setIsModalOpen(false);
+    setIsModalOpenRule(false)
   };
   const {
     data: dataAdded,
@@ -436,7 +438,7 @@ const StudentPostBlog = () => {
   ///
   ///update button
   const handleOkUpdate = async () => {
-    const user = jwtTranslate(cookiesAccessToken);
+    const user = jwtTranslate(cookiesAccessToken.access_token);
     const data = {
       lastupdated_date: Date.now(),
       status: "Pending",
@@ -467,8 +469,28 @@ const StudentPostBlog = () => {
       Message.error(res.message);
     }
   };
+  ////accept điều khoản
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isModalOpenRule, setIsModalOpenRule] = useState(false);
+  const showModalRule = () => {
+    setIsModalOpenRule(true);
+  };
 
+  const handleOkRule = () => {
+    setIsModalOpenRule(false);
+  };
+
+  const handleCancelRule = () => {
+    setIsModalOpenRule(false);
+  };
   ////
+  const [isData, setIsData] = useState(false);
+  const [stateAdd, setStateAdd] = useState(false)
+  useEffect(() => {
+    if(selectedFiles && title){
+      setIsData(true);
+    }
+  },[selectedFiles, title])
   const { Search } = Input;
   const suffix = (
     <AudioOutlined
@@ -480,8 +502,10 @@ const StudentPostBlog = () => {
   );
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
-    <div style={{ padding: '50px' }}>
-      <WrapperHeader><p>List Of Contributions</p></WrapperHeader>
+    <div style={{ padding: "50px" }}>
+      <WrapperHeader>
+        <p>List Of Contributions</p>
+      </WrapperHeader>
       <div>
         <Space direction="vertical">
           <Search
@@ -594,7 +618,14 @@ const StudentPostBlog = () => {
         </Loading>
       </div>
       <div>
-        <Modal width={800} title="Add New Contributions" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal
+          width={800}
+          title="Add New Contributions"
+          open={isModalOpen}
+          onOk={showModalRule}
+          onCancel={handleCancel}
+          okButtonProps={{disabled: !isData }}
+        >
           <Form
             name="basic"
             labelCol={{
@@ -790,7 +821,11 @@ const StudentPostBlog = () => {
                       borderTop: "1px solid rgba(5, 5, 5, 0.06)",
                       marginTop: "30px",
                       paddingTop: "10px",
-                      display: !isBeforeFinalCloseDate  || detailContribution?.status === 'Pending' ? "none" : null,
+                      display:
+                        !isBeforeFinalCloseDate ||
+                        detailContribution?.status === "Pending"
+                          ? "none"
+                          : null,
                     }}
                   >
                     <span>Comment</span>
@@ -855,7 +890,12 @@ const StudentPostBlog = () => {
             </div>
           </div>
         </DrawerComponent>
-        <ModalComponent title="Delete contribution" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteUser}>
+        <ModalComponent
+          title="Delete contribution"
+          open={isModalOpenDelete}
+          onCancel={handleCancelDelete}
+          onOk={handleDeleteUser}
+        >
           <div>Are you sure to delete this contribution? </div>
         </ModalComponent>
         <Modal
@@ -945,6 +985,77 @@ const StudentPostBlog = () => {
               </Upload>
             </Form.Item>
           </Form>
+        </Modal>
+        <Modal
+          open={isModalOpenRule}
+          onOk={handleOk}
+          onCancel={handleCancelRule}
+          okButtonProps={{ disabled: !isCheckboxChecked }}
+        >
+          <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+            <h2>Terms and Conditions</h2>
+            <ol style={{ listStyleType: "decimal", paddingLeft: "20px" }}>
+              <li>
+                Acceptance of Terms of Use: I commit to adhering to all terms
+                and conditions of the system, including regulations regarding
+                posting and service usage.
+              </li>
+              <li>
+                Copyright and Ownership: I acknowledge that all content and
+                materials posted on the system are my own creative work. I agree
+                not to copy, modify, or use any content without the permission
+                of the rightful owner.
+              </li>
+              <li>
+                Acceptance of Contribution Guidelines: I understand that my
+                submissions must comply with the guidelines and standards of the
+                system. I pledge to only post articles and materials that I have
+                created or have the right to use.
+              </li>
+              <li>
+                Feedback and Edits: I agree to accept feedback and edits from
+                marketing coordinators or administrators to improve and refine
+                my submissions.
+              </li>
+              <li>
+                Content Responsibility: I acknowledge and accept responsibility
+                for the content of my posts. I commit to not posting any
+                information that may infringe on the privacy, dignity, or
+                copyright of others.
+              </li>
+              <li>
+                Acceptance of Privacy Policy: I agree that my personal
+                information may be collected and used according to the privacy
+                policy of the system.
+              </li>
+              <li>
+                Posting Deadlines: I commit to posting and updating my
+                contributions according to the deadlines set by the system.
+              </li>
+              <li>
+                Compliance with Laws: I pledge to comply with all legal
+                regulations related to the use of the system and my postings.
+              </li>
+              <li>
+                Impact on School Reputation: I commit to not posting any
+                information or content that could damage the reputation or
+                prestige of the school.
+              </li>
+              <li>
+                Compliance Commitment: I commit to adhering to and implementing
+                all terms and conditions outlined in this agreement.
+              </li>
+            </ol>
+            <label style={{ display: "block", marginTop: "10px"}}>
+              <input
+              style={{marginRight: '10px' }}
+                type="checkbox"
+                checked={isCheckboxChecked}
+                onChange={(e) => setIsCheckboxChecked(e.target.checked)}
+              />
+              I agree
+            </label>
+          </div>
         </Modal>
       </div>
     </div>

@@ -56,7 +56,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   };
   const [cookiesAccessToken, setCookieAccessToken, removeCookie] =
     useCookies("");
-  const marketingaccount = jwtTranslate(cookiesAccessToken);
+  const marketingaccount = jwtTranslate(cookiesAccessToken.access_token);
   //setup faculty label
   const [itemsFaculty, setItemsFaculty] = useState([]);
   useEffect(() => {

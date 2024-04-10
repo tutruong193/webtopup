@@ -15,15 +15,24 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   ///lấy những bài đã accepted
-  const [contributions, setContributions] = useState();
+  const [contributions, setContributions] = useState([]);
+  const [smallContributions, setSmallContributions] = useState([]);
   useEffect(() => {
     const fetchContribution = async () => {
       try {
         const res = await ContributionService.getAllContributions();
         setContributions(
-          res?.data?.filter(
-            (contribution) => contribution?.status == "Accepted"
-          )
+          res?.data
+            ?.filter((contribution) => contribution?.status == "Accepted")
+            .sort((a, b) => new Date(b.confirm_date) - new Date(a.confirm_date))
+            .slice(0, 3)
+        );
+        setSmallContributions(
+          res?.data
+            ?.filter((contribution) => contribution?.status == "Accepted")
+            .sort((a, b) => new Date(b.confirm_date) - new Date(a.confirm_date))
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3)
         );
         setIsLoading(false);
       } catch (error) {
@@ -40,8 +49,17 @@ const HomePage = () => {
   return (
     <Wrapper>
       <WrapperSlider>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <img src={logo} style={{width: '15rem', backgroundColor: 'transparent'}}></img>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={logo}
+            style={{ width: "15rem", backgroundColor: "transparent" }}
+          ></img>
           <div
             style={{
               fontFamily: "'Raleway', 'Helvetica', sans-serif",
@@ -55,7 +73,7 @@ const HomePage = () => {
             THINK GLOBALLY, ACT LOCALLY
           </div>
         </div>
-        <div style={{display: 'flex', justifyContent:'center'}}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <Loading isLoading={isLoading}>
             {contributions &&
               contributions.map((contribution) => (

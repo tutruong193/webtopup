@@ -11,18 +11,19 @@ export function getItem(label, key, icon, children, type) {
 
 
 export const jwtTranslate = (cookiesAccessToken) => {
-    if (!cookiesAccessToken || !cookiesAccessToken.access_token) {
+    if (!cookiesAccessToken) {
+        console.log('Invalid access token');
         return null;
     }
-
     try {
-        const decodedToken = jwtDecode(cookiesAccessToken.access_token);
+        const decodedToken = jwtDecode(cookiesAccessToken);
         return decodedToken;
     } catch (error) {
         console.error('Error decoding JWT token:', error);
         return null;
     }
 };
+
 
 export const getBase64 = (file) =>
     new Promise((resolve, reject) => {

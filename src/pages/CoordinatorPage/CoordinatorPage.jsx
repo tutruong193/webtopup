@@ -11,22 +11,15 @@ import { Menu, Popover, Badge, Card, List } from "antd";
 import * as UserService from "../../services/UserService";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import CoordinatorAccount from "../../components/CoordinatorComponent/CoordinatorAccount/CoordinatorAccount";
 import CoordinatorEvent from "../../components/CoordinatorComponent/CoordinatorEvent/CoordinatorEvent";
 import CoordinatorContribution from "../../components/CoordinatorComponent/CoordinatorContribution/CoordinatorContribution";
 import * as NotificationService from "../../services/NotificationService";
 import { format } from "date-fns";
+import AccountDetailComponent from "../../components/AccountDetailComponent/AccountDetailComponent";
 const CoordinatorPage = () => {
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
-  const user = jwtTranslate(cookiesAccessToken);
+  const user = jwtTranslate(cookiesAccessToken.access_token);
   const items = [
-    getItem(
-      "Marketing Coordinator",
-      "grp",
-      null,
-      [getItem("Logout", "logout", <LogoutOutlined />)],
-      "group"
-    ),
     getItem(
       "Functions",
       "g2",
@@ -41,7 +34,7 @@ const CoordinatorPage = () => {
   const renderPage = (key) => {
     switch (key) {
       case "account":
-        return <CoordinatorAccount />;
+        return <AccountDetailComponent accesstoken={cookiesAccessToken.access_token}/>;
       case "notification":
         return (
           <Popover placement="rightTop" title="abc">
@@ -52,8 +45,6 @@ const CoordinatorPage = () => {
         return <CoordinatorEvent />;
       case "contribution":
         return <CoordinatorContribution />;
-      case "logout":
-        return <div onClick={handleLogout}>logout</div>;
       default:
         return <></>;
     }
@@ -64,11 +55,6 @@ const CoordinatorPage = () => {
     setKeySelected(key);
   };
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    await UserService.logoutUser();
-    navigate("/");
-    window.location.reload();
-  };
   ///lay thong bao
   const [notification, setNotification] = useState([]);
   useEffect(() => {

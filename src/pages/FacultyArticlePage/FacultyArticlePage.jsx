@@ -1,7 +1,11 @@
-import { Col, Menu, Pagination, Row, Select } from "antd";
+import { Col, Menu, Pagination, Row, Select, Empty } from "antd";
 import Sider from "antd/es/layout/Sider";
 import React, { useEffect, useState } from "react";
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LaptopOutlined,
+  NotificationOutlined,
+} from "@ant-design/icons";
 import SmallCardComponent from "../../components/SmallCardComponent/SmallCardComponent";
 import { Content } from "antd/es/layout/layout";
 import * as ContributionService from "../../services/ContributionService";
@@ -24,7 +28,11 @@ const FacultyArticlePage = () => {
     const fetchContribution = async () => {
       try {
         const res = await ContributionService.getAllContributions();
-        setContributions(res?.data?.filter((contribution) => contribution?.status === "Accepted"));
+        setContributions(
+          res?.data?.filter(
+            (contribution) => contribution?.status === "Accepted"
+          )
+        );
       } catch (error) {
         console.error("Error fetching contributions:", error);
       }
@@ -64,7 +72,9 @@ const FacultyArticlePage = () => {
 
   useEffect(() => {
     if (keySelected) {
-      const selectedFaculty = itemsFaculty.find((faculty) => faculty.key === keySelected);
+      const selectedFaculty = itemsFaculty.find(
+        (faculty) => faculty.key === keySelected
+      );
       if (selectedFaculty) {
         window.location.href = `/faculty/?facul=${selectedFaculty.key}`;
       }
@@ -94,13 +104,21 @@ const FacultyArticlePage = () => {
   const sortContributions = (contributions, selectedSort) => {
     switch (selectedSort) {
       case "name-asc":
-        return [...contributions].sort((a, b) => a.title.localeCompare(b.title));
+        return [...contributions].sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
       case "name-desc":
-        return [...contributions].sort((a, b) => b.title.localeCompare(a.title));
+        return [...contributions].sort((a, b) =>
+          b.title.localeCompare(a.title)
+        );
       case "date-asc":
-        return [...contributions].sort((a, b) => new Date(a.confirm_date) - new Date(b.confirm_date));
+        return [...contributions].sort(
+          (a, b) => new Date(a.confirm_date) - new Date(b.confirm_date)
+        );
       case "date-desc":
-        return [...contributions].sort((a, b) => new Date(b.confirm_date) - new Date(a.confirm_date));
+        return [...contributions].sort(
+          (a, b) => new Date(b.confirm_date) - new Date(a.confirm_date)
+        );
       default:
         return contributions;
     }
@@ -110,10 +128,15 @@ const FacultyArticlePage = () => {
     setIsLoadingContent(true);
     let sortedContributions = contributions ? [...contributions] : [];
     if (selectedSort) {
-      sortedContributions = sortContributions(sortedContributions, selectedSort);
+      sortedContributions = sortContributions(
+        sortedContributions,
+        selectedSort
+      );
     }
     if (id) {
-      sortedContributions = sortedContributions.filter((contribution) => contribution.facultyId === id);
+      sortedContributions = sortedContributions.filter(
+        (contribution) => contribution.facultyId === id
+      );
     }
     setVisibleContributions(sortedContributions.slice(startIndex, endIndex));
     setIsLoadingContent(false);
@@ -124,7 +147,9 @@ const FacultyArticlePage = () => {
   };
 
   return (
-    <div style={{ padding: "48px", backgroundColor: "#e6e3e3", minHeight: "90vh" }}>
+    <div
+      style={{ padding: "48px", backgroundColor: "#e6e3e3", minHeight: "90vh" }}
+    >
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col className="gutter-row" span={6}>
           <Sider width="100%">
@@ -134,37 +159,78 @@ const FacultyArticlePage = () => {
           </Sider>
         </Col>
         <Col className="gutter-row" span={18}>
-          <Loading isLoading={isLoadingContent}>
-            <Content style={{ minHeight: 280, display: "flex", flexWrap: "wrap", flexDirection: "column" }}>
-              <div style={{ paddingLeft: "5px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div>Home / Faculty {id && `/ ${facultyLabel(id)}`}</div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ marginRight: "10px" }}>Sorted by</div>
-                  <Select
-                    style={{ width: 120 }}
-                    defaultValue="Name: A to Z"
-                    onChange={handleChangeSelect}
-                    options={[
-                      { value: "name-asc", label: "Name: A to Z" },
-                      { value: "name-desc", label: "Name: Z to A" },
-                      { value: "date-asc", label: "Date: Oldest to Newest" },
-                      { value: "date-desc", label: "Date: Newest to Oldest" },
-                    ]}
-                  />
-                </div>
+          <Content
+            style={{
+              minHeight: 280,
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              style={{
+                paddingLeft: "5px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>Home / Faculty {id && `/ ${facultyLabel(id)}`}</div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ marginRight: "10px" }}>Sorted by</div>
+                <Select
+                  style={{ width: 120 }}
+                  defaultValue="Name: A to Z"
+                  onChange={handleChangeSelect}
+                  options={[
+                    { value: "name-asc", label: "Name: A to Z" },
+                    { value: "name-desc", label: "Name: Z to A" },
+                    { value: "date-asc", label: "Date: Oldest to Newest" },
+                    { value: "date-desc", label: "Date: Newest to Oldest" },
+                  ]}
+                />
               </div>
-              <Content style={{ minHeight: 280, display: "flex", flexWrap: "wrap" }}>
-                {visibleContributions.map((contribution) => (
-                  <div key={contribution._id} style={{ width: "33.33%", padding: "5px" }} onClick={() => handleSmallCardClick(contribution._id)}>
-                    <SmallCardComponent contribution={contribution} />
+            </div>
+            <Loading isLoading={isLoadingContent}>
+              {visibleContributions.length > 0 ? (
+                <>
+                  <Content
+                    style={{
+                      minHeight: 280,
+                      display: "flex",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {visibleContributions.map((contribution) => (
+                      <div
+                        key={contribution._id}
+                        style={{ width: "33.33%", padding: "5px" }}
+                        onClick={() => handleSmallCardClick(contribution._id)}
+                      >
+                        <SmallCardComponent contribution={contribution} />
+                      </div>
+                    ))}
+                  </Content>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Pagination
+                      current={current}
+                      onChange={onChange}
+                      total={totalCards}
+                      pageSize={pageSize}
+                    />
                   </div>
-                ))}
-              </Content>
-            </Content>
-          </Loading>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Pagination current={current} onChange={onChange} total={totalCards} pageSize={pageSize} />
-          </div>
+                </>
+              ) : (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              )}
+            </Loading>
+          </Content>
         </Col>
       </Row>
     </div>

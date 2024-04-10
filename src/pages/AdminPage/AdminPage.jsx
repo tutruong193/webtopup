@@ -13,17 +13,10 @@ import AdminEvent from "../../components/AdminComponent/AdminEvent/AdminEvent";
 import * as UserService from "../../services/UserService";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import AdminAccount from "../../components/AdminComponent/AdminAccount/AdminAccount";
 import AdminFaculty from "../../components/AdminComponent/AdminFaculty/AdminFaculty";
+import AccountDetailComponent from "../../components/AccountDetailComponent/AccountDetailComponent";
 const AdminPage = () => {
   const items = [
-    getItem(
-      "Admin",
-      "grp",
-      null,
-      [getItem("Logout", "logout", <LogoutOutlined />)],
-      "group"
-    ),
     getItem(
       "Functions",
       "g2",
@@ -37,24 +30,23 @@ const AdminPage = () => {
       "group"
     ),
   ];
+  
   const renderPage = (key) => {
     switch (key) {
       case "account":
-        return <AdminAccount />;
+        return <AccountDetailComponent accesstoken={cookiesAccessToken.access_token}/>;
       case "faculty":
         return <AdminFaculty />;
       case "user":
         return <AdminUser />;
       case "event":
         return <AdminEvent />;
-      case "logout":
-        return <div onClick={handleLogout}>logout</div>;
       default:
         return <></>;
     }
   };
   const [keySelected, setKeySelected] = useState("");
-  const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
+  const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const navigate = useNavigate();
   const handleOnCLick = ({ key }) => {
     setKeySelected(key);

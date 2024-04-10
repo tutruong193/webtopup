@@ -4,8 +4,8 @@ import styled from "styled-components";
 export const WrapperCardStyle = styled(Card)`
   max-width: 352px;
   & img {
-    width: 100%;
-    height: 176px;
+    max-width: 100%;
+    max-height: 176px;
   }
   & .ant-card-body {
     padding: 0px;

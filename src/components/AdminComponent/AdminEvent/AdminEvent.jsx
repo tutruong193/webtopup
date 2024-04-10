@@ -87,7 +87,6 @@ const AdminEvent = () => {
     };
   });
   ///setup add event
-  const currentYear = new Date().getFullYear();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stateEvent, setStateEvent] = useState({
     name: '',

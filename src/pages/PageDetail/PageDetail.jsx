@@ -6,10 +6,9 @@ import {
   WrapperLinkAuthor,
   WrapperDatePulisher,
   WrapperCard,
-  WrapperActionCard,
+  WrapperSmallTextHeaderCartStyle
 } from "./style";
 import avatar from "../../assets/images/avatar.jpg";
-import pic01 from "../../assets/images/pic01.jpg";
 import { HeartOutlined, CommentOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import * as ContributionService from "../../services/ContributionService";
@@ -47,6 +46,7 @@ const PageDetail = () => {
         const formattedData = filteredStudents.map((student) => ({
           key: student._id,
           label: student.name,
+          avatar: student.avatar,
         }));
         setItemsStudent(formattedData);
       } catch (error) {
@@ -59,6 +59,10 @@ const PageDetail = () => {
   const studentLabel = (studentId) => {
     const student = itemsStudent.find((student) => student.key === studentId);
     return student ? student.label : "";
+  };
+  const studentAvatar = (studentId) => {
+    const student = itemsStudent.find((student) => student.key === studentId);
+    return student ? student.avatar : "";
   };
   /// lấy dữ riệu faculty
   const [itemsFaculty, setItemsFaculty] = useState([]);
@@ -142,57 +146,41 @@ const PageDetail = () => {
                     height: "40px",
                     borderRadius: "100%",
                   }}
-                  src={avatar}
+                  src={studentAvatar(detail?.studentId) || avatar}
                   alt="avatar"
                 ></img>
               </div>
             </div>
           </div>
-          <WrapperCard> 
+          <WrapperCard>
             {detail?.imageFiles && detail?.imageFiles.length > 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                {detail.imageFiles.map((imageFile, index) => (
-                  <img
-                    key={index}
-                    style={{
-                      width: "90%",
-                      height: "60%",
-                    }}
-                    alt={`Image ${index + 1}`}
-                    src={imageFile}
-                  />
-                ))}
+              <div>
+                <WrapperSmallTextHeaderCartStyle>Related Image</WrapperSmallTextHeaderCartStyle>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  {detail.imageFiles.map((imageFile, index) => (
+                    <img
+                      key={index}
+                      style={{
+                        width: "90%",
+                        height: "60%",
+                      }}
+                      alt={`Image ${index + 1}`}
+                      src={imageFile}
+                    />
+                  ))}
+                </div>
               </div>
             )}
             <div
-              style={{ padding: "25px 65px", justifyContent: "space-between" }}
+              style={{ padding: "20px 100px", justifyContent: "space-between" }}
             >
               <div dangerouslySetInnerHTML={{ __html: detail?.content }}></div>
             </div>
-            <WrapperActionCard>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  paddingLeft: "25px",
-                  opacity: "0.5",
-                }}
-              >
-                <div style={{ paddingRight: "10px" }}>
-                  <HeartOutlined />{" "}
-                  <span style={{ marginLeft: "5px", opacity: 0.5 }}>20</span>
-                </div>
-                <div style={{ paddingRight: "10px" }}>
-                  <CommentOutlined />{" "}
-                  <span style={{ marginLeft: "5px", opacity: 0.5 }}>100</span>
-                </div>
-              </div>
-            </WrapperActionCard>
           </WrapperCard>
         </WrapperCardStyle>
       </Loading>

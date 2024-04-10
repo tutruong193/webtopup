@@ -7,20 +7,17 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom'
 import ManagerDashboard from '../../components/ManagerComponent/ManagerDashboard/ManagerDashboard';
 import ManagerContribution from '../../components/ManagerComponent/ManagerContribution/ManagerContribution';
-import ManagerAccount from '../../components/ManagerComponent/ManagerAccount/ManagerAccount';
+import AccountDetailComponent from '../../components/AccountDetailComponent/AccountDetailComponent';
 
 const ManagerPage = () => {
 
   const items = [
-    getItem('Marketing Manager', 'grp', null, [getItem('Logout', 'logout', <LogoutOutlined />)], 'group'),
     getItem('Functions', 'g2', null, [getItem('Account', 'account', <UserOutlined />),getItem('Dashboard', 'dashboard', <UserOutlined />), getItem('List Contribution', 'listContribution', <FormOutlined />)], 'group'),
   ];
   const renderPage = (key) => {
     switch (key) {
       case 'account':
-        return (
-          <ManagerAccount/>
-        )
+        return <AccountDetailComponent accesstoken={cookiesAccessToken.access_token}/>;
       case 'dashboard':
         return (
           <ManagerDashboard />
@@ -29,11 +26,6 @@ const ManagerPage = () => {
       case 'listContribution':
         return (
           <ManagerContribution />
-        )
-
-      case 'logout':
-        return (
-          <div onClick={handleLogout}>logout</div>
         )
       default:
         return <></>
@@ -44,13 +36,7 @@ const ManagerPage = () => {
   const handleOnCLick = ({ key }) => {
     setKeySelected(key)
   }
-  const [cookies, setCookie, removeCookie] = useCookies(['access_token']);
-  const navigate = useNavigate()
-  const handleLogout = async () => {
-    await UserService.logoutUser()
-    removeCookie('access_token')
-    navigate('/')
-  }
+  const [cookiesAccessToken, setCookieAccessToken, removeCookie] = useCookies('')
   return (
     <>
       <div style={{ display: 'flex' }}>

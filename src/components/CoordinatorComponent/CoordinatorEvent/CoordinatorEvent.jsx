@@ -35,7 +35,7 @@ import * as UserService from "../../../services/UserService";
 import * as ContributionService from "../../../services/ContributionService";
 const CoordinatorEvent = () => {
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
-  const marketingaccount = jwtTranslate(cookiesAccessToken);
+  const marketingaccount = jwtTranslate(cookiesAccessToken.access_token);
   ////lấy tên học sinh và dữ liệu contribution
   const [itemsStudent, setItemsStudent] = useState([]);
   const [itemContributions, setItemContributions] = useState([]);

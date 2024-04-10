@@ -39,11 +39,22 @@ const SignInPage = () => {
             password
         });
     };
+    const handleSendCode = async (id) => {
+        try {
+            const res = await UserService.sendActivationCode(id);
+            if (res.status === 'OK') {
+                Message.success('Resend successful');
+            }
+        } catch (error) {
+            console.error('Error resending activation code:', error);
+        }
+    }
     const { data, isSuccess } = mutation;
+    const [accessToken, setAccessToken] = useState('')
     useEffect(() => {
         if (isSuccess && data?.status === 'OK') {
             setCookieAccessToken('access_token', `Bearer ${data?.access_token}`, { path: '/', encode: String });
-            const user = jwtTranslate(cookiesAccessToken);
+            const user = jwtTranslate(data?.access_token)
             switch (user?.role) {
                 case 'Admin':
                     navigate('/system/admin');
@@ -63,13 +74,12 @@ const SignInPage = () => {
         } else if (data?.status === 'ERR' && data?.message === 'Not activated yet') {
             Message.warning('Account is not verified')
             setTimeout(() => {
+                handleSendCode(data?.data?._id)
                 navigate(`/active/${data?.data?._id}`);
             }, 1500);
 
         }
     }, [isSuccess, data]);
-
-
     return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0, 0, 0, 0.53)', height: '100vh' }}>
             <div style={{ width: '800px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex' }}>
