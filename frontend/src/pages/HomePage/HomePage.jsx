@@ -17,6 +17,7 @@ const HomePage = () => {
   ///lấy những bài đã accepted
   const [contributions, setContributions] = useState([]);
   const [smallContributions, setSmallContributions] = useState([]);
+  console.log('REACT_APP_API_URL', process.env.REACT_APP_API_URL);
   useEffect(() => {
     const fetchContribution = async () => {
       try {

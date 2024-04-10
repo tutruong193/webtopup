@@ -142,7 +142,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: "file",
     multiple: true,
-    action: "http://localhost:3001/upload-files",
+    action: "${process.env.REACT_APP_API_URL}/upload-files",
     beforeUpload: (file) => {
       const isDoc =
         file.type === "application/msword" ||
@@ -239,7 +239,7 @@ const StudentPostBlog = () => {
     setIsData(false);
     setIsOpenDrawer(false);
     setIsModalOpen(false);
-    setIsModalOpenRule(false)
+    setIsModalOpenRule(false);
   };
   const {
     data: dataAdded,
@@ -382,7 +382,7 @@ const StudentPostBlog = () => {
   const propsWordUpdate = {
     name: "file",
     multiple: false,
-    action: "http://localhost:3001/upload-files",
+    action: "${process.env.REACT_APP_API_URL}/upload-files",
     beforeUpload: (file) => {
       const isDoc =
         file.type === "application/msword" ||
@@ -485,12 +485,12 @@ const StudentPostBlog = () => {
   };
   ////
   const [isData, setIsData] = useState(false);
-  const [stateAdd, setStateAdd] = useState(false)
+  const [stateAdd, setStateAdd] = useState(false);
   useEffect(() => {
-    if(selectedFiles && title){
+    if (selectedFiles && title) {
       setIsData(true);
     }
-  },[selectedFiles, title])
+  }, [selectedFiles, title]);
   const { Search } = Input;
   const suffix = (
     <AudioOutlined
@@ -624,7 +624,7 @@ const StudentPostBlog = () => {
           open={isModalOpen}
           onOk={showModalRule}
           onCancel={handleCancel}
-          okButtonProps={{disabled: !isData }}
+          okButtonProps={{ disabled: !isData }}
         >
           <Form
             name="basic"
@@ -1046,9 +1046,9 @@ const StudentPostBlog = () => {
                 all terms and conditions outlined in this agreement.
               </li>
             </ol>
-            <label style={{ display: "block", marginTop: "10px"}}>
+            <label style={{ display: "block", marginTop: "10px" }}>
               <input
-              style={{marginRight: '10px' }}
+                style={{ marginRight: "10px" }}
                 type="checkbox"
                 checked={isCheckboxChecked}
                 onChange={(e) => setIsCheckboxChecked(e.target.checked)}

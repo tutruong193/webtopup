@@ -179,9 +179,12 @@ const ManagerContribution = () => {
   ///Download single file
   const handleDownLoad = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:3001/downloadZip/${id}`, {
-        responseType: "blob", // Đặt kiểu dữ liệu trả về là blob
-      });
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/downloadZip/${id}`,
+        {
+          responseType: "blob", // Đặt kiểu dữ liệu trả về là blob
+        }
+      );
       // Tạo một đường dẫn URL tạm thời cho blob
       const url = window.URL.createObjectURL(res.data);
       // Tạo một thẻ a để tải xuống tệp
@@ -206,9 +209,9 @@ const ManagerContribution = () => {
   const handleDownloadSelected = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/downloadZips?selectedIds=${selectedIds.join(
-          ","
-        )}`,
+        `${
+          process.ENV.REACT_APP_API_URL
+        }/downloadZips?selectedIds=${selectedIds.join(",")}`,
         {
           responseType: "blob", // Set the response data type to blob
         }

@@ -85,7 +85,6 @@ const SignInPage = () => {
             <div style={{ width: '800px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex' }}>
                 <WrapperContainerLeft>
                     <h1>LOGIN</h1>
-                    <p>Đăng nhập vào tạo tài khoản</p>
                     {data?.status === 'ERR' ? <span style={{ color: 'red' }}>{data?.message}</span> : null}
                     <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={handleOnchangeEmail} />
                     <div style={{ position: 'relative' }}>
@@ -124,11 +123,11 @@ const SignInPage = () => {
                             borderRadius: '4px',
                             margin: '26px 0 10px'
                         }}
-                        textButton={'Đăng nhập'}
+                        textButton={'Login'}
                         styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                     ></ButtonComponent>
-                    <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p>
-                    <p>Quay về <WrapperTextLight onClick={handleNavigateHomePage}>Trang chủ</WrapperTextLight></p>
+                    <p><WrapperTextLight>Forgot password?</WrapperTextLight></p>
+                    <p>Back to <WrapperTextLight onClick={handleNavigateHomePage}>Home page</WrapperTextLight></p>
                 </WrapperContainerLeft>
                 <WrapperContainerRight>
                     <Image src={imageLogo} preview={false} alt="iamge-logo" height="203px" width="203px" />
