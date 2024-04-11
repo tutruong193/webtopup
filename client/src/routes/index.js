@@ -8,6 +8,7 @@ import FacultyArticlePage from "../pages/FacultyArticlePage/FacultyArticlePage";
 import CoordinatorPage from "../pages/CoordinatorPage/CoordinatorPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ActivePage from "../pages/ActivePage/ActivePage";
+import ContactPage from "../pages/ContactPage/ContactPage";
 export const routes = [
   {
     path: "/",
@@ -25,11 +26,19 @@ export const routes = [
     path: "/detail/:id",
     page: PageDetail,
     isShowHeader: true,
+    requiresAuth: false,
   },
   {
     path: "/faculty",
     page: FacultyArticlePage,
     isShowHeader: true,
+    requiresAuth: false,
+  },
+  {
+    path: "/contact",
+    page: ContactPage,
+    isShowHeader: false,
+    requiresAuth: false,
   },
   {
     path: "/faculty/?facul=:id",

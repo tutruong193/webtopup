@@ -69,6 +69,9 @@ const HeaderComponent = () => {
     navigate("/faculty");
     window.location.reload();
   };
+  const handleContact =() => {
+    navigate("/contact");
+  }
   ///search
   const [filteredContributions, setFilteredContributions] = useState([]);
   const [inputSearch, setInputSearch] = useState("");
@@ -194,8 +197,8 @@ const HeaderComponent = () => {
               </div>
             </Dropdown>
           </WrapperText>
-          <WrapperText>Contact</WrapperText>
-          <WrapperText>About me</WrapperText>
+          <WrapperText onClick={handleContact}>Contact</WrapperText>
+      
         </Col>
         <Col
           span={2}
