@@ -32,7 +32,6 @@ const HomePage = () => {
           res?.data
             ?.filter((contribution) => contribution?.status == "Accepted")
             .sort((a, b) => new Date(b.confirm_date) - new Date(a.confirm_date))
-            .sort((a, b) => b.score - a.score)
             .slice(0, 3)
         );
         setIsLoading(false);
@@ -76,8 +75,8 @@ const HomePage = () => {
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Loading isLoading={isLoading}>
-            {contributions &&
-              contributions.map((contribution) => (
+            {smallContributions &&
+              smallContributions.sort((a, b) => b.score - a.score).map((contribution) => (
                 <div
                   key={contribution._id}
                   style={{ width: "33.33%", padding: "5px" }}
@@ -99,15 +98,6 @@ const HomePage = () => {
               <div style={{ marginBottom: "50px" }}>
                 <BigCardComponent
                   contribution={contribution}
-                  title={contribution.title}
-                  date={contribution.lastupdated_date}
-                  author={contribution.studentId}
-                  key={contribution._id}
-                  img={
-                    contribution?.imageFiles?.length > 0 &&
-                    contribution.imageFiles[0]
-                  }
-                  id={contribution?._id}
                 />
               </div>
             ))}

@@ -8,9 +8,8 @@ import { Chart } from 'chart.js/auto'; // Import Chart từ chart.js/auto
 
 const ManagerDashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [contributionData, setContributionData] = useState(null);
+  const [contributionData, setContributionData] = useState([]);
   const [events, setEvents] = useState([]);
-
   // Hàm useEffect để fetch danh sách sự kiện
   useEffect(() => {
     const fetchEvents = async () => {
@@ -34,17 +33,16 @@ const ManagerDashboard = () => {
       if (selectedEvent) {
         try {
           // Gọi API để lấy dữ liệu đóng góp dựa trên sự kiện đã chọn
-          const res = await ContributionService.getAllContributions(selectedEvent);
-          setContributionData(res.data); // Lưu dữ liệu đóng góp vào state
+          const res = await ContributionService.getAllContributions();
+          setContributionData(res.data.filter(contribution => contribution.eventId == selectedEvent)); // Lưu dữ liệu đóng góp vào state
         } catch (error) {
           console.error('Error fetching contribution data:', error); // Xử lý lỗi nếu có
         }
       }
     };
-
     fetchContributionData();
   }, [selectedEvent]);
-
+  console.log(contributionData)
   // Hàm tạo dữ liệu cho biểu đồ thanh số lượng đóng góp theo khoa
   const createBarChartData = (data) => {
     const facultyNames = data.map(item => item.facultyName);

@@ -63,18 +63,18 @@ const BigCardComponent = ({ contribution }) => {
   ///lấy 1 ít văn bản ra
   const extractCharacters = (htmlString, maxLength) => {
     // Tạo một phần tử div ẩn để chứa HTML
-    const tempDiv = document.createElement('div');
+    const tempDiv = document.createElement("div");
     tempDiv.innerHTML = htmlString;
-  
+
     // Lấy nội dung văn bản từ phần tử div
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-  
+    const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
     // Kiểm tra nếu độ dài văn bản lớn hơn maxLength
     if (textContent.length > maxLength) {
       // Cắt chuỗi và thêm dấu "..."
-      return textContent.slice(0, maxLength) + '...';
+      return textContent.slice(0, maxLength) + "...";
     }
-  
+
     // Trả về toàn bộ nội dung nếu không cần cắt
     return textContent;
   };
@@ -170,25 +170,6 @@ const BigCardComponent = ({ contribution }) => {
                 letterSpacing: "0.2em",
               }}
             ></ButtonComponent>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              width: "50%",
-              alignItems: "center",
-              opacity: "0.5",
-            }}
-          >
-            <div style={{ paddingRight: "10px" }}>
-              <HeartOutlined />{" "}
-              <span style={{ marginLeft: "5px", opacity: 0.5 }}>20</span>
-            </div>
-            <div style={{ paddingRight: "10px" }}>
-              <CommentOutlined />{" "}
-              <span style={{ marginLeft: "5px", opacity: 0.5 }}>100</span>
-            </div>
           </div>
         </WrapperActionCard>
       </WrapperCard>
