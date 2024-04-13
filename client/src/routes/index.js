@@ -37,7 +37,7 @@ export const routes = [
   {
     path: "/contact",
     page: ContactPage,
-    isShowHeader: false,
+    isShowHeader: true,
     requiresAuth: false,
   },
   {
