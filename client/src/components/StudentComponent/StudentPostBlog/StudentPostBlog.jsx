@@ -142,7 +142,7 @@ const StudentPostBlog = () => {
   const propsWord = {
     name: "file",
     multiple: true,
-    action: "${process.env.REACT_APP_API_URL}/upload-files",
+    action: `${process.env.REACT_APP_API_URL}/upload-files`,
     beforeUpload: (file) => {
       const isDoc =
         file.type === "application/msword" ||
@@ -382,7 +382,7 @@ const StudentPostBlog = () => {
   const propsWordUpdate = {
     name: "file",
     multiple: false,
-    action: "${process.env.REACT_APP_API_URL}/upload-files",
+    action: `${process.env.REACT_APP_API_URL}/upload-files`,
     beforeUpload: (file) => {
       const isDoc =
         file.type === "application/msword" ||
