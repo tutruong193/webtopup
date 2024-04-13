@@ -6,7 +6,7 @@ import {
   WrapperLinkAuthor,
   WrapperDatePulisher,
   WrapperCard,
-  WrapperSmallTextHeaderCartStyle
+  WrapperSmallTextHeaderCartStyle,
 } from "./style";
 import avatar from "../../assets/images/avatar.jpg";
 import { HeartOutlined, CommentOutlined } from "@ant-design/icons";
@@ -152,22 +152,30 @@ const PageDetail = () => {
               </div>
             </div>
           </div>
-          <WrapperCard>
+          <WrapperCard style={{ display: "flex" }}>
+            <div
+              style={{ padding: "20px 100px", justifyContent: "space-between" }}
+            >
+              <div dangerouslySetInnerHTML={{ __html: detail?.content }}></div>
+            </div>
             {detail?.imageFiles && detail?.imageFiles.length > 0 && (
-              <div>
-                <WrapperSmallTextHeaderCartStyle>Related Image</WrapperSmallTextHeaderCartStyle>
+              <div style={{ width: "100%", padding: '0px 100px',borderTop: '1px solid rgba(160, 160, 160, 0.3)', paddingTop: '20px' }}>
+                <WrapperSmallTextHeaderCartStyle>
+                  Related Image
+                </WrapperSmallTextHeaderCartStyle>
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
                   }}
                 >
                   {detail.imageFiles.map((imageFile, index) => (
                     <img
                       key={index}
                       style={{
-                        width: "90%",
-                        height: "60%",
+                        maxWidth: "80%",
+                        paddingBottom: "20px",
                       }}
                       alt={`Image ${index + 1}`}
                       src={imageFile}
@@ -176,11 +184,6 @@ const PageDetail = () => {
                 </div>
               </div>
             )}
-            <div
-              style={{ padding: "20px 100px", justifyContent: "space-between" }}
-            >
-              <div dangerouslySetInnerHTML={{ __html: detail?.content }}></div>
-            </div>
           </WrapperCard>
         </WrapperCardStyle>
       </Loading>
