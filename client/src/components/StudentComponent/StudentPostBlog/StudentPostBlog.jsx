@@ -683,7 +683,7 @@ const StudentPostBlog = () => {
               ]}
             >
               <Upload {...propsWord} maxCount={1}>
-                <Button icon={<UploadOutlined />}>Upload</Button>
+                <Button icon={<UploadOutlined />} disabled={selectedFiles ? true : false}>Upload</Button>
               </Upload>
             </Form.Item>
             <Form.Item label="Upload File Image" name="uploadFileImg">
