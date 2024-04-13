@@ -41,6 +41,15 @@ const SmallCardComponent = ({ contribution }) => {
     const student = itemsStudent.find((student) => student.key === studentId);
     return student ? student.avatar : "";
   };
+  ///title
+  const maxTitleLength = 20; // Độ dài tối đa của tiêu đề
+
+  // Rút gọn tiêu đề nếu quá dài
+  const shortenTitle = (title) => {
+    return title.length > maxTitleLength
+      ? title.substring(0, maxTitleLength) + "..."
+      : title;
+  };
   return (
     <div>
       <WrapperCardStyle
@@ -49,7 +58,7 @@ const SmallCardComponent = ({ contribution }) => {
         cover={
           <img
             alt="example"
-            style={{ borderRadius: "0px" }}
+            style={{ borderRadius: "0px", height: "200px" }}
             src={contribution.imageFiles[0] || logo}
           />
         }
@@ -69,7 +78,7 @@ const SmallCardComponent = ({ contribution }) => {
               fontWeight: "500",
             }}
           >
-            <div>{contribution ? contribution.title : "Lorem"}</div>
+            <div>{shortenTitle(contribution.title)}</div>
             <div style={{ color: "grey" }}>
               {formatDate(contribution.lastupdated_date) || "October 10, 2010"}
             </div>
@@ -84,9 +93,6 @@ const SmallCardComponent = ({ contribution }) => {
                 borderRadius: "100%",
                 marginLeft: "auto",
                 marginRight: "auto",
-                ight: "auto",
-                ight: "auto",
-                ight: "auto",
               }}
               src={studentAvatar(contribution?.studentId) || acb}
             />
