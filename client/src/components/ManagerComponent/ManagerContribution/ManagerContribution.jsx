@@ -31,6 +31,7 @@ const ManagerContribution = () => {
       title: "Faculty",
       dataIndex: "faculty",
       key: "faculty",
+      render: (facultyId) => facultyLabel(facultyId),
     },
     {
       title: "Last Updated Date",
@@ -72,6 +73,10 @@ const ManagerContribution = () => {
   };
   const handleFacultyChange = (value) => {
     setSelectedFaculty(value);
+  };
+  const facultyLabel = (facultyId) => {
+    const faculty = itemsFaculty.find((faculty) => faculty.key === facultyId);
+    return faculty ? faculty.name : "N/A";
   };
   ///lấy thông tin tất cả user có role là student
   const [stateUser, setStateUser] = useState();
@@ -209,8 +214,7 @@ const ManagerContribution = () => {
   const handleDownloadSelected = async () => {
     try {
       const res = await axios.get(
-        `${
-          process.ENV.REACT_APP_API_URL
+        `${process.ENV.REACT_APP_API_URL
         }/downloadZips?selectedIds=${selectedIds.join(",")}`,
         {
           responseType: "blob", // Set the response data type to blob
@@ -236,7 +240,7 @@ const ManagerContribution = () => {
 
   return (
     <div>
-      <div>DANH SÁCH TÀI LIỆU</div>
+      <div>List of Contributions</div>
       <Select
         style={{
           width: 120,
