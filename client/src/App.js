@@ -15,7 +15,6 @@ function App() {
       removeCookie('access_token');
     }
   }, [window.location.pathname]);
-
   return (
     <div>
       <Router>

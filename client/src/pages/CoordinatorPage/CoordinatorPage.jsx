@@ -16,6 +16,7 @@ import CoordinatorContribution from "../../components/CoordinatorComponent/Coord
 import * as NotificationService from "../../services/NotificationService";
 import { format } from "date-fns";
 import AccountDetailComponent from "../../components/AccountDetailComponent/AccountDetailComponent";
+import CoordinatorSelectedReports from "../../components/CoordinatorComponent/CoordinatorSelectedReports/CoordinatorSelectedReports";
 const CoordinatorPage = () => {
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const user = jwtTranslate(cookiesAccessToken.access_token);
@@ -27,6 +28,7 @@ const CoordinatorPage = () => {
       [
         getItem("Account", "account", <UserOutlined />),
         getItem("List Of Contributions", "listBlog", <FormOutlined />),
+        getItem("Selecting Reports", "selectedReports", <FormOutlined />),
       ],
       "group"
     ),
@@ -34,7 +36,11 @@ const CoordinatorPage = () => {
   const renderPage = (key) => {
     switch (key) {
       case "account":
-        return <AccountDetailComponent accesstoken={cookiesAccessToken.access_token}/>;
+        return (
+          <AccountDetailComponent
+            accesstoken={cookiesAccessToken.access_token}
+          />
+        );
       case "notification":
         return (
           <Popover placement="rightTop" title="abc">
@@ -43,6 +49,8 @@ const CoordinatorPage = () => {
         );
       case "listBlog":
         return <CoordinatorEvent />;
+      case "selectedReports":
+        return <CoordinatorSelectedReports />;
       case "contribution":
         return <CoordinatorContribution />;
       default:
@@ -72,7 +80,7 @@ const CoordinatorPage = () => {
       }
     };
     fetchNotification();
-  }, [notification]);
+  }, []);
   //notification
   const content = [
     <div

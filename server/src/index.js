@@ -10,8 +10,6 @@ dotenv.config();
 const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
-const writeFileAsync = promisify(fs.writeFile);
-const Docxtemplater = require("docxtemplater");
 const archiver = require("archiver");
 const app = express();
 const port = process.env.PORT || 3001;
@@ -171,8 +169,7 @@ app.get("/downloadZips", async (req, res) => {
       if (downloadTriggered === false) {
         downloadTriggered = true;
 
-        res.download("Files.zip", () => {
-        });
+        res.download("Files.zip", () => {});
       }
     });
 

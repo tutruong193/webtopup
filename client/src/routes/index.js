@@ -9,6 +9,7 @@ import CoordinatorPage from "../pages/CoordinatorPage/CoordinatorPage";
 import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ActivePage from "../pages/ActivePage/ActivePage";
 import ContactPage from "../pages/ContactPage/ContactPage";
+import GuestPage from "../pages/GuestPage/GuestPage";
 export const routes = [
   {
     path: "/",
@@ -75,7 +76,12 @@ export const routes = [
     isShowHeader: false,
     requiresAuth: true,
   },
-
+  {
+    path: "/system/guest",
+    page: GuestPage,
+    isShowHeader: false,
+    requiresAuth: true,
+  },
   {
     path: "*",
     page: NotFoundPage,

@@ -84,6 +84,10 @@ const AdminUser = () => {
       label: "Marketing Coordinator",
       key: "MarketingCoordinator",
     },
+    {
+      label: "Guest",
+      key: "Guest",
+    },
   ];
   const [stateUser, setStateUser] = useState({
     name: "",
@@ -461,8 +465,7 @@ const AdminUser = () => {
               </Button>
             </Dropdown>
           </Form.Item>
-          {stateUser["role"] === "Student" ||
-          stateUser["role"] === "MarketingCoordinator" ? (
+          {stateUser["role"] !== "MarketingManager" ? (
             <Form.Item
               label="Faculty"
               name="faculty"
