@@ -37,7 +37,6 @@ ChartJS.register(
 );
 
 const ManagerDashboard = () => {
-  const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const [itemsFaculty, setItemsFaculty] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [itemsEvent, setItemsEvent] = useState([]);
@@ -49,7 +48,7 @@ const ManagerDashboard = () => {
   const [isLoadingData, setIsLoadingData] = useState(false);
 
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchEventAndFaculty = async () => {
       try {
         // Lấy dữ liệu của các sự kiện
         const eventRes = await EventService.getAllEvent();
@@ -71,7 +70,7 @@ const ManagerDashboard = () => {
         console.error("Error fetching event data:", error);
       }
     };
-    fetchEvent();
+    fetchEventAndFaculty();
   }, []);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import { jwtTranslate } from "../../../utilis";
 import * as ViewReportService from "../../../services/ViewReportService";
 import * as EventService from "../../../services/EventService";
+import * as Message from "../../Message/Message";
 const CoordinatorSelectedReports = () => {
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const user = jwtTranslate(cookiesAccessToken.access_token);
@@ -20,14 +21,19 @@ const CoordinatorSelectedReports = () => {
   ];
   const data = [
     {
-      key: "1",
+      key: "numbercontributions",
       name: "Number of contributions",
       description: "New York No. 1 Lake Park",
     },
     {
-      key: "2",
+      key: "percentage",
       name: "Percentage of contributions",
       description: "London No. 1 Lake Park",
+    },
+    {
+      key: "numbercontributionsbystudent",
+      name: "Number of contributions",
+      description: "New York No. 1 Lake Park",
     },
   ];
   ///lấy thông tin events
@@ -83,10 +89,20 @@ const CoordinatorSelectedReports = () => {
       selectedEvent,
       keySelected
     );
+    if(res.status === 'OK'){
+      Message.success()
+    } else if(res.status === 'ERR'){
+      Message.error(res.message);
+    }
   };
   const handleHidden = async () => {
     const res = await ViewReportService.updateReport(user?.faculty, selectedEvent, []);
     setKeySelected([])
+    if(res.status === 'OK'){
+      Message.success()
+    } else if(res.status === 'ERR'){
+      Message.error(res.message);
+    }
   };
   return (
     <div>
@@ -113,7 +129,6 @@ const CoordinatorSelectedReports = () => {
 
           <Button
             type="primary"
-            disabled={!keySelected}
             onClick={() => handleView()}
           >
             Hien thi
