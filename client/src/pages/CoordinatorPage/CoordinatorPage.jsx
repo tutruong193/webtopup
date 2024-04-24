@@ -57,7 +57,7 @@ const CoordinatorPage = () => {
         return <></>;
     }
   };
-  const [keySelected, setKeySelected] = useState("");
+  const [keySelected, setKeySelected] = useState("listBlog");
 
   const handleOnCLick = ({ key }) => {
     setKeySelected(key);

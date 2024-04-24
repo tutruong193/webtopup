@@ -1,5 +1,7 @@
 const Contribution = require("../models/ContributionModel");
 const NotificationService = require('../services/NotificationService');
+const EmailService = require("../services/EmailService");
+const UserService = require("../services/UserService");
 const createContribution = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -35,6 +37,8 @@ const createContribution = async (data) => {
       // Lưu Contribution
       const savedContribution = await newContribution.save();
       await NotificationService.createNotification(studentId, facultyId, eventId,`submited a new contribution`)
+      const userName = await UserService.getUserName(studentId);
+      await EmailService.sendNotificationEmail("tutagch210167@fpt.edu.vn", "Submitted a new contribution", `${userName} has submited a new contribution`)
       resolve({
         status: "OK",
         message: "SUCCESS",
@@ -109,7 +113,7 @@ const deleteContribution = async (id) => {
 const updateContribution = async (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const updateContribution = await Contribution.findByIdAndUpdate(id, data);
+      await Contribution.findByIdAndUpdate(id, data);
       resolve({
         status: "OK",
         message: "UPDATE SUCCESS",
@@ -144,6 +148,8 @@ const updateCommentContribution = async (id, comment) => {
       // Thêm comment mới vào danh sách comment của bài đăng
       contribution.comment.push(comment);
       await NotificationService.createNotification(contribution.studentId, contribution.facultyId, contribution.eventId,`has posted a new comment`)
+      const userName = await UserService.getUserName(contribution.studentId);
+      await EmailService.sendNotificationEmail("tutagch210167@fpt.edu.vn", "Posted a new comment", `${userName} has posted a new comment: ${comment.split("^")[0]}`)
       await contribution.save();
       resolve({
         status: "OK",

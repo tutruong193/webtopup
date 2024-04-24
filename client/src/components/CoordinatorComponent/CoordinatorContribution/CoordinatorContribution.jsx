@@ -29,6 +29,7 @@ import * as Message from "../../../components/Message/Message";
 import { jwtTranslate } from "../../../utilis";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import ModalComponent from "../../ModalComponent/ModalComponent";
+import Loading from "../../../components/LoadingComponent/LoadingComponent";
 const CoordinatorContribution = ({ eventId, facultyId }) => {
   ///setup trạng thái
   const items = [
@@ -59,32 +60,17 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   const marketingaccount = jwtTranslate(cookiesAccessToken.access_token);
   //setup faculty label
   const [itemsFaculty, setItemsFaculty] = useState([]);
+  const [itemsStudent, setItemsStudent] = useState([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   useEffect(() => {
-    const fetchFacultyData = async () => {
+    const fetchData = async () => {
       try {
-        const res = await FacultyService.getAllFaculty();
+        const resFaculty = await FacultyService.getAllFaculty();
         // Chuyển đổi dữ liệu từ API thành định dạng mong muốn và cập nhật state
-        const formattedData = res.data.map((faculty) => ({
+        const formattedDataFaculty = resFaculty.data.map((faculty) => ({
           key: faculty._id, // Gán id vào key
           label: faculty.name, // Gán name vào name
         }));
-        setItemsFaculty(formattedData);
-      } catch (error) {
-        console.error("Error fetching faculty data:", error);
-      }
-    };
-
-    fetchFacultyData();
-  }, []);
-  const facultyLabel = (facultyId) => {
-    const faculty = itemsFaculty.find((faculty) => faculty.key === facultyId);
-    return faculty ? faculty.label : "";
-  };
-  ////lấy tên học sinh
-  const [itemsStudent, setItemsStudent] = useState([]);
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
         const res = await UserService.getAllUser();
         const filteredStudents = res.data.filter(
           (user) => user.role === "Student"
@@ -95,21 +81,26 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
           facultyId: student.facultyId,
         }));
         setItemsStudent(formattedData);
+        setItemsFaculty(formattedDataFaculty);
       } catch (error) {
-        console.error("Error fetching student data:", error);
+        console.error("Error fetching faculty data:", error);
       }
     };
-
-    fetchStudentData();
+    fetchData();
   }, []);
-
+  const facultyLabel = (facultyId) => {
+    const faculty = itemsFaculty.find((faculty) => faculty.key === facultyId);
+    return faculty ? faculty.label : "";
+  };
   const studentLabel = (studentId) => {
     const student = itemsStudent.find((student) => student.key === studentId);
     return student ? student.label : "";
   };
+
   //lấy dữ liệu contribution
   const fetchListContribution = async () => {
     const res = await ContributionService.getAllContributions();
+    setIsLoadingData(false);
     return res?.data?.filter(
       (contribution) =>
         contribution?.eventId === eventId &&
@@ -123,6 +114,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   });
   const { data: contributions } = contributionQuerry;
   /////drawer để xem:
+  const [isLoadingView, setIsLoadingView] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [status, setStatus] = useState();
   const [contributionDetail, setContributionDetail] = useState({
@@ -140,13 +132,17 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
     comment: "",
   });
   const handleOpenDrawer = async (id) => {
+    setIsOpenDrawer(true);
+    setIsLoadingView(true);
     const res = await ContributionService.getDetailContribution(
       id,
       cookiesAccessToken
     );
     setContributionDetail(res.data);
-    setStatus(res.data.status)
-    setIsOpenDrawer(true);
+    setStatus(res.data.status);
+    if (res.data.status) {
+      setIsLoadingView(false);
+    }
   };
   const handleOnChangeComment = (e) => {
     setContributionDetail({
@@ -188,7 +184,8 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
       { id: updatedContribution?._id, contributionDetail: updatedContribution },
       {
         onSettled: () => {
-          contributionQuerry.refetch();
+          setIsLoadingData(true);
+          contributionQuerry.refetch().then(() => setIsLoadingData(false));
         },
       }
     );
@@ -209,6 +206,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   }, [isSuccessUpdated]);
   //xem file
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalImageOpen, setIsModalImageOpen] = useState(false);
   const [wordContent, setWordContent] = useState("");
   const [wordName, setWordName] = useState("");
   const handleViewWord = async (content, name) => {
@@ -222,8 +220,10 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
       console.error("Error fetching word content:", error);
     }
   };
+  const handleViewImage = () => {
+    setIsModalImageOpen(true);
+  };
   //comment
-  const [isBeforeFinalCloseDate, setIsBeforeFinalCloseDate] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [comment, setComment] = useState("");
   const handleCommentChange = (e) => {
@@ -247,6 +247,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
   return (
     <div>
       <div>
+        <h1>List Contributions</h1>
         <List
           itemLayout="vertical"
           size="large"
@@ -256,6 +257,7 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
             },
             pageSize: 5,
           }}
+          loading={isLoadingData}
           hoverable={true}
           dataSource={contributions}
           renderItem={(item) => (
@@ -319,51 +321,63 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         width="90%"
       >
         <div style={{ padding: "0px 200px" }}>
-          <Descriptions
-            title="User Info"
-            bordered
-            contentStyle={{ width: "70%" }}
-            label={{ width: "30%" }}
-            column={1}
-            size="middle"
-          >
-            <Descriptions.Item label="Title">
-              {contributionDetail?.title}
-            </Descriptions.Item>
-            <Descriptions.Item label="Status">
-              {contributionDetail?.status}
-            </Descriptions.Item>
-            <Descriptions.Item label="Student">
-              {studentLabel(contributionDetail?.studentId)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Last Updated">
-              {formatDateTime(contributionDetail?.lastupdated_date)}
-            </Descriptions.Item>
-            <Descriptions.Item label="File Word">
-              {contributionDetail?.nameofword}
-              <Button
-                style={{ marginLeft: "20px" }}
-                onClick={() =>
-                  handleViewWord(
-                    contributionDetail?.content,
-                    contributionDetail?.nameofword
-                  )
-                }
-              >
-                View
-              </Button>
-            </Descriptions.Item>
-            <Descriptions.Item label="File Image">
-              {contributionDetail?.imageFiles?.length > 0 ? (
-                <>
-                  {`${contributionDetail?.imageFiles.length} pictures`}
-                  <Button style={{ marginLeft: "20px" }}>View</Button>
-                </>
-              ) : (
-                "none"
-              )}
-            </Descriptions.Item>
-          </Descriptions>
+          <Loading isLoading={isLoadingView}>
+            <Descriptions
+              title="User Info"
+              bordered
+              contentStyle={{ width: "70%" }}
+              label={{ width: "30%" }}
+              column={1}
+              size="middle"
+            >
+              <Descriptions.Item label="Title">
+                {contributionDetail?.title}
+              </Descriptions.Item>
+              <Descriptions.Item label="Status">
+                {contributionDetail?.status}
+              </Descriptions.Item>
+              <Descriptions.Item label="Student">
+                {studentLabel(contributionDetail?.studentId)}
+              </Descriptions.Item>
+              <Descriptions.Item label="Last Updated">
+                {formatDateTime(contributionDetail?.lastupdated_date)}
+              </Descriptions.Item>
+              <Descriptions.Item label="File Word">
+                {contributionDetail?.nameofword}
+                <Button
+                  style={{ marginLeft: "20px" }}
+                  onClick={() =>
+                    handleViewWord(
+                      contributionDetail?.content,
+                      contributionDetail?.nameofword
+                    )
+                  }
+                >
+                  View
+                </Button>
+              </Descriptions.Item>
+              <Descriptions.Item label="File Image">
+                {contributionDetail?.imageFiles?.length > 0 ? (
+                  <>
+                    {`${contributionDetail?.imageFiles.length} pictures`}
+                    <Button
+                      onClick={() =>
+                        handleViewImage(
+                          contributionDetail?.content,
+                          contributionDetail?.nameofword
+                        )
+                      }
+                      style={{ marginLeft: "20px" }}
+                    >
+                      View
+                    </Button>
+                  </>
+                ) : (
+                  "none"
+                )}
+              </Descriptions.Item>
+            </Descriptions>
+          </Loading>
         </div>
         <div style={{ padding: "0px 200px" }}>
           <Descriptions
@@ -432,19 +446,18 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
                           <span>: {comment.split("^")[0]}</span>
                         </div>
                       ))
-                      
                     : null}
                 </div>
                 {newComment && (
-                    <div>
-                      <span>
-                        {newComment.split("^")[1] !== marketingaccount?.id
-                          ? "Student"
-                          : "Me"}
-                      </span>
-                      <span>: {newComment.split("^")[0]}</span>
-                    </div>
-                  )}
+                  <div>
+                    <span>
+                      {newComment.split("^")[1] !== marketingaccount?.id
+                        ? "Student"
+                        : "Me"}
+                    </span>
+                    <span>: {newComment.split("^")[0]}</span>
+                  </div>
+                )}
                 <div
                   style={{
                     borderTop: "1px solid rgba(5, 5, 5, 0.06)",
@@ -505,6 +518,22 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         footer=""
       >
         <div dangerouslySetInnerHTML={{ __html: wordContent }}></div>
+      </ModalComponent>
+      <ModalComponent
+        title="Image"
+        open={isModalImageOpen}
+        onCancel={() => setIsModalImageOpen(false)}
+        width="70%"
+        footer=""
+      >
+        <div style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px'}}>
+          {contributionDetail.imageFiles &&
+            contributionDetail.imageFiles.map((imageFile, index) => (
+              <div>
+                <img key={index} src={imageFile} alt={`Image ${index}`} />
+              </div>
+            ))}
+        </div>
       </ModalComponent>
     </div>
   );

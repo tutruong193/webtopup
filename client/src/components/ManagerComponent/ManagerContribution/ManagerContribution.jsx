@@ -214,7 +214,8 @@ const ManagerContribution = () => {
   const handleDownloadSelected = async () => {
     try {
       const res = await axios.get(
-        `${process.ENV.REACT_APP_API_URL
+        `${
+          process.ENV.REACT_APP_API_URL
         }/downloadZips?selectedIds=${selectedIds.join(",")}`,
         {
           responseType: "blob", // Set the response data type to blob
@@ -239,26 +240,63 @@ const ManagerContribution = () => {
   };
 
   return (
-    <div>
-      <div>List of Contributions</div>
-      <Select
+    <div
+      style={{
+        padding: "30px 20px",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
+      <div
         style={{
-          width: 120,
+          justifyContent: "center",
+          display: "flex",
+          alignItems: "center",
+          height: "fit-content",
         }}
-        onChange={handleChange}
-        options={itemsEvent.map((item) => ({
-          label: item.label,
-          value: item.key,
-        }))}
-      />
-      <Select
-        style={{ width: 120 }}
-        onChange={handleFacultyChange}
-        options={itemsFaculty.map((item) => ({
-          label: item.name,
-          value: item.key,
-        }))}
-      />
+      >
+        <h1 style={{ textTransform: "uppercase", margin: "0" }}>
+          List of Contributions
+        </h1>
+      </div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "15px 0px",
+          margin: "10px 0px",
+          borderTop: "solid 1px rgba(160, 160, 160, 0.3)",
+          borderBottom: "solid 1px rgba(160, 160, 160, 0.3)",
+        }}
+      >
+        <div>Choose event: </div>
+        <Select
+          style={{
+            maxWidth: 200,
+            minWidth: 150,
+          }}
+          onChange={handleChange}
+          options={itemsEvent.map((item) => ({
+            label: item.label,
+            value: item.key,
+          }))}
+        />
+        <div>and choose faculty: </div>
+        <Select
+          style={{
+            maxWidth: 150,
+            minWidth: 120,
+          }}
+          onChange={handleFacultyChange}
+          options={itemsFaculty.map((item) => ({
+            label: item.name,
+            value: item.key,
+          }))}
+        />
+      </div>
       {selectedFaculty && selectedEvent && (
         <div>
           {selectedIds && selectedIds.length > 0 && (

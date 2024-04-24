@@ -25,12 +25,11 @@ const StudentPage = () => {
                 return <></>
         }
     }
-    const [keySelected, setKeySelected] = useState('')
+    const [keySelected, setKeySelected] = useState('postBlog')
 
     const handleOnCLick = ({ key }) => {
         setKeySelected(key)
     }
-    const navigate = useNavigate()
     return (
         <>
             <div style={{ display: 'flex' }}>

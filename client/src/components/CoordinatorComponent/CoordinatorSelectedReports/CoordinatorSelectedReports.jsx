@@ -64,13 +64,16 @@ const CoordinatorSelectedReports = () => {
   useEffect(() => {
     const fetchSelectedKeys = async () => {
       try {
-        const res = await ViewReportService.getSelectedKeys(user?.faculty, selectedEvent);
+        const res = await ViewReportService.getSelectedKeys(
+          user?.faculty,
+          selectedEvent
+        );
         setKeySelected(res?.data?.selected); // Cập nhật state với các khóa của các mục đã được chọn
       } catch (error) {
         console.error("Error fetching selected keys:", error);
       }
     };
-    if(selectedEvent !== null){
+    if (selectedEvent !== null) {
       fetchSelectedKeys();
     }
   }, [selectedEvent]);
@@ -89,36 +92,53 @@ const CoordinatorSelectedReports = () => {
       selectedEvent,
       keySelected
     );
-    if(res.status === 'OK'){
-      Message.success()
-    } else if(res.status === 'ERR'){
+    if (res.status === "OK") {
+      Message.success();
+    } else if (res.status === "ERR") {
       Message.error(res.message);
     }
   };
   const handleHidden = async () => {
-    const res = await ViewReportService.updateReport(user?.faculty, selectedEvent, []);
-    setKeySelected([])
-    if(res.status === 'OK'){
-      Message.success()
-    } else if(res.status === 'ERR'){
+    const res = await ViewReportService.updateReport(
+      user?.faculty,
+      selectedEvent,
+      []
+    );
+    setKeySelected([]);
+    if (res.status === "OK") {
+      Message.success();
+    } else if (res.status === "ERR") {
       Message.error(res.message);
     }
   };
   return (
-    <div>
-      <h1>Selected statistic for guest</h1>
-      <Select
+    <div style={{ padding: "50px" }}>
+      <h2 style={{ textTransform: "uppercase" }}>
+        Selected statistic for guest
+      </h2>
+      <div
         style={{
-          width: 120,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
         }}
-        onChange={handleChange}
-        options={itemsEvent.map((item) => ({
-          label: item.label,
-          value: item.key,
-        }))}
-      />
+      >
+        <div>Choose event: </div>
+        <Select
+          style={{
+            maxWidth: 200,
+            minWidth: 150,
+          }}
+          onChange={handleChange}
+          options={itemsEvent.map((item) => ({
+            label: item.label,
+            value: item.key,
+          }))}
+        />
+      </div>
       {selectedEvent && (
-        <div>
+        <div style={{ width: "100%" }}>
           <TableComponent
             columns={columns}
             dataSource={data}
@@ -126,16 +146,21 @@ const CoordinatorSelectedReports = () => {
               ...rowSelection,
             }}
           />
-
-          <Button
-            type="primary"
-            onClick={() => handleView()}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              gap: "20px",
+            }}
           >
-            Hien thi
-          </Button>
-          <Button type="primary" onClick={() => handleHidden()} danger>
-            Ẩn hết
-          </Button>
+            <Button type="primary" onClick={() => handleView()}>
+              Show
+            </Button>
+            <Button type="primary" onClick={() => handleHidden()} danger>
+              Hide
+            </Button>
+          </div>
         </div>
       )}
     </div>

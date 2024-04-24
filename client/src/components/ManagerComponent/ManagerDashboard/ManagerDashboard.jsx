@@ -90,10 +90,11 @@ const ManagerDashboard = () => {
             );
             return {
               facultyName: faculty.label,
+              facultyId: faculty.key,
               totalStudents: studentsForFaculty.length,
             };
           });
-
+          console.log(totalStudentsByFaculty)
           // Tính số lượng đóng góp và phần trăm đóng góp của mỗi khoa
           const contributionsByFacultyAndStudent = itemsFaculty.map(
             (faculty) => {
@@ -125,6 +126,9 @@ const ManagerDashboard = () => {
             );
             return {
               facultyName: faculty.label,
+              totalStudentsByFaculty: totalStudentsByFaculty.find(
+                (student) => student.facultyId === faculty.key
+              ).totalStudents,
               totalContributions: contributionsForFaculty.length,
               acceptedContributions: contributionsForFaculty.filter(
                 (contribution) => contribution.status === "Accepted"
@@ -137,6 +141,7 @@ const ManagerDashboard = () => {
               ).length,
             };
           });
+          console.log('contributionsByFaculty',contributionsByFaculty)
           setNumberOfContributionsByFaculty(contributionsByFaculty);
           setNumberOfContributionsByStudents(contributionsByFacultyAndStudent);
           setPercentage(contributionsByFacultyAndStudent);
@@ -192,6 +197,13 @@ const ManagerDashboard = () => {
   const data1 = {
     labels: labels1,
     datasets: [
+      {
+        label: "Total Students",
+        data: numberOfContributionsByFaculty.map(
+          (faculty) => faculty.totalStudentsByFaculty
+        ),
+        backgroundColor: "rgba(252, 223, 73, 0.5)",
+      },
       {
         label: "Total Contributions",
         data: numberOfContributionsByFaculty.map(
@@ -295,7 +307,6 @@ const ManagerDashboard = () => {
       },
     },
   };
-  console.log(numberOfContributionsByStudents);
   const labels3 = labels1;
   const data3 = {
     labels: labels3,
@@ -314,9 +325,10 @@ const ManagerDashboard = () => {
       key: "1",
       label: "Number of contributions per faculty",
       children: (
-        <div style={{ width: "50%" }}>
-          <div>
-            <h2>Number of contributions per faculty</h2>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <div style={{ width: "70%" }}>
             <Bar options={options1} data={data1} />
           </div>
         </div>
@@ -326,9 +338,10 @@ const ManagerDashboard = () => {
       key: "2",
       label: "Percentage of contributions by each Faculty",
       children: (
-        <div style={{ width: "50%" }}>
-          <div>
-            <h2>Percentage of contributions by each Faculty</h2>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <div style={{ width: "70%" }}>
             <Line options={options2} data={data2} />
           </div>
         </div>
@@ -338,9 +351,10 @@ const ManagerDashboard = () => {
       key: "3",
       label: "Number of contributions (students) per faculty",
       children: (
-        <div style={{ width: "50%" }}>
-          <div>
-            <h2>Number of contributions per faculty</h2>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <div style={{ width: "70%" }}>
             <Bar options={options3} data={data3} />
           </div>
         </div>
@@ -348,23 +362,56 @@ const ManagerDashboard = () => {
     },
   ];
   return (
-    <div>
-      <div>Dashboard</div>
-      <Select
+    <div
+      style={{
+        padding: "30px 20px",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
+      <div
         style={{
-          width: 120,
+          justifyContent: "center",
+          display: "flex",
+          alignItems: "center",
+          height: "fit-content",
         }}
-        onChange={handleChange}
-        options={itemsEvent.map((item) => ({
-          label: item.label,
-          value: item.key,
-        }))}
-      />
-      {selectedEvent && (
-        <Loading isLoading={isLoadingData}>
-          <Tabs defaultActiveKey="1" type="card" items={items} />
-        </Loading>
-      )}
+      >
+        <h1 style={{ textTransform: "uppercase", margin: "0" }}>Dashboard</h1>
+      </div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "15px 0px",
+          margin: "10px 0px",
+          borderTop: "solid 1px rgba(160, 160, 160, 0.3)",
+          borderBottom: "solid 1px rgba(160, 160, 160, 0.3)",
+        }}
+      >
+        <div>Choose event: </div>
+        <Select
+           style={{
+            maxWidth: 200,
+            minWidth: 150,
+          }}
+          onChange={handleChange}
+          options={itemsEvent.map((item) => ({
+            label: item.label,
+            value: item.key,
+          }))}
+        />
+      </div>
+      <div>
+        {selectedEvent && (
+          <Loading isLoading={isLoadingData}>
+            <Tabs defaultActiveKey="1" type="card" items={items} />
+          </Loading>
+        )}
+      </div>
     </div>
   );
 };

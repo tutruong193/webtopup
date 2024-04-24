@@ -13,7 +13,8 @@ import {
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
-  AudioOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
 import { WrapperHeader, WrapperCard } from "../StudentPostBlog/style";
@@ -29,9 +30,9 @@ import * as Message from "../../../components/Message/Message";
 import { useQuery } from "@tanstack/react-query";
 import ModalComponent from "../../ModalComponent/ModalComponent";
 import Loading from "../../../components/LoadingComponent/LoadingComponent";
-const { TextArea } = Input;
 const StudentPostBlog = () => {
   ////setup
+  const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(true);
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const [updateForm, setUpdateForm] = useState({
@@ -106,6 +107,7 @@ const StudentPostBlog = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
   const showModal = () => {
     setIsModalOpen(true);
@@ -214,7 +216,9 @@ const StudentPostBlog = () => {
   const mutationAdded = useMutationHooks((data) =>
     ContributionService.createContribution(data)
   );
+  const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const handleOk = async () => {
+    setIsLoadingAdd(true);
     const user = jwtTranslate(cookiesAccessToken.access_token);
     const imageUrls = fileListImage.map((file) => file);
     const data = {
@@ -230,16 +234,15 @@ const StudentPostBlog = () => {
       nameofword: selectedFiles?.name,
       content: selectedFiles?.response?.htmlContent,
     };
-
+    setIsLoading(true);
     mutationAdded.mutate(data, {
       onSettled: () => {
-        submitedQuerry.refetch();
+        setIsLoading(true);
+        submitedQuerry.refetch().then(() => setIsLoading(false));
       },
     });
-    setIsData(false);
-    setIsOpenDrawer(false);
-    setIsModalOpen(false);
     setIsModalOpenRule(false);
+    setIsCheckboxChecked(false);
   };
   const {
     data: dataAdded,
@@ -250,8 +253,16 @@ const StudentPostBlog = () => {
     if (isSuccessAdded && dataAdded?.status === "OK") {
       Message.success();
       setIsModalOpen(false);
+      setIsData(false);
+      setIsOpenDrawer(false);
+      setIsLoadingAdd(false);
+      setTitle("");
+      setSelectedFiles(null);
+      setFileListImage([]);
+      form.resetFields();
     } else if (isErrorAdded && dataAdded?.status === "ERR") {
       Message.error();
+      setIsLoadingAdd(false);
     }
   }, [isSuccessAdded]);
   ///lấy dữ liệu của bài đã nộp
@@ -271,6 +282,7 @@ const StudentPostBlog = () => {
   };
   ///delete contribution
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const handleCancelDelete = () => {
     setIsModalOpenDelete(false);
   };
@@ -282,31 +294,33 @@ const StudentPostBlog = () => {
     return res;
   });
   const handleDeleteUser = () => {
+    setIsLoadingDelete(true);
     const id = detailContribution?._id;
     const accessToken = cookiesAccessToken;
     mutationDeleted.mutate(
       { id, accessToken },
       {
         onSettled: () => {
-          submitedQuerry.refetch();
+          setIsLoading(true);
+          submitedQuerry.refetch().then(() => setIsLoading(false));
         },
       }
     );
-    setIsModalOpenDelete(false);
-    setIsOpenDrawer(false);
   };
   const {
     data: dataDeleted,
-    isLoading: isLoadingDeleted,
     isSuccess: isSuccessDelected,
     isError: isErrorDeleted,
   } = mutationDeleted;
   useEffect(() => {
     if (isSuccessDelected && dataDeleted?.status === "OK") {
       Message.success();
-      handleCancelDelete();
+      setIsLoadingDelete(false);
+      setIsModalOpenDelete(false);
+      setIsOpenDrawer(false);
     } else if (isErrorDeleted) {
       Message.error();
+      setIsLoadingDelete(false);
     }
   }, [isSuccessDelected]);
   ///comment
@@ -437,7 +451,9 @@ const StudentPostBlog = () => {
 
   ///
   ///update button
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const handleOkUpdate = async () => {
+    setIsLoadingUpdate(true)
     const user = jwtTranslate(cookiesAccessToken.access_token);
     const data = {
       lastupdated_date: Date.now(),
@@ -462,6 +478,7 @@ const StudentPostBlog = () => {
       Message.success();
       setIsModalUpdateOpen(false);
       setIsOpenDrawer(false);
+      setIsLoadingUpdate(false)
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -479,46 +496,25 @@ const StudentPostBlog = () => {
   const handleOkRule = () => {
     setIsModalOpenRule(false);
   };
-
   const handleCancelRule = () => {
     setIsModalOpenRule(false);
   };
   ////
   const [isData, setIsData] = useState(false);
-  const [stateAdd, setStateAdd] = useState(false);
   useEffect(() => {
     if (selectedFiles && title) {
       setIsData(true);
     }
   }, [selectedFiles, title]);
-  const { Search } = Input;
-  const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: "#1677ff",
-      }}
-    />
-  );
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  ////
+  const [isHidden, setIsHidden] = useState(true);
   return (
     <div style={{ padding: "50px" }}>
       <WrapperHeader>
-        <p>List Of Contributions</p>
+        <p>List Of Events</p>
       </WrapperHeader>
-      <div>
-        <Space direction="vertical">
-          <Search
-            placeholder="Search by title"
-            onSearch={onSearch}
-            style={{
-              width: 200,
-            }}
-          />
-        </Space>
-      </div>
-      <div style={{ paddingTop: "50px" }}>
-        <Loading isLoading={isLoading}>
+      <Loading isLoading={isLoading}>
+        <div style={{ paddingTop: "50px" }}>
           <div>Sự kiện đang diễn ra</div>
           <Row gutter={16}>
             {itemsEvent && itemsEvent.length !== 0 ? (
@@ -565,66 +561,73 @@ const StudentPostBlog = () => {
               <Empty />
             )}
           </Row>
-        </Loading>
-      </div>
-      <div style={{ paddingTop: "50px" }}>
-        <Loading isLoading={isLoading}>
-          <div>Sự kiện hết hạn</div>
-          <Row gutter={16}>
-            {itemsUnValidEvent && itemsUnValidEvent.length !== 0 ? (
-              itemsUnValidEvent.map((event) => (
-                <Col span={8} key={event.key}>
-                  <WrapperCard
-                    title={
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <div
-                          style={{
-                            marginRight: "5px",
-                            verticalAlign: "middle",
-                          }}
-                        >
-                          {event.label}
+        </div>
+        <div style={{ paddingTop: "50px" }}>
+          <div onClick={() => setIsHidden(!isHidden)}>
+            Sự kiện hết hạn{" "}
+            {isHidden ? <CaretUpOutlined /> : <CaretDownOutlined />}
+          </div>
+          {isHidden ? null : (
+            <Row gutter={16}>
+              {itemsUnValidEvent && itemsUnValidEvent.length !== 0 ? (
+                itemsUnValidEvent.map((event) => (
+                  <Col span={8} key={event.key}>
+                    <WrapperCard
+                      title={
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <div
+                            style={{
+                              marginRight: "5px",
+                              verticalAlign: "middle",
+                            }}
+                          >
+                            {event.label}
+                          </div>
+                          {submited &&
+                          submited.some(
+                            (item) => item.eventId === event.key
+                          ) ? (
+                            <CheckCircleOutlined
+                              style={{
+                                color: "green",
+                                verticalAlign: "middle",
+                              }}
+                            />
+                          ) : (
+                            <CloseCircleOutlined
+                              style={{ color: "red", verticalAlign: "middle" }}
+                            />
+                          )}
                         </div>
-                        {submited &&
-                        submited.some((item) => item.eventId === event.key) ? (
-                          <CheckCircleOutlined
-                            style={{ color: "green", verticalAlign: "middle" }}
-                          />
-                        ) : (
-                          <CloseCircleOutlined
-                            style={{ color: "red", verticalAlign: "middle" }}
-                          />
-                        )}
-                      </div>
-                    }
-                    bordered={false}
-                    hoverable
-                    onClick={() => handleCardClick(event.key)}
-                  >
-                    <p>Open Date: {formatDateTime(event.openDate)}</p>
-                    <p>
-                      First Close Date: {formatDateTime(event.firstCloseDate)}
-                    </p>
-                    <p>
-                      Final Close Date: {formatDateTime(event.finalCloseDate)}
-                    </p>
-                  </WrapperCard>
-                </Col>
-              ))
-            ) : (
-              <Empty />
-            )}
-          </Row>
-        </Loading>
-      </div>
+                      }
+                      bordered={false}
+                      hoverable
+                      onClick={() => handleCardClick(event.key)}
+                    >
+                      <p>Open Date: {formatDateTime(event.openDate)}</p>
+                      <p>
+                        First Close Date: {formatDateTime(event.firstCloseDate)}
+                      </p>
+                      <p>
+                        Final Close Date: {formatDateTime(event.finalCloseDate)}
+                      </p>
+                    </WrapperCard>
+                  </Col>
+                ))
+              ) : (
+                <Empty />
+              )}
+            </Row>
+          )}
+        </div>
+      </Loading>
       <div>
         <Modal
           width={800}
           title="Add New Contributions"
           open={isModalOpen}
-          onOk={showModalRule}
           onCancel={handleCancel}
-          okButtonProps={{ disabled: !isData }}
+          footer=""
         >
           <Form
             name="basic"
@@ -641,6 +644,7 @@ const StudentPostBlog = () => {
               remember: true,
             }}
             autoComplete="off"
+            form={form}
           >
             <Form.Item
               label="Chủ Đề"
@@ -666,11 +670,7 @@ const StudentPostBlog = () => {
                 },
               ]}
             >
-              <InputComponent
-                value={title}
-                name="title"
-                onChange={handleOnchange}
-              />
+              <InputComponent name="title" onChange={handleOnchange} />
             </Form.Item>
             <Form.Item
               label="Upload File Word"
@@ -683,7 +683,12 @@ const StudentPostBlog = () => {
               ]}
             >
               <Upload {...propsWord} maxCount={1}>
-                <Button icon={<UploadOutlined />} disabled={selectedFiles ? true : false}>Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={selectedFiles ? true : false}
+                >
+                  Upload
+                </Button>
               </Upload>
             </Form.Item>
             <Form.Item label="Upload File Image" name="uploadFileImg">
@@ -706,6 +711,19 @@ const StudentPostBlog = () => {
               </>
             </Form.Item>
           </Form>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+          >
+            <Button
+              disabled={!isData}
+              onClick={showModalRule}
+              type="primary" // Đảm bảo handleOk được gọi khi nút được nhấn
+            >
+              {isLoadingAdd ? "Submitting..." : "Submit"}{" "}
+              <Loading isLoading={isLoadingAdd} color="white"></Loading>
+            </Button>
+            <Button onClick={handleCancel}>Cancel</Button>
+          </div>
         </Modal>
       </div>
       <div>
@@ -894,19 +912,33 @@ const StudentPostBlog = () => {
           title="Delete contribution"
           open={isModalOpenDelete}
           onCancel={handleCancelDelete}
-          onOk={handleDeleteUser}
+          footer=""
         >
           <div>Are you sure to delete this contribution? </div>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+          >
+            <Button
+              onClick={handleDeleteUser}
+              danger // Đảm bảo handleOk được gọi khi nút được nhấn
+            >
+              {isLoadingDelete ? "Deleting..." : "Delete"}{" "}
+              <Loading isLoading={isLoadingDelete} color="red"></Loading>
+            </Button>
+            <Button onClick={handleCancelDelete} type="primary">
+              Cancel
+            </Button>
+          </div>
         </ModalComponent>
         <Modal
           width={800}
           title="Update Contribution"
           open={isModalUpdateOpen}
           onCancel={handleUpdateCancel}
-          onOk={handleOkUpdate}
-          okButtonProps={{
-            disabled: !(isChangeWordFile || isContentChanged),
-          }}
+          footer=""
+          // okButtonProps={{
+          //   disabled: !(isChangeWordFile || isContentChanged),
+          // }}
         >
           <Form
             name="basic"
@@ -985,6 +1017,19 @@ const StudentPostBlog = () => {
               </Upload>
             </Form.Item>
           </Form>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+          >
+            <Button
+            disabled={!(isChangeWordFile || isContentChanged)}
+              onClick={handleOkUpdate}
+              type="primary" // Đảm bảo handleOk được gọi khi nút được nhấn
+            >
+              {isLoadingUpdate ? "Updating..." : "Update"}{" "}
+              <Loading isLoading={isLoadingUpdate} color="white"></Loading>
+            </Button>
+            <Button onClick={handleUpdateCancel}>Cancel</Button>
+          </div>
         </Modal>
         <Modal
           open={isModalOpenRule}
