@@ -27,23 +27,10 @@ import * as UserService from "../../../services/UserService";
 import ModalComponent from "../../ModalComponent/ModalComponent";
 import { useCookies } from "react-cookie";
 import * as Message from "../../../components/Message/Message";
+import Loading from "../../../components/LoadingComponent/LoadingComponent";
 const AdminUser = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
   //setup
-  const renderAction = (record) => {
-    return (
-      <div>
-        <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
-          onClick={() => setIsModalOpenDelete(true)}
-        />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
-          onClick={() => handleDetailUser(record)}
-        />
-      </div>
-    );
-  };
   const columns = [
     {
       title: "Name",
@@ -68,7 +55,20 @@ const AdminUser = () => {
     {
       title: "Action",
       dataIndex: "Action",
-      render: renderAction,
+      render: (_, record) => {
+        return dataTable.length > 0 ? (
+          <div>
+            <DeleteOutlined
+              style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+              onClick={() => handleDelete(record)}
+            />
+            <EditOutlined
+              style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+              onClick={() => handleDetailUser(record)}
+            />
+          </div>
+        ) : null;
+      },
     },
   ];
   const itemsRole = [
@@ -77,8 +77,8 @@ const AdminUser = () => {
       key: "Student",
     },
     {
-      label: "Marketing Manager",
-      key: "MarketingManager",
+      label: "Manager",
+      key: "Manager",
     },
     {
       label: "Marketing Coordinator",
@@ -160,8 +160,11 @@ const AdminUser = () => {
     onClick: handleFacultyClick,
   };
   //getalluser
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const fetchUserAll = async () => {
+    setIsLoadingData(true);
     const res = await UserService.getAllUser();
+    setIsLoadingData(false);
     return res;
   };
   const userQuerry = useQuery({
@@ -226,6 +229,11 @@ const AdminUser = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const handleCancelDelete = () => {
     setIsModalOpenDelete(false);
+    setRowSelected("");
+  };
+  const handleDelete = (record) => {
+    setIsModalOpenDelete(true);
+    setRowSelected(record?.key);
   };
   const mutationDeleted = useMutationHooks((data) => {
     const { id, token } = data;
@@ -271,12 +279,9 @@ const AdminUser = () => {
     formUpdate.setFieldsValue(stateDetailUser);
   }, [formUpdate, stateDetailUser]);
   const handleDetailUser = (record) => {
-    const selectedId = record?._id;
-    setRowSelected((rowSelected) => selectedId);
-    if (rowSelected) {
-      setIsOpenDrawer(true);
-      // setIsLoadingUpdate(true)
-    }
+    setRowSelected(record?.key);
+    fetchGetUserDetail(record?.key);
+    setIsOpenDrawer(true);
   };
   const handleRoleClickUpdate = ({ key }) => {
     setStateDetailUser({
@@ -376,28 +381,15 @@ const AdminUser = () => {
             Add
           </Button>
         </div>
-        <div
-          style={{
-            paddingLeft: "20px",
-          }}
-        >
-          <Button style={{ width: "100px" }} danger>
-            Delete
-          </Button>
-        </div>
       </WrapperAction>
       <div>
-        <TableComponent
-          dataSource={dataTable}
-          columns={columns}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                setRowSelected(record?.key);
-              },
-            };
-          }}
-        />
+        <Loading isLoading={isLoadingData}>
+          <TableComponent
+            rowSelection={null}
+            dataSource={dataTable}
+            columns={columns}
+          />
+        </Loading>
       </div>
       <Modal
         title="Create User Account"
@@ -465,7 +457,7 @@ const AdminUser = () => {
               </Button>
             </Dropdown>
           </Form.Item>
-          {stateUser["role"] !== "MarketingManager" ? (
+          {stateUser["role"] !== "Manager" ? (
             <Form.Item
               label="Faculty"
               name="faculty"

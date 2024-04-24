@@ -130,6 +130,7 @@ const CoordinatorPage = () => {
           }}
           items={items}
           onClick={handleOnCLick}
+          defaultSelectedKeys={['listBlog']}
         />
         <div style={{ flex: 1, padding: "15px" }}>
           {renderPage(keySelected)}

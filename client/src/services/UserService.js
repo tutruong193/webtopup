@@ -65,7 +65,7 @@ export const deleteUser = async (id, access_token) => {
 };
 export const updateUser = async (id, access_token, data) => {
   let { faculty, role } = data;
-  if (role === "MarketingManager") {
+  if (role === "Manager") {
     faculty = null;
   }
   data.faculty = faculty;

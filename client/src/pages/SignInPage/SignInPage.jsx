@@ -70,7 +70,7 @@ const SignInPage = () => {
         case "MarketingCoordinator":
           navigate("/system/coordinator");
           break;
-        case "MarketingManager":
+        case "Manager":
           navigate("/system/manager");
           break;
         case "Guest":

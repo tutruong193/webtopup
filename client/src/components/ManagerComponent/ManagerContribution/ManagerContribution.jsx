@@ -13,7 +13,6 @@ import * as Message from "../../../components/Message/Message";
 import Loading from "../../../components/LoadingComponent/LoadingComponent";
 const ManagerContribution = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
   ///columns
   const columns = [
     {
@@ -54,7 +53,7 @@ const ManagerContribution = () => {
               style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
             />
             <Popconfirm
-              title={`Download ${record.fileName} ?`}
+              title={`Download?`}
               onConfirm={() => handleDownLoad(record.key)}
             >
               <DownloadOutlined
@@ -124,7 +123,6 @@ const ManagerContribution = () => {
         console.error("Error fetching faculty data:", error);
       }
     };
-
     fetchFacultyData();
   }, []);
   ///lấy dữ liệu cho table
@@ -132,6 +130,7 @@ const ManagerContribution = () => {
   const fetchContributionData = async () => {
     if (selectedEvent && selectedFaculty) {
       try {
+        setIsLoading(true)
         const res = await ContributionService.getAllContributions();
         if (res?.data) {
           const dataTableData = res.data
@@ -165,8 +164,10 @@ const ManagerContribution = () => {
       }
     }
   };
+  console.log(dataTable);
   useEffect(() => {
     fetchContributionData();
+    setSelectedIds([])
   }, [selectedEvent, selectedFaculty]);
   ////view file
   const [detailContribution, setDetailContribution] = useState("");
@@ -215,7 +216,7 @@ const ManagerContribution = () => {
     try {
       const res = await axios.get(
         `${
-          process.ENV.REACT_APP_API_URL
+          process.env.REACT_APP_API_URL
         }/downloadZips?selectedIds=${selectedIds.join(",")}`,
         {
           responseType: "blob", // Set the response data type to blob
@@ -296,10 +297,7 @@ const ManagerContribution = () => {
             value: item.key,
           }))}
         />
-      </div>
-      {selectedFaculty && selectedEvent && (
-        <div>
-          {selectedIds && selectedIds.length > 0 && (
+        {selectedIds && selectedIds.length > 0 && (
             <Popconfirm
               title={`Download those files ?`}
               onConfirm={() => handleDownloadSelected()}
@@ -307,6 +305,10 @@ const ManagerContribution = () => {
               <Button>Download</Button>
             </Popconfirm>
           )}
+      </div>
+      {selectedFaculty && selectedEvent && (
+        <div>
+          
           <Loading isLoading={isLoading}>
             <TableComponent
               columns={columns}

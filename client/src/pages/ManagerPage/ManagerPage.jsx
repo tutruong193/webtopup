@@ -49,6 +49,7 @@ const ManagerPage = () => {
           }}
           items={items}
           onClick={handleOnCLick}
+          defaultSelectedKeys={['dashboard']}
         />
         <div style={{ flex: 1, padding: '15px' }}>
           {renderPage(keySelected)}

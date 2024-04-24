@@ -45,7 +45,7 @@ const AdminPage = () => {
         return <></>;
     }
   };
-  const [keySelected, setKeySelected] = useState("");
+  const [keySelected, setKeySelected] = useState("user");
   const [cookiesAccessToken, setCookieAccessToken] = useCookies("");
   const navigate = useNavigate();
   const handleOnCLick = ({ key }) => {
@@ -68,6 +68,7 @@ const AdminPage = () => {
           }}
           items={items}
           onClick={handleOnCLick}
+          defaultSelectedKeys={['user']}
         />
         <div style={{ flex: 1, padding: "15px" }}>
           {renderPage(keySelected)}

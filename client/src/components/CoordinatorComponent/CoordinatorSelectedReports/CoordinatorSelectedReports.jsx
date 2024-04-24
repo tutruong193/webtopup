@@ -21,18 +21,18 @@ const CoordinatorSelectedReports = () => {
   ];
   const data = [
     {
-      key: "numbercontributions",
+      key: "Number of contributions",
       name: "Number of contributions",
       description: "New York No. 1 Lake Park",
     },
     {
-      key: "percentage",
+      key: "Percentage of contributions",
       name: "Percentage of contributions",
       description: "London No. 1 Lake Park",
     },
     {
-      key: "numbercontributionsbystudent",
-      name: "Number of contributions",
+      key: "Number of contributions (students)",
+      name: "Number of contributions (students)",
       description: "New York No. 1 Lake Park",
     },
   ];

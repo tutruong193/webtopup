@@ -9,10 +9,13 @@ import {
   Button,
   Space,
 } from "antd";
+import { WrapperHeader } from "./style";
+import { WrapperAction } from "../AdminUser/style";
 import * as FacultyService from "../../../services/FacultyService";
 import { useQuery } from "@tanstack/react-query";
 import * as Message from "../../Message/Message";
 import * as UserService from "../../../services/UserService";
+import Loading from "../../../components/LoadingComponent/LoadingComponent";
 const EditableCell = ({
   editing,
   dataIndex,
@@ -48,9 +51,11 @@ const EditableCell = ({
   );
 };
 const AdminFaculty = () => {
-    ///fetch to get the list of faculty 
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  ///fetch to get the list of faculty
   const fetchData = async () => {
     try {
+      setIsLoadingData(true)
       const facultyRes = await FacultyService.getAllFaculty();
       const formattedData = facultyRes.data.map((faculty) => ({
         key: faculty._id, // Gán id vào key
@@ -59,7 +64,7 @@ const AdminFaculty = () => {
       return formattedData;
     } catch (error) {
       console.error("Error fetching data:", error);
-    }
+    } 
   };
   const facultyQuerry = useQuery({
     queryKey: ["faculties"],
@@ -100,24 +105,25 @@ const AdminFaculty = () => {
   };
   const columns = [
     {
-      title: "name",
+      title: "Name",
       dataIndex: "name",
       width: "50%",
       editable: true,
     },
     {
-      title: "operation",
-      dataIndex: "operation",
+      title: "Action",
+      dataIndex: "action",
       render: (_, record) => {
         const editable = isEditing(record);
         const isUserExist = checkUserExist(record.key);
 
         // Tạo một biến để lưu thông báo khi nút bị disable
         let disabledMessage = "";
-    
+
         // Kiểm tra nếu user tồn tại trong faculty
         if (isUserExist) {
-          disabledMessage = "This faculty has associated users. You cannot delete it.";
+          disabledMessage =
+            "This faculty has associated users. You cannot delete it.";
         }
         return editable ? (
           <span>
@@ -146,7 +152,9 @@ const AdminFaculty = () => {
               onConfirm={() => handleDelete(record.key)}
               disabled={isUserExist}
             >
-              <Typography.Link disabled={isUserExist} title={disabledMessage}>Delete</Typography.Link>
+              <Typography.Link disabled={isUserExist} title={disabledMessage}>
+                Delete
+              </Typography.Link>
             </Popconfirm>
           </Space>
         );
@@ -199,6 +207,8 @@ const AdminFaculty = () => {
         console.log(res.data);
       } catch (error) {
         console.error("Error fetching User data:", error);
+      } finally {
+        setIsLoadingData(false)
       }
     };
     fetchUserData();
@@ -209,17 +219,21 @@ const AdminFaculty = () => {
     return result;
   };
   const handleDelete = async (key) => {
-    const res = await FacultyService.deleteFaculty(key)
-    if(res.status === 'OK'){
-        Message.success(res.message)
-        facultyQuerry.refetch();
-    } else if(res.status ==='ERR'){
-        Message.error(res.message)
+    const res = await FacultyService.deleteFaculty(key);
+    if (res.status === "OK") {
+      Message.success(res.message);
+      facultyQuerry.refetch();
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
     }
   };
   return (
-    <div>
-      <Form form={form} component={false}>
+    <div style={{ padding: "30px" }}>
+      <WrapperHeader>
+        <p>List faculties</p>
+      </WrapperHeader>
+      <WrapperAction
+      >
         <Popconfirm
           icon=""
           placement="bottomLeft"
@@ -233,16 +247,11 @@ const AdminFaculty = () => {
             </div>
           }
         >
-          <Button
-            type="primary"
-            style={{
-              marginBottom: 16,
-            }}
-          >
-            Add a faculty
-          </Button>
+          <Button type="primary">Add a faculty</Button>
         </Popconfirm>
-
+      </WrapperAction>
+      <Loading isLoading={isLoadingData}>
+      <Form form={form} component={false}>
         <Table
           components={{
             body: {
@@ -258,6 +267,7 @@ const AdminFaculty = () => {
           }}
         />
       </Form>
+      </Loading>
     </div>
   );
 };

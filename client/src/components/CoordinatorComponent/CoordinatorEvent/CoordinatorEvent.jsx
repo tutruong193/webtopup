@@ -64,7 +64,7 @@ const CoordinatorEvent = () => {
     <div>
       {!showContribution && (
         <WrapperHeader>
-          <p>list of Event</p>
+          <p>List of Event</p>
         </WrapperHeader>
       )}
       <div style={{ padding: "50px" }}>

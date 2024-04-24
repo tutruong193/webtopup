@@ -281,24 +281,52 @@ const GuestViewReport = () => {
     ? reportSelected.map((selected, index) => {
         let tabContent;
         switch (selected) {
-          case "numbercontributions":
+          case "Number of contributions":
             tabContent = (
-              <div style={{ width: "80%" }}>
-                <Bar options={options1} data={data1} />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ width: "70%" }}>
+                  <Bar options={options1} data={data1} />
+                </div>
               </div>
             );
             break;
-          case "percentage":
+          case "Percentage of contributions":
             tabContent = (
-              <div style={{ width: "80%" }}>
-                <Pie data={dataPercentage} />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center", // Căn giữa theo chiều dọc
+                  textAlign: "center",
+                }}
+              >
+                <div style={{paddingBottom: '10px', fontWeight: '500', fontSize: '12px'}}>Percentage of submitted contributions</div>
+                <div style={{ width: "50%" }}>
+                  <Pie data={dataPercentage} />
+                </div>
               </div>
             );
             break;
-          case "numbercontributionsbystudent":
+          case "Number of contributions (students)":
             tabContent = (
-              <div style={{ width: "80%" }}>
-                <Bar options={options3} data={data3} />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ width: "70%" }}>
+                  <Bar options={options3} data={data3} />
+                </div>
               </div>
             );
             break;
@@ -314,18 +342,50 @@ const GuestViewReport = () => {
     : null;
   console.log(tabItems);
   return (
-    <div>
-      <h1>View Reports</h1>
-      <Select
+    <div
+      style={{
+        padding: "30px 20px",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
+      <div
         style={{
-          width: 120,
+          justifyContent: "center",
+          display: "flex",
+          alignItems: "center",
+          height: "fit-content",
         }}
-        onChange={handleChange}
-        options={itemsEvent.map((item) => ({
-          label: item.label,
-          value: item.key,
-        }))}
-      />
+      >
+        <h2 style={{ textTransform: "uppercase", margin: "0" }}>
+          View reports
+        </h2>
+      </div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "15px 0px",
+          margin: "10px 0px",
+          borderTop: "solid 1px rgba(160, 160, 160, 0.3)",
+          borderBottom: "solid 1px rgba(160, 160, 160, 0.3)",
+        }}
+      >
+        <div>Choose event: </div>
+        <Select
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={itemsEvent.map((item) => ({
+            label: item.label,
+            value: item.key,
+          }))}
+        />
+      </div>
       <Loading isLoading={isLoadingData}>
         {tabItems ? (
           <Tabs defaultActiveKey="0" type="card" items={tabItems} />

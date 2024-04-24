@@ -25,17 +25,6 @@ const createEvent = async (req, res) => {
         message: "Resubmit dates", // Sửa thông báo
       });
     }
-    if (
-      (firstCloseDateSau.getTime() - openDateSau.getTime()) /
-        (1000 * 3600 * 24) <
-      14
-    ) {
-      // Sửa biến
-      return res.status(200).json({
-        status: "ERR",
-        message: "FirstCloseDate must be older than openDate 14 days", // Sửa thông báo
-      });
-    }
     const currentTimeVietnam = moment().tz("Asia/Ho_Chi_Minh").format();
     const openDateVietNam = moment(openDateSau).tz("Asia/Ho_Chi_Minh");
     const firstCloseDateVietNam =
@@ -90,17 +79,6 @@ const updateEvent = async (req, res) => {
     const openDateSau = new Date(openDate);
     const firstCloseDateSau = new Date(firstCloseDate); // Sửa tên biến
     const finalCloseDateSau = new Date(finalCloseDate); // Thêm biến cho ngày đóng cửa cuối cùng
-    if (
-      (firstCloseDateSau.getTime() - openDateSau.getTime()) /
-        (1000 * 3600 * 24) <
-      14
-    ) {
-      // Sửa biến
-      return res.status(200).json({
-        status: "ERR",
-        message: "FirstCloseDate must be older than openDate 14 days", // Sửa thông báo
-      });
-    }
     const currentTimeVietnam = moment().tz("Asia/Ho_Chi_Minh").format();
     const firstCloseDateVietNam =
       moment(firstCloseDateSau).tz("Asia/Ho_Chi_Minh"); // Sửa biến

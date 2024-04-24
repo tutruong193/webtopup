@@ -68,7 +68,7 @@ const authMarketingManagerMiddleWare = (req, res, next) => {
                 status: 'ERROR'
             })
         }
-        if (user?.role == 'MarketingManager') {
+        if (user?.role == 'Manager') {
             next()
         } else {
             return res.status(404).json({

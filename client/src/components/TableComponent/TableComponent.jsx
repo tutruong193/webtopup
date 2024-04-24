@@ -18,7 +18,6 @@ const TableComponent = (props) => {
   }
   return (
     <div>
-
       <Table
         rowSelection={{
           ...rowSelection,
@@ -33,31 +32,3 @@ const TableComponent = (props) => {
 }
 
 export default TableComponent
-{/* <div style={{ display: 'none' }}>{kindoftable}</div>
-      {rowSelectedKeys.length > 0 && kindoftable == 'manager' ? (
-        <div style={{
-          background: '#1d1ddd',
-          color: '#fff',
-          fontWeight: 'bold',
-          padding: '10px',
-          cursor: 'pointer'
-        }}
-          onClick={handleDownloadMany}
-        >
-          Dowdload selected
-        </div>
-      ) : null} */}
-{/* {rowSelectedKeys.length > 0 && kindoftable !== 'manager' ? 
-      (
-        <div style={{
-          background: '#1d1ddd',
-          color: '#fff',
-          fontWeight: 'bold',
-          padding: '10px',
-          cursor: 'pointer'
-        }}
-        // onClick={handleDeleteAll}
-        >
-          Delete Selected
-        </div>
-      ) : null} */}

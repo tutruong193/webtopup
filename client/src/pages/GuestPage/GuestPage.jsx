@@ -15,6 +15,10 @@ import GuestViewReport from "../../components/GuestComponent/GuestViewReport/Gue
 const GuestPage = () => {
   const [cookiesAccessToken, setCookieAccessToken, removeCookie] =
     useCookies("");
+
+  // Đặt keySelected ban đầu là 'viewReport'
+  const [keySelected, setKeySelected] = useState('viewReport');
+
   const items = [
     getItem(
       "Functions",
@@ -27,6 +31,7 @@ const GuestPage = () => {
       "group"
     ),
   ];
+
   const renderPage = (key) => {
     switch (key) {
       case "user":
@@ -41,12 +46,11 @@ const GuestPage = () => {
         return <></>;
     }
   };
-  const [keySelected, setKeySelected] = useState("");
 
-  const handleOnCLick = ({ key }) => {
+  const handleOnClick = ({ key }) => {
     setKeySelected(key);
   };
-  const navigate = useNavigate();
+
   return (
     <>
       <div style={{ display: "flex" }}>
@@ -58,7 +62,9 @@ const GuestPage = () => {
             height: "100vh",
           }}
           items={items}
-          onClick={handleOnCLick}
+          onClick={handleOnClick}
+          // Thiết lập defaultSelectedKeys cho menu
+          defaultSelectedKeys={['viewReport']}
         />
         <div style={{ flex: 1, padding: "15px" }}>
           {renderPage(keySelected)}
@@ -69,3 +75,4 @@ const GuestPage = () => {
 };
 
 export default GuestPage;
+
