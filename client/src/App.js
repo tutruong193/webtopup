@@ -15,6 +15,7 @@ function App() {
       removeCookie('access_token');
     }
   }, [window.location.pathname]);
+  console.log(process.env.REACT_APP_API_URL)
   return (
     <div>
       <Router>
