@@ -451,9 +451,9 @@ const StudentPostBlog = () => {
 
   ///
   ///update button
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const handleOkUpdate = async () => {
-    setIsLoadingUpdate(true)
+    setIsLoadingUpdate(true);
     const user = jwtTranslate(cookiesAccessToken.access_token);
     const data = {
       lastupdated_date: Date.now(),
@@ -478,7 +478,7 @@ const StudentPostBlog = () => {
       Message.success();
       setIsModalUpdateOpen(false);
       setIsOpenDrawer(false);
-      setIsLoadingUpdate(false)
+      setIsLoadingUpdate(false);
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -508,6 +508,8 @@ const StudentPostBlog = () => {
   }, [selectedFiles, title]);
   ////
   const [isHidden, setIsHidden] = useState(true);
+
+  // Additional state variables and functions for handling UI and logic
   return (
     <div style={{ padding: "50px" }}>
       <WrapperHeader>
@@ -896,13 +898,15 @@ const StudentPostBlog = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button
-                    style={{ width: "100px" }}
-                    type="dashed"
-                    onClick={showModal}
-                  >
-                    Add
-                  </Button>
+                  isBeforeFirstCloseDate && (
+                    <Button
+                      style={{ width: "100px" }}
+                      type="dashed"
+                      onClick={showModal}
+                    >
+                      Add
+                    </Button>
+                  )
                 )
               ) : null}
             </div>
@@ -1021,7 +1025,7 @@ const StudentPostBlog = () => {
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <Button
-            disabled={!(isChangeWordFile || isContentChanged)}
+              disabled={!(isChangeWordFile || isContentChanged)}
               onClick={handleOkUpdate}
               type="primary" // Đảm bảo handleOk được gọi khi nút được nhấn
             >
