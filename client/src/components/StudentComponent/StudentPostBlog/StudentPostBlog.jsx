@@ -502,7 +502,7 @@ const StudentPostBlog = () => {
       </WrapperHeader>
       <Loading isLoading={isLoading}>
         <div style={{ paddingTop: "50px" }}>
-          <div>Sự kiện đang diễn ra</div>
+          <div>Ongoing Events</div>
           <Row gutter={16}>
             {itemsEvent && itemsEvent.length !== 0 ? (
               itemsEvent.map((event) => (
@@ -551,7 +551,7 @@ const StudentPostBlog = () => {
         </div>
         <div style={{ paddingTop: "50px" }}>
           <div onClick={() => setIsHidden(!isHidden)}>
-            Sự kiện hết hạn{" "}
+            Overdue Events{" "}
             {isHidden ? <CaretUpOutlined /> : <CaretDownOutlined />}
           </div>
           {isHidden ? null : (
