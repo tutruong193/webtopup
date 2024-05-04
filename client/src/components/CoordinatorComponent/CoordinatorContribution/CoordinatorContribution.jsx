@@ -166,44 +166,24 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
     items: items,
     onClick: handleStatusClick,
   };
-  const mutationUpdate = useMutationHooks((data) => {
-    const { contributionDetail } = data;
-    const res = ContributionService.updateContribution(
-      contributionDetail?._id,
-      contributionDetail
-    );
-    return res;
-  });
-  const handleMarking = () => {
+  const handleMarking = async() => {
     const updatedContribution = {
       ...contributionDetail,
       confirm_date: new Date(), // Thêm trường confirm_date là thời điểm hiện tại
     };
-    console.log(updatedContribution);
-    mutationUpdate.mutate(
-      { id: updatedContribution?._id, contributionDetail: updatedContribution },
-      {
-        onSettled: () => {
-          setIsLoadingData(true);
-          contributionQuerry.refetch().then(() => setIsLoadingData(false));
-        },
-      }
+    const res = await ContributionService.updateContribution(
+      updatedContribution?._id,
+      updatedContribution
     );
-  };
-  const {
-    data: dataUpdated,
-    isLoading: isLoadingUpdated,
-    isSuccess: isSuccessUpdated,
-    isError: isErrorUpdated,
-  } = mutationUpdate;
-  useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+    if (res.status === "OK") {
       Message.success();
+      setIsLoadingData(true);
+      contributionQuerry.refetch().then(() => setIsLoadingData(false));
       setIsOpenDrawer(false);
-    } else if (isErrorUpdated) {
-      Message.error();
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
     }
-  }, [isSuccessUpdated]);
+  };
   //xem file
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalImageOpen, setIsModalImageOpen] = useState(false);
@@ -526,7 +506,15 @@ const CoordinatorContribution = ({ eventId, facultyId }) => {
         width="70%"
         footer=""
       >
-        <div style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px'}}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
           {contributionDetail.imageFiles &&
             contributionDetail.imageFiles.map((imageFile, index) => (
               <div>

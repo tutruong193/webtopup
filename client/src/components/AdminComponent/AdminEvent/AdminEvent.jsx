@@ -231,45 +231,20 @@ const AdminEvent = () => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-  };
-  const mutationAdded = useMutationHooks((data) =>
-    EventService.createEvent(data)
-  );
-  const [form] = Form.useForm();
-  const handleOk = () => {
-    mutationAdded.mutate(
-      { ...stateEvent },
-      {
-        onSettled: () => {
-          eventQuerry.refetch();
-        },
-      }
-    );
-    if (dataAdded?.status == "OK") {
-      setStateEvent({
-        name: "",
-        openDate: "",
-        firstCloseDate: "",
-        finalCloseDate: "",
-      });
-      setIsModalOpen(false);
-    }
     form.resetFields();
   };
-  const {
-    data: dataAdded,
-    isLoading: isLoadingAdded,
-    isSuccess: isSuccessAdded,
-    isError: isErrorAdded,
-  } = mutationAdded;
-  useEffect(() => {
-    if (isSuccessAdded && dataAdded?.status === "OK") {
+  const [form] = Form.useForm();
+  const handleOk = async () => {
+    const res = await EventService.createEvent(cookies["access_token"].split(" ")[1], stateEvent)
+    if(res.status === 'OK') {
       Message.success();
+      form.resetFields();
       setIsModalOpen(false);
-    } else if (isErrorAdded && dataAdded?.status === "ERR") {
-      Message.error();
+      eventQuerry.refetch();
+    } else if (res.status === 'ERR') {
+      Message.error(res.message);
     }
-  }, [isSuccessAdded]);
+  };
   //delete event
   const [rowSelected, setRowSelected] = useState("");
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
@@ -397,9 +372,6 @@ const AdminEvent = () => {
             onOk={handleOk}
             onCancel={handleCancel}
           >
-            {dataAdded?.status == "ERR" && (
-              <p style={{ color: "red" }}>{dataAdded?.message}</p>
-            )}
             <Form
               name="basic"
               labelCol={{

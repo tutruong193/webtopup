@@ -74,60 +74,24 @@ const AccountDetailComponent = ({ accesstoken }) => {
     });
   };
 
-  //thay đổi sdt
-  const isVietnamesePhoneNumber = (phoneNumber) => {
-    // Biểu thức chính quy để kiểm tra số điện thoại Việt Nam
-    const vietnamesePhoneNumberRegex = /^(\\+?84|0)([3|5|7|8|9])+([0-9]{8})\\b/;
-    return vietnamesePhoneNumberRegex.test(phoneNumber);
-  };
-  const [checkPhone, setCheckPhone] = useState(true);
-  const handlePhoneNumberChange = (e) => {
-    // const phoneNumber = e.target.value;
-    // if (!isVietnamesePhoneNumber(phoneNumber)) {
-    //   setCheckPhone(false); // Đặt checkPhone thành false nếu số điện thoại không hợp lệ
-    // } else {
-    //   setCheckPhone(true); // Đặt lại checkPhone thành true nếu số điện thoại hợp lệ
-    // }
-    handleOnchangeDetails(e);
-  };
 
   //save
-  const mutationUpdate = useMutationHooks((data) => {
-    const { detailUser } = data;
-    const token = accesstoken.split(" ")[1];
-    const res = UserService.updateUser(detailUser?._id, token, detailUser);
-    return res;
-  });
 
-  const onFinish = () => {
-    const token = accesstoken.split(" ")[1];
-    mutationUpdate.mutate({
-      detailUser: detailUser?._id,
-      token,
-      detailUser: detailUser,
-    });
-  };
-
-  const {
-    data: dataUpdated,
-    isSuccess: isSuccessUpdated,
-    isError: isErrorUpdated,
-  } = mutationUpdate;
-
-  useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+  const onFinish = async () => {
+    const res = await UserService.updateUser(detailUser?._id, detailUser)
+    if(res.status === 'OK') {
       Message.success();
-    } else if (isErrorUpdated) {
-      Message.error();
+    } else if (res.status === 'ERR') {
+      Message.error(res.message);
     }
-  }, [isSuccessUpdated]);
+  };
 
   ///change password
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [reNewPassword, setReNewPassword] = useState("");
   const [comparePassword, setComparePassword] = useState();
-
+  const [formPass] = Form.useForm();
   const handleOnchangePassword = (e) => {
     const { name, value } = e.target;
     if (name === "password") {
@@ -146,16 +110,16 @@ const AccountDetailComponent = ({ accesstoken }) => {
 
   const onChangePass = async (values) => {
     try {
-      const token = accesstoken.split(" ")[1];
-      const res = await UserService.updateUser(user?.id, token, {
+      const res = await UserService.updateUser(user?.id, {
         password: values.newpassword,
       });
-      if (res?.data) {
+      if (res.status === 'OK') {
         Message.success("Password updated successfully!");
         setDetailUser({
           ...detailUser,
           password: values.newpassword,
         });
+        formPass.resetFields()
       } else {
         Message.error("Failed to update password!");
       }
@@ -236,29 +200,6 @@ const AccountDetailComponent = ({ accesstoken }) => {
                         name="name"
                       />
                     </Form.Item>
-                    <Form.Item
-                      label="Phone Number"
-                      name="phone"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your phone number!",
-                        },
-                      ]}
-                    >
-                      <div>
-                        <Input
-                          value={detailUser?.phone}
-                          onChange={handlePhoneNumberChange}
-                          name="phone"
-                        />
-                        {/* {!checkPhone && (
-                          <span style={{ color: "red" }}>
-                            Your phone number is invalid!!!
-                          </span>
-                        )} */}
-                      </div>
-                    </Form.Item>
                     <Form.Item label="Avatar" name="avatar">
                       <WrapperUploadFile
                         onChange={handleOnchangeAvatarDetails}
@@ -332,6 +273,7 @@ const AccountDetailComponent = ({ accesstoken }) => {
                     initialValues={{
                       remember: true,
                     }}
+                    form = {formPass}
                     onFinish={onChangePass}
                     autoComplete="off"
                   >

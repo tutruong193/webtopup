@@ -152,18 +152,6 @@ const getUserName = async (id) => {
   }
 };
 
-const searchUser = async (query) => {
-  try {
-    const users = await User.find(query);
-    return {
-      status: "OK",
-      message: "SUCCESS",
-      data: users,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
 const sendActivationCode = async (id) => {
   try {
     const user = await User.findById(id);
@@ -237,7 +225,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserName,
-  searchUser,
   sendActivationCode,
   verifyActivationCode,
 };

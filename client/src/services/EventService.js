@@ -1,9 +1,13 @@
 import axios from "axios";
 const axiosJWT = axios.create();
-export const createEvent = async (data) => {
-  const res = await axios.post(
+export const createEvent = async (access_token, data) => {
+  const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL}/api/event/create`,
-    data
+    data, {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
   );
   return res.data;
 };

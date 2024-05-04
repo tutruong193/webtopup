@@ -1,9 +1,14 @@
 import axios from "axios";
-export const createContribution = async (data) => {
+export const createContribution = async (access_token, data) => {
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_API_URL}/api/contribution/create`,
-      data
+      data,
+      {
+        headers: {
+          token: `Bearer ${access_token}`,
+        },
+      }
     );
     return res.data;
   } catch (error) {
@@ -13,7 +18,12 @@ export const createContribution = async (data) => {
 };
 export const deleteContribution = async (id, access_token) => {
   const res = await axios.delete(
-    `${process.env.REACT_APP_API_URL}/api/contribution/delete/${id}`
+    `${process.env.REACT_APP_API_URL}/api/contribution/delete/${id}`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
   );
   return res.data;
 };

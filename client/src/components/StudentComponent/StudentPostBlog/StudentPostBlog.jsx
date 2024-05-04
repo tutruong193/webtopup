@@ -108,6 +108,9 @@ const StudentPostBlog = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     form.resetFields();
+    setTitle("");
+    setSelectedFiles(null);
+    setFileListImage([]);
   };
   const showModal = () => {
     setIsModalOpen(true);
@@ -213,9 +216,6 @@ const StudentPostBlog = () => {
     setTitle(e.target.value);
   };
   ///add button
-  const mutationAdded = useMutationHooks((data) =>
-    ContributionService.createContribution(data)
-  );
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const handleOk = async () => {
     setIsLoadingAdd(true);
@@ -234,37 +234,33 @@ const StudentPostBlog = () => {
       nameofword: selectedFiles?.name,
       content: selectedFiles?.response?.htmlContent,
     };
-    setIsLoading(true);
-    mutationAdded.mutate(data, {
-      onSettled: () => {
-        setIsLoading(true);
-        submitedQuerry.refetch().then(() => setIsLoading(false));
-      },
-    });
     setIsModalOpenRule(false);
-    setIsCheckboxChecked(false);
-  };
-  const {
-    data: dataAdded,
-    isSuccess: isSuccessAdded,
-    isError: isErrorAdded,
-  } = mutationAdded;
-  useEffect(() => {
-    if (isSuccessAdded && dataAdded?.status === "OK") {
+    const res = await ContributionService.createContribution(
+      cookiesAccessToken.access_token.split(" ")[1],
+      data
+    );
+    if (res.status === "OK") {
       Message.success();
-      setIsModalOpen(false);
-      setIsData(false);
-      setIsOpenDrawer(false);
-      setIsLoadingAdd(false);
-      setTitle("");
-      setSelectedFiles(null);
-      setFileListImage([]);
-      form.resetFields();
-    } else if (isErrorAdded && dataAdded?.status === "ERR") {
-      Message.error();
-      setIsLoadingAdd(false);
+      setIsLoading(true);
+      submitedQuerry
+        .refetch()
+        .then(
+          () => setIsLoading(false),
+          setIsCheckboxChecked(false),
+          setIsModalOpen(false),
+          setIsData(false),
+          setIsOpenDrawer(false),
+          setIsLoadingAdd(false),
+          setTitle(""),
+          setSelectedFiles(null),
+          setFileListImage([]),
+          form.resetFields()
+        );
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
+      setIsCheckboxChecked(false);
     }
-  }, [isSuccessAdded]);
+  };
   ///lấy dữ liệu của bài đã nộp
   const [detailContribution, setDetailContribution] = useState([]);
   const fetchData = async (eventId) => {
@@ -289,40 +285,29 @@ const StudentPostBlog = () => {
   const handleDeleteContribution = async () => {
     setIsModalOpenDelete(true);
   };
-  const mutationDeleted = useMutationHooks(({ id, accessToken }) => {
-    const res = ContributionService.deleteContribution(id, accessToken);
-    return res;
-  });
-  const handleDeleteUser = () => {
+  const handleDeleteBlog = async () => {
     setIsLoadingDelete(true);
     const id = detailContribution?._id;
-    const accessToken = cookiesAccessToken;
-    mutationDeleted.mutate(
-      { id, accessToken },
-      {
-        onSettled: () => {
-          setIsLoading(true);
-          submitedQuerry.refetch().then(() => setIsLoading(false));
-        },
-      }
+    const res = await ContributionService.deleteContribution(
+      id,
+      cookiesAccessToken.access_token.split(" ")[1]
     );
-  };
-  const {
-    data: dataDeleted,
-    isSuccess: isSuccessDelected,
-    isError: isErrorDeleted,
-  } = mutationDeleted;
-  useEffect(() => {
-    if (isSuccessDelected && dataDeleted?.status === "OK") {
+    if (res.status === "OK") {
       Message.success();
-      setIsLoadingDelete(false);
-      setIsModalOpenDelete(false);
-      setIsOpenDrawer(false);
-    } else if (isErrorDeleted) {
-      Message.error();
+      setIsLoading(true);
+      submitedQuerry
+        .refetch()
+        .then(
+          () => setIsLoading(false),
+          setIsLoadingDelete(false),
+          setIsModalOpenDelete(false),
+          setIsOpenDrawer(false),
+        );
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
       setIsLoadingDelete(false);
     }
-  }, [isSuccessDelected]);
+  };
   ///comment
   const [newComment, setNewComment] = useState("");
   const [comment, setComment] = useState("");
@@ -923,7 +908,7 @@ const StudentPostBlog = () => {
             style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
           >
             <Button
-              onClick={handleDeleteUser}
+              onClick={handleDeleteBlog}
               danger // Đảm bảo handleOk được gọi khi nút được nhấn
             >
               {isLoadingDelete ? "Deleting..." : "Delete"}{" "}

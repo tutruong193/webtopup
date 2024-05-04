@@ -186,44 +186,28 @@ const AdminUser = () => {
       a.faculty > b.faculty ? 1 : b.faculty > a.faculty ? -1 : 0
     );
   ///add user
-  const mutationAdded = useMutationHooks((data) =>
-    UserService.createUser(data)
-  );
   const [form] = Form.useForm();
-  const handleOk = () => {
-    mutationAdded.mutate(
-      { ...stateUser },
-      {
-        onSettled: () => {
-          userQuerry.refetch();
-        },
-      }
+  const handleOk = async () => {
+    const res = await UserService.createUser(
+      cookies["access_token"].split(" ")[1],
+      stateUser
     );
-    setStateUser({
-      name: "",
-      email: "",
-      password: "",
-      role: "",
-      faculty: "",
-    });
-    form.resetFields();
-    setIsModalOpen(false);
-  };
-  const {
-    data: dataAdded,
-    isLoading: isLoadingAdded,
-    isSuccess: isSuccessAdded,
-    isError: isErrorAdded,
-  } = mutationAdded;
-  useEffect(() => {
-    if (isSuccessAdded && dataAdded?.status === "OK") {
+    if (res.status === "OK") {
       Message.success();
-      handleCancelDelete();
-    } else if (isErrorAdded) {
-      Message.error();
+      form.resetFields();
+      setIsModalOpen(false);
+      setStateUser({
+        name: "",
+        email: "",
+        password: "",
+        role: "",
+        faculty: "",
+      });
+      userQuerry.refetch();
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
     }
-  }, [isSuccessAdded]);
-
+  };
   ///delete user
   const [rowSelected, setRowSelected] = useState("");
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
@@ -235,36 +219,19 @@ const AdminUser = () => {
     setIsModalOpenDelete(true);
     setRowSelected(record?.key);
   };
-  const mutationDeleted = useMutationHooks((data) => {
-    const { id, token } = data;
-    const res = UserService.deleteUser(id, token);
-    return res;
-  });
-  const handleDeleteUser = () => {
-    mutationDeleted.mutate(
-      { id: rowSelected, token: cookies["access_token"].split(" ")[1] },
-      {
-        onSettled: () => {
-          userQuerry.refetch();
-        },
-      }
+  const handleDeleteUser = async () => {
+    const res = await UserService.deleteUser(
+      rowSelected,
+      cookies["access_token"].split(" ")[1]
     );
-    setIsModalOpenDelete(false);
-  };
-  const {
-    data: dataDeleted,
-    isLoading: isLoadingDeleted,
-    isSuccess: isSuccessDelected,
-    isError: isErrorDeleted,
-  } = mutationDeleted;
-  useEffect(() => {
-    if (isSuccessDelected && dataDeleted?.status === "OK") {
+    if (res.status === "OK") {
       Message.success();
-      handleCancelDelete();
-    } else if (isErrorDeleted) {
-      Message.error();
+      setIsModalOpenDelete(false);
+      userQuerry.refetch();
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
     }
-  }, [isSuccessDelected]);
+  };
   ////update user
   const [formUpdate] = Form.useForm();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
@@ -329,42 +296,19 @@ const AdminUser = () => {
       });
     }
   };
-  const mutationUpdate = useMutationHooks((data) => {
-    const { stateDetailUser } = data;
-    const token = cookies["access_token"].split(" ")[1];
-    const res = UserService.updateUser(rowSelected, token, stateDetailUser);
-    return res;
-  });
-
-  const updateUser = () => {
-    mutationUpdate.mutate(
-      {
-        rowSelected,
-        token: cookies["access_token"].split(" ")[1],
-        stateDetailUser,
-      },
-      {
-        onSettled: () => {
-          userQuerry.refetch();
-        },
-      }
+  const updateUser = async () => {
+    const res = await UserService.updateUser(
+      rowSelected,
+      stateDetailUser
     );
-    setIsOpenDrawer(false);
-  };
-  const {
-    data: dataUpdated,
-    isLoading: isLoadingUpdated,
-    isSuccess: isSuccessUpdated,
-    isError: isErrorUpdated,
-  } = mutationUpdate;
-  useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+    if (res.status === "OK") {
       Message.success();
-      handleCancelDelete();
-    } else if (isErrorUpdated) {
-      Message.error();
+      setIsOpenDrawer(false);
+      userQuerry.refetch();
+    } else if (res.status === "ERR") {
+      Message.error(res.message);
     }
-  }, [isSuccessUpdated]);
+  };
   //
   return (
     <div style={{ padding: "30px" }}>

@@ -28,15 +28,19 @@ export const getDetailsUser = async (id) => {
   );
   return res.data;
 };
-export const createUser = async (data) => {
+export const createUser = async (access_token, data) => {
   let { faculty } = data;
   if (faculty === "") {
     faculty = null;
   }
   data.faculty = faculty;
-  const res = await axios.post(
+  const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL}/api/user/create`,
-    data
+    data,{
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
   );
   return res.data;
 };
@@ -63,20 +67,16 @@ export const deleteUser = async (id, access_token) => {
   );
   return res.data;
 };
-export const updateUser = async (id, access_token, data) => {
+export const updateUser = async (id, data) => {
   let { faculty, role } = data;
   if (role === "Manager") {
     faculty = null;
   }
   data.faculty = faculty;
-  const res = await axiosJWT.put(
+  console.log(id, data)
+  const res = await axios.put(
     `${process.env.REACT_APP_API_URL}/api/user/update/${id}`,
-    data,
-    {
-      headers: {
-        token: `Bearer ${access_token}`,
-      },
-    }
+    data
   );
   return res.data;
 };

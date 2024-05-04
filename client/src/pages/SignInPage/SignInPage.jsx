@@ -35,7 +35,7 @@ const SignInPage = () => {
     setPassword(value);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
     mutation.mutate({
       email,
       password,
