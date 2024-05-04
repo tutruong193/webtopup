@@ -45,7 +45,7 @@ const SignInPage = () => {
     try {
       const res = await UserService.sendActivationCode(id);
       if (res.status === "OK") {
-        Message.success("Resend successful");
+        Message.success("Send successful");
       }
     } catch (error) {
       console.error("Error resending activation code:", error);
@@ -159,7 +159,7 @@ const SignInPage = () => {
             }}
           ></ButtonComponent>
           <p>
-            <WrapperTextLight>Forgot password?</WrapperTextLight>
+            <WrapperTextLight><a href='/resetpassword'>Forgot password?</a></WrapperTextLight>
           </p>
           <p>
             Back to{" "}

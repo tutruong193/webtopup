@@ -10,6 +10,8 @@ import ManagerPage from "../pages/ManagerPage/ManagerPage";
 import ActivePage from "../pages/ActivePage/ActivePage";
 import ContactPage from "../pages/ContactPage/ContactPage";
 import GuestPage from "../pages/GuestPage/GuestPage";
+import ResetPasswordPage from "../pages/ResetPassword/ResetPasswordPage";
+import ChangePasswordPage from "../pages/ChangePassword/ChangePasswordPage";
 export const routes = [
   {
     path: "/",
@@ -81,6 +83,18 @@ export const routes = [
     page: GuestPage,
     isShowHeader: false,
     requiresAuth: true,
+  },
+  {
+    path: "/resetpassword",
+    page: ResetPasswordPage,
+    isShowHeader: false,
+    requiresAuth: false,
+  },
+  {
+    path: "/resetpassword/:id",
+    page: ChangePasswordPage,
+    isShowHeader: false,
+    requiresAuth: false,
   },
   {
     path: "*",

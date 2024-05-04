@@ -78,7 +78,7 @@ const getContributionSubmited = async (studentID) => {
     try {
       const contributionSubmited = await Contribution.find({
         studentId: studentID,
-      }); // Chú ý sử dụng await để đợi lấy dữ liệu
+      });
       if (!contributionSubmited) {
         resolve({
           status: "OK",
